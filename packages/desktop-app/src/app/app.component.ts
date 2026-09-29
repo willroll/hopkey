@@ -133,12 +133,13 @@ export class AppComponent implements OnInit {
     // Create folders and files if missing
     this.updaterService.createFoldersIfMissing();
 
+    // Copy the system vault secrets of a workspace imported from the app Hopkey was forked from:
+    // the migrations below may need them
+    await this.importLegacySecrets();
+
     // Before retrieving an actual copy of the workspace we
     // check and in case apply, our retro compatibility service
     await this.retroCompatibilityService.applyWorkspaceMigrations();
-
-    // Copy the system vault secrets of an imported workspace from the app Hopkey was forked from
-    await this.importLegacySecrets();
 
     // Check the existence of a pre-Hopkey credential file and make a backup
     this.showCredentialBackupMessageIfNeeded();
