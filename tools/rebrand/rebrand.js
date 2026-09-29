@@ -40,7 +40,7 @@ const EXCLUDED = [
   /^(README|NOTICE)\.md$/, // hand-maintained, credits upstream Leapp on purpose
   /^dpapi-addon\//, // source of the upstream-published @noovolari/dpapi-addon package
   /^packages\/desktop-app\/electron\/build\//, // committed node-gyp output
-  /^packages\/core\/src\/services\/leapp-import-service(\.spec)?\.ts$/, // reads the legacy Leapp data on purpose
+  /^packages\/core\/src\/services\/legacy-import-service(\.spec)?\.ts$/, // imports Leapp data, names it on purpose
   /^tools\/rebrand\//,
 ];
 

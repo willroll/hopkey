@@ -31,6 +31,7 @@ import { PluginManagerService } from "@hopkey/core/plugin-sdk/plugin-manager-ser
 import { ExtensionWebsocketService } from "./services/extension-websocket.service";
 import { TeamService, Role } from "./services/team-service";
 import { AnalyticsService } from "./services/analytics.service";
+import { legacyApp } from "@hopkey/core/services/legacy-import-service";
 
 @Component({
   selector: "app-root",
@@ -135,6 +136,9 @@ export class AppComponent implements OnInit {
     // Before retrieving an actual copy of the workspace we
     // check and in case apply, our retro compatibility service
     await this.retroCompatibilityService.applyWorkspaceMigrations();
+
+    // Copy the system vault secrets of an imported workspace from the app Hopkey was forked from
+    await this.importLegacySecrets();
 
     // Check the existence of a pre-Hopkey credential file and make a backup
     this.showCredentialBackupMessageIfNeeded();
@@ -250,6 +254,31 @@ export class AppComponent implements OnInit {
 
     // Finally quit
     this.appService.quit();
+  }
+
+  private async importLegacySecrets(): Promise<void> {
+    try {
+      const importedSecrets = await this.appProviderService.legacyImportService.importSecrets();
+      if (importedSecrets !== undefined) {
+        this.loggingService.log(
+          new LoggedEntry(
+            `Imported your ${legacyApp.appName} workspace and ${importedSecrets} secret(s) from the system vault.`,
+            this,
+            LogLevel.info,
+            true
+          )
+        );
+      }
+    } catch (error) {
+      this.loggingService.log(
+        new LoggedEntry(
+          `Could not copy your ${legacyApp.appName} secrets from the system vault, retrying at the next launch: ${error?.message ?? error}`,
+          this,
+          LogLevel.warn,
+          true
+        )
+      );
+    }
   }
 
   /**

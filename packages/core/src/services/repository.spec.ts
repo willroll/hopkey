@@ -105,6 +105,18 @@ describe("Repository", () => {
     expect(repository.persistWorkspace).not.toHaveBeenCalled();
   });
 
+  test("createWorkspace() - imports the legacy app workspace instead of creating a new one", () => {
+    const legacyImportService = { importWorkspace: jest.fn(() => true) };
+    workspaceConsistencyService.createNewWorkspace = jest.fn(() => mockedWorkspace);
+    mockedFileService.writeFileSync = jest.fn();
+
+    repository = new Repository(mockedNativeService, mockedFileService, workspaceConsistencyService, legacyImportService as any);
+
+    expect(legacyImportService.importWorkspace).toHaveBeenCalled();
+    expect(workspaceConsistencyService.createNewWorkspace).not.toHaveBeenCalled();
+    expect(mockedFileService.writeFileSync).not.toHaveBeenCalled();
+  });
+
   test("removeWorkspace() - the workspace file exists", () => {
     const mockedHomedirPath = "mocked-homedir-path";
     mockedFileService.existsSync = jest.fn(() => true);

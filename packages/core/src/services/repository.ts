@@ -19,6 +19,7 @@ import PluginStatus from "../models/plugin-status";
 import { WorkspaceConsistencyService } from "./workspace-consistency-service";
 import { HopkeyNotification } from "../models/notification";
 import { GlobalSettings } from "../interfaces/i-global-settings";
+import { LegacyImportService } from "./legacy-import-service";
 
 export class Repository {
   // Private singleton workspace
@@ -28,7 +29,8 @@ export class Repository {
   constructor(
     private nativeService: INativeService,
     private fileService: FileService,
-    private workspaceConsistencyService: WorkspaceConsistencyService
+    private workspaceConsistencyService: WorkspaceConsistencyService,
+    private legacyImportService: LegacyImportService = new LegacyImportService(nativeService, fileService)
   ) {
     this.workspaceFileName = constants.lockFileDestination;
     this.createWorkspace();
@@ -66,6 +68,9 @@ export class Repository {
 
   createWorkspace(): void {
     if (!this.fileService.existsSync(this.nativeService.os.homedir() + "/" + this.workspaceFileName)) {
+      if (this.legacyImportService.importWorkspace()) {
+        return;
+      }
       this.fileService.newDir(this.nativeService.os.homedir() + "/.hopkey", { recursive: true });
       this._workspace = this.workspaceConsistencyService.createNewWorkspace();
       this.persistWorkspace(this._workspace);

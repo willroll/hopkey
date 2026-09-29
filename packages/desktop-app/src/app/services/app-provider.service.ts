@@ -16,6 +16,7 @@ import { AppAwsAuthenticationService } from "./app-aws-authentication.service";
 import { AwsParentSessionFactory } from "@hopkey/core/services/session/aws/aws-parent-session.factory";
 import { AwsIamRoleChainedService } from "@hopkey/core/services/session/aws/aws-iam-role-chained-service";
 import { Repository } from "@hopkey/core/services/repository";
+import { LegacyImportService } from "@hopkey/core/services/legacy-import-service";
 import { AwsSsoRoleService } from "@hopkey/core/services/session/aws/aws-sso-role-service";
 import { AwsSsoOidcService } from "@hopkey/core/services/aws-sso-oidc.service";
 import { AppVerificationWindowService } from "./app-verification-window.service";
@@ -77,6 +78,7 @@ export class AppProviderService {
   private awsParentSessionFactoryInstance: AwsParentSessionFactory;
   private fileServiceInstance: FileService;
   private repositoryInstance: Repository;
+  private legacyImportServiceInstance: LegacyImportService;
   private regionsServiceInstance: RegionsService;
   private keychainServiceInstance: IKeychainService;
   private workspaceConsistencyServiceInstance: WorkspaceConsistencyService;
@@ -379,9 +381,16 @@ export class AppProviderService {
 
   public get repository(): Repository {
     if (!this.repositoryInstance) {
-      this.repositoryInstance = new Repository(this.appNativeService, this.fileService, this.workspaceConsistencyService);
+      this.repositoryInstance = new Repository(this.appNativeService, this.fileService, this.workspaceConsistencyService, this.legacyImportService);
     }
     return this.repositoryInstance;
+  }
+
+  public get legacyImportService(): LegacyImportService {
+    if (!this.legacyImportServiceInstance) {
+      this.legacyImportServiceInstance = new LegacyImportService(this.appNativeService, this.fileService);
+    }
+    return this.legacyImportServiceInstance;
   }
 
   get regionsService(): RegionsService {
