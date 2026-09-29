@@ -153,6 +153,7 @@
     "@aws-sdk/client-sso-oidc": "3.525.0",
     "@azure/msal-node": "^1.9.0",
     "@electron/remote": "^2.0.1",
+    "@fortawesome/fontawesome-free": "6.7.2",
     "@ng-select/ng-select": "10.0.4",
     "@ngx-translate/core": "14.0.0",
     "@ngx-translate/http-loader": "~6.0.0",
