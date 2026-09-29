@@ -39,8 +39,8 @@ describe("CliAwsSsoOidcVerificationWindowService", () => {
     expect(browserProcess?.signalCode).toBeNull();
 
     await cliAwsSsoOidcVerificationWindowService.closeBrowser();
-    expect(browserProcess?.killed).toBeTruthy();
-    expect(browserProcess?.signalCode).toEqual("SIGKILL");
+    // puppeteer >= 20 shuts Chrome down gracefully instead of SIGKILL-ing it
+    expect(browserProcess?.exitCode !== null || browserProcess?.signalCode !== null).toBeTruthy();
   });
 
   test("closeBrowser, no opened browser", async () => {

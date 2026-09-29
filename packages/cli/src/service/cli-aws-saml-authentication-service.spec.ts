@@ -154,7 +154,7 @@ describe("CliAwsAuthenticationService", () => {
     expect(browserProcess?.signalCode).toBeNull();
 
     await cliAwsAuthenticationService.closeAuthenticationWindow();
-    expect(browserProcess?.killed).toBeTruthy();
-    expect(browserProcess?.signalCode).toEqual("SIGKILL");
+    // puppeteer >= 20 shuts Chrome down gracefully instead of SIGKILL-ing it
+    expect(browserProcess?.exitCode !== null || browserProcess?.signalCode !== null).toBeTruthy();
   });
 });
