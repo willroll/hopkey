@@ -1,14 +1,14 @@
 {
-  "name": "Leapp",
+  "name": "Hopkey",
   "version": "0.26.1",
   "private": true,
   "author": {
     "name": "Noovolari",
     "email": "info@noovolari.com"
   },
-  "description": "Leapp is a Cross-Platform Cloud access App, built on top of Electron.",
+  "description": "Hopkey is a Cross-Platform Cloud access App, built on top of Electron.",
   "main": "electron/dist/electron/main.js",
-  "homepage": "https://github.com/Noovolari/leapp",
+  "homepage": "https://github.com/willroll/hopkey",
   "scripts": {
     "setup": "gushio ../../gushio/clean-and-bootstrap.js desktop-app",
     "clean": "gushio gushio/target-clean.js",
@@ -36,30 +36,30 @@
   },
   "build": {
     "protocols": {
-      "name": "leapp-deep-linking",
+      "name": "hopkey-deep-linking",
       "schemes": [
-        "leapp"
+        "hopkey"
       ]
     },
     "publish": [
       {
         "provider": "github",
         "owner": "Noovolari",
-        "repo": "leapp",
+        "repo": "hopkey",
         "releaseType": "release"
       }
     ],
-    "productName": "Leapp",
+    "productName": "Hopkey",
     "icon": "src/assets/icons/icon.icns",
     "files": [
-      "dist/assets/images/Leapp.icns",
-      "dist/assets/images/Leapp.ico",
-      "dist/assets/images/Leapp.png",
+      "dist/assets/images/Hopkey.icns",
+      "dist/assets/images/Hopkey.ico",
+      "dist/assets/images/Hopkey.png",
       "dist/icon.icns",
       "dist/icon.ico",
       "dist/icon.png",
-      "dist/leapp-client/*",
-      "dist/leapp-client/**/*",
+      "dist/hopkey-client/*",
+      "dist/hopkey-client/**/*",
       "electron/dist/*",
       "electron/dist/**/*",
       "node_modules/**/*",
@@ -69,7 +69,7 @@
       "output": "release",
       "buildResources": "dist"
     },
-    "appId": "com.leapp.app",
+    "appId": "io.github.willroll.hopkey",
     "dmg": {
       "icon": "src/assets/icons/icon.icns",
       "background": "src/assets/icons/background.png",
@@ -88,13 +88,13 @@
     },
     "linux": {
       "category": "Utility",
-      "synopsis": "Leapp Client is a tool that allows the user to obtain secure, temporary and refreshable credentials to access AWS Services with AWS CLI and tools based on it",
-      "description": "Leapp Client is a tool that allows the user to obtain secure, temporary and refreshable credentials to access AWS Services with AWS CLI and tools based on it, with versioning tools that work with AWS CodeCommit service and to easily use AWS SDK from your local environment during your everyday development.",
+      "synopsis": "Hopkey Client is a tool that allows the user to obtain secure, temporary and refreshable credentials to access AWS Services with AWS CLI and tools based on it",
+      "description": "Hopkey Client is a tool that allows the user to obtain secure, temporary and refreshable credentials to access AWS Services with AWS CLI and tools based on it, with versioning tools that work with AWS CodeCommit service and to easily use AWS SDK from your local environment during your everyday development.",
       "icon": "src/assets/icons/1024x1024.png",
       "desktop": {
         "desktopActions": {
           "NewWindow": {
-             "Exec": "leapp %U"
+             "Exec": "hopkey %U"
           }
        }
       },
@@ -103,11 +103,11 @@
         "AppImage"
       ],
       "mimeTypes": [
-        "x-scheme-handler/leapp"
+        "x-scheme-handler/hopkey"
       ]
     },
     "mac": {
-      "icon": "src/assets/images/Leapp.icns",
+      "icon": "src/assets/images/Hopkey.icns",
       "forceCodeSigning": true,
       "notarize": true,
       "hardenedRuntime": true,
@@ -130,7 +130,7 @@
       ]
     },
     "win": {
-      "icon": "src/assets/images/Leapp.ico",
+      "icon": "src/assets/images/Hopkey.ico",
       "legalTrademarks": "beSharp",
       "requestedExecutionLevel": "asInvoker",
       "verifyUpdateCodeSignature": false,
@@ -158,7 +158,7 @@
     "@ngx-translate/core": "14.0.0",
     "@ngx-translate/http-loader": "~6.0.0",
     "@noovolari/dpapi-addon": "0.1.2",
-    "@noovolari/leapp-core": "file:../core",
+    "@hopkey/core": "file:../core",
     "@smithy/fetch-http-handler": "2.4.2",
     "assert": "2.0.0",
     "axios": "1.11.0",

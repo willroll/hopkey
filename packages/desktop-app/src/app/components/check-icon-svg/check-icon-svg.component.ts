@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { AppProviderService } from "../../services/app-provider.service";
 import { AppService } from "../../services/app.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { BehaviorSubject } from "rxjs";
 
 export const colorThemeSubject = new BehaviorSubject(false);

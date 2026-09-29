@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { integrationId } from "../../flags";
-import { Integration } from "@noovolari/leapp-core/models/integration";
+import { Integration } from "@hopkey/core/models/integration";
 
-export default class LoginIntegration extends LeappCommand {
+export default class LoginIntegration extends HopkeyCommand {
   static description = "Login to synchronize integration sessions";
 
-  static examples = ["$leapp integration login", "$leapp integration login --integrationId ID"];
+  static examples = ["$hopkey integration login", "$hopkey integration login --integrationId ID"];
 
   static flags = {
     integrationId,

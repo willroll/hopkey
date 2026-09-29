@@ -1,5 +1,5 @@
 import { BehaviorSubject } from "rxjs";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 interface User {
   [key: string]: any;
@@ -36,7 +36,7 @@ export class TeamService {
 
   set skipKeychainSecretsDeletion(value: boolean) {}
 
-  get isLeappTeamStubbed(): boolean {
+  get isHopkeyTeamStubbed(): boolean {
     return true;
   }
 

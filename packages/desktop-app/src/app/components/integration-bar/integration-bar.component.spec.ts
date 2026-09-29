@@ -5,8 +5,8 @@ import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from "@angular/material/snack-bar"
 import { mustInjected } from "../../../base-injectables";
 import { RouterTestingModule } from "@angular/router/testing";
 import { AppProviderService } from "../../services/app-provider.service";
-import { AwsSsoIntegration } from "@noovolari/leapp-core/models/aws/aws-sso-integration";
-import { IntegrationFactory } from "@noovolari/leapp-core/services/integration-factory";
+import { AwsSsoIntegration } from "@hopkey/core/models/aws/aws-sso-integration";
+import { IntegrationFactory } from "@hopkey/core/services/integration-factory";
 
 describe("IntegrationBarComponent", () => {
   let component: IntegrationBarComponent;
@@ -32,7 +32,7 @@ describe("IntegrationBarComponent", () => {
       getIntegrations: () => [],
     });
 
-    const spyLeappCoreService = jasmine.createSpyObj("AppProviderService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("AppProviderService", [], {
       repository: spyRepositoryService,
       awsCoreService: { getRegions: () => ["mocked-region-1", "mocked-region-2"] },
       awsSsoOidcService: { listeners: [] },
@@ -51,7 +51,7 @@ describe("IntegrationBarComponent", () => {
       ].concat(
         mustInjected().concat([
           { provide: IntegrationFactory, useValue: spyIntegrationFactory },
-          { provide: AppProviderService, useValue: spyLeappCoreService },
+          { provide: AppProviderService, useValue: spyHopkeyCoreService },
         ])
       ),
     }).compileComponents();

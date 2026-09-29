@@ -1,5 +1,5 @@
 import { Repository } from "./repository";
-import { LeappNotification } from "../models/notification";
+import { HopkeyNotification } from "../models/notification";
 
 export class NotificationService {
   constructor(private repository: Repository) {
@@ -8,16 +8,16 @@ export class NotificationService {
     }
   }
 
-  getNotifications(unread?: boolean): LeappNotification[] {
+  getNotifications(unread?: boolean): HopkeyNotification[] {
     if (unread !== undefined && unread === true) {
-      return this.repository.getNotifications().filter((n: LeappNotification) => !n.read);
+      return this.repository.getNotifications().filter((n: HopkeyNotification) => !n.read);
     }
     return this.repository.getNotifications();
   }
 
   setNotificationAsRead(uuid: string): void {
     const notifications = this.getNotifications();
-    notifications.forEach((n: LeappNotification) => {
+    notifications.forEach((n: HopkeyNotification) => {
       if (n.uuid === uuid) {
         n.read = true;
       }
@@ -25,17 +25,17 @@ export class NotificationService {
     this.repository.setNotifications(notifications);
   }
 
-  setNotifications(notifications: LeappNotification[]): void {
+  setNotifications(notifications: HopkeyNotification[]): void {
     this.repository.setNotifications(notifications);
   }
 
-  removeNotification(notificationToBeRemoved: LeappNotification): void {
+  removeNotification(notificationToBeRemoved: HopkeyNotification): void {
     const notifications = this.getNotifications();
     const newNotifications = notifications.filter((notification) => notification.uuid !== notificationToBeRemoved.uuid);
     this.setNotifications(newNotifications);
   }
 
-  getNotificationByUuid(uuid: string): LeappNotification | undefined {
-    return this.getNotifications().find((leappNotification) => leappNotification.uuid === uuid);
+  getNotificationByUuid(uuid: string): HopkeyNotification | undefined {
+    return this.getNotifications().find((hopkeyNotification) => hopkeyNotification.uuid === uuid);
   }
 }

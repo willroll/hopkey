@@ -17,7 +17,7 @@ describe("TrayMenuComponent", () => {
       getProfiles: [],
       getSessions: [],
     });
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       behaviouralSubjectService: spyBehaviouralSubjectService,
       repository: spyRepositoryService,
       awsCoreService: { getRegions: () => [] },
@@ -28,7 +28,7 @@ describe("TrayMenuComponent", () => {
 
     TestBed.configureTestingModule({
       declarations: [TrayMenuComponent],
-      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyLeappCoreService })),
+      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyHopkeyCoreService })),
     }).compileComponents();
   }));
 

@@ -4,10 +4,10 @@ import { AwsIamUserSessionRequest } from "../../services/session/aws/aws-iam-use
 
 export class AwsIamUserSessionData extends SessionData {
   /**
-   * @param profileId - ID of the Named Profile that is going to be associated with the Leapp Session; it refers to an internal ID rather than the name assigned by the user.
+   * @param profileId - ID of the Named Profile that is going to be associated with the Hopkey Session; it refers to an internal ID rather than the name assigned by the user.
    * When instantiating this class, use the method getProfileIdByName() to obtain the Named Profile ID by passing its name.
-   * @param region - the region that is going to be associated with the Leapp Session
-   * @param sessionName - the name of the Leapp Session
+   * @param region - the region that is going to be associated with the Hopkey Session
+   * @param sessionName - the name of the Hopkey Session
    * @param accessKey - the Access Key ID associated with the IAM User. See {@link https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html|AWS documentation}.
    * @param secretKey - the Secret Access Key associated with the IAM User. See {@link https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html|AWS documentation}.
    */

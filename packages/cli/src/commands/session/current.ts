@@ -1,21 +1,21 @@
-import { AwsNamedProfile } from "@noovolari/leapp-core/models/aws/aws-named-profile";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
+import { AwsNamedProfile } from "@hopkey/core/models/aws/aws-named-profile";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
 import { Flags } from "@oclif/core";
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { AzureSessionService } from "@noovolari/leapp-core/services/session/azure/azure-session-service";
-import { AzureSession } from "@noovolari/leapp-core/models/azure/azure-session";
+import { Session } from "@hopkey/core/models/session";
+import { constants } from "@hopkey/core/models/constants";
+import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-session-service";
+import { AzureSession } from "@hopkey/core/models/azure/azure-session";
 
 const awsProvider = "aws";
 const azureProvider = "azure";
 
-export default class CurrentSession extends LeappCommand {
+export default class CurrentSession extends HopkeyCommand {
   static description =
     "Provides info about the current active session for a selected profile (if no profile is provided, it uses the profile default)";
-  static examples = ['$leapp session current --format "alias accountNumber" --inline --provider aws'];
+  static examples = ['$hopkey session current --format "alias accountNumber" --inline --provider aws'];
   static flags = {
     inline: Flags.boolean({
       char: "i",

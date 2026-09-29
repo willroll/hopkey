@@ -1,17 +1,17 @@
-`leapp help`
+`hopkey help`
 ============
 
-Display help for leapp.
+Display help for hopkey.
 
-* [`leapp help [COMMANDS]`](#leapp-help-commands)
+* [`hopkey help [COMMANDS]`](#hopkey-help-commands)
 
-## `leapp help [COMMANDS]`
+## `hopkey help [COMMANDS]`
 
-Display help for leapp.
+Display help for hopkey.
 
 ```
 USAGE
-  $ leapp help [COMMANDS...] [-n]
+  $ hopkey help [COMMANDS...] [-n]
 
 ARGUMENTS
   COMMANDS...  Command to show help for.
@@ -20,7 +20,7 @@ FLAGS
   -n, --nested-commands  Include all nested commands in the output.
 
 DESCRIPTION
-  Display help for leapp.
+  Display help for hopkey.
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_

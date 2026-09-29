@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AppProviderService } from "../../services/app-provider.service";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { globalLeappProPlanStatus, LeappPlanStatus, OptionsDialogComponent } from "../dialogs/options-dialog/options-dialog.component";
+import { globalHopkeyProPlanStatus, HopkeyPlanStatus, OptionsDialogComponent } from "../dialogs/options-dialog/options-dialog.component";
 import { WorkspaceState } from "../../services/team-service";
 import { Router } from "@angular/router";
 import { LoginWorkspaceDialogComponent } from "../dialogs/login-team-dialog/login-workspace-dialog.component";
@@ -40,9 +40,9 @@ export class SyncProWidgetComponent implements OnInit, OnDestroy {
       this.isFailed = workspaceState?.syncState === "failed";
     });
 
-    this.subscription2 = globalLeappProPlanStatus.subscribe(async (_) => {
-      const currentState = await this.appProviderService.keychainService.getSecret("Leapp", "leapp-enabled-plan");
-      if (currentState === LeappPlanStatus.proEnabled || currentState === LeappPlanStatus.proPending) {
+    this.subscription2 = globalHopkeyProPlanStatus.subscribe(async (_) => {
+      const currentState = await this.appProviderService.keychainService.getSecret("Hopkey", "hopkey-enabled-plan");
+      if (currentState === HopkeyPlanStatus.proEnabled || currentState === HopkeyPlanStatus.proPending) {
         this.buttonText = "SIGN IN";
       } else {
         this.buttonText = "UPGRADE TO PRO";
@@ -59,8 +59,8 @@ export class SyncProWidgetComponent implements OnInit, OnDestroy {
     if (this.buttonText === "UPGRADE TO PRO") {
       this.bsModalService.show(OptionsDialogComponent, { animated: false, class: "option-modal", initialState: { selectedIndex: 6 } });
     } else if (this.buttonText === "SIGN IN") {
-      const isLeappTeamStubbed = this.appProviderService.teamService.isLeappTeamStubbed;
-      if (isLeappTeamStubbed) return;
+      const isHopkeyTeamStubbed = this.appProviderService.teamService.isHopkeyTeamStubbed;
+      if (isHopkeyTeamStubbed) return;
       this.bsModalService.show(LoginWorkspaceDialogComponent, {
         animated: false,
         class: "create-modal",

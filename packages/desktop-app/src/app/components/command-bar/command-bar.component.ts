@@ -6,24 +6,24 @@ import { SegmentDialogComponent } from "../dialogs/segment-dialog/segment-dialog
 import { FormControl, FormGroup } from "@angular/forms";
 import { BehaviorSubject } from "rxjs";
 import { globalOrderingFilter } from "../sessions/sessions.component";
-import { Session } from "@noovolari/leapp-core/models/session";
-import Segment, { GlobalFilters } from "@noovolari/leapp-core/models/segment";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
+import { Session } from "@hopkey/core/models/session";
+import Segment, { GlobalFilters } from "@hopkey/core/models/segment";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
 import { syncAllEvent } from "../integration-bar/integration-bar.component";
 import { AppProviderService } from "../../services/app-provider.service";
 import { AppNativeService } from "../../services/app-native.service";
 import { AppService } from "../../services/app.service";
-import { AwsSsoRoleSession } from "@noovolari/leapp-core/models/aws/aws-sso-role-session";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
+import { constants } from "@hopkey/core/models/constants";
 import { WindowService } from "../../services/window.service";
 import { OptionsService } from "../../services/options.service";
-import { AzureSession } from "@noovolari/leapp-core/models/azure/azure-session";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
+import { AzureSession } from "@hopkey/core/models/azure/azure-session";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
 import { UpdaterService } from "../../services/updater.service";
-import { LeappNotification, LeappNotificationType } from "@noovolari/leapp-core/models/notification";
+import { HopkeyNotification, HopkeyNotificationType } from "@hopkey/core/models/notification";
 import { InfoDialogComponent } from "../dialogs/info-dialog/info-dialog.component";
-import { NotificationService } from "@noovolari/leapp-core/services/notification-service";
+import { NotificationService } from "@hopkey/core/services/notification-service";
 import { NoovolariDialogComponent } from "../dialogs/noovolari-dialog/noovolari-dialog.component";
 
 export const compactMode = new BehaviorSubject<boolean>(false);
@@ -69,7 +69,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
   filterExtended: boolean;
   compactMode: boolean;
-  isLeappTeamWorkspace: boolean;
+  isHopkeyTeamWorkspace: boolean;
 
   eConstants = constants;
 
@@ -116,9 +116,9 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     let notifications = this.notificationService.getNotifications().filter((n) => n.uuid === "noovolari-1000");
     if (!notifications.find((n) => n.uuid === "noovolari-1000")) {
       notifications = [
-        new LeappNotification(
+        new HopkeyNotification(
           "noovolari-1000",
-          LeappNotificationType.info,
+          HopkeyNotificationType.info,
           "Noovolari important communication",
           "Read more",
           "",
@@ -144,7 +144,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     document.querySelector(".sessions").classList.toggle("filtered");
   }
 
-  get notifications(): LeappNotification[] {
+  get notifications(): HopkeyNotification[] {
     return this.notificationService.getNotifications();
   }
 
@@ -218,7 +218,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     });
 
     this.workspaceStateSubscription = this.appProviderService.teamService.workspacesState.subscribe((workspacesState) => {
-      this.isLeappTeamWorkspace = !!workspacesState.find((workspace) => workspace.type === "team" && workspace.selected);
+      this.isHopkeyTeamWorkspace = !!workspacesState.find((workspace) => workspace.type === "team" && workspace.selected);
     });
   }
 
@@ -329,7 +329,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
   }
 
   goToGettingStarted(): void {
-    this.windowService.openExternalUrl("https://docs.leapp.cloud/");
+    this.windowService.openExternalUrl("https://willroll.github.io/hopkey/");
   }
 
   goToJoinTheCommunity(): void {
@@ -338,21 +338,21 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
   openAnIssue(): void {
     this.windowService.openExternalUrl(
-      `https://github.com/noovolari/leapp/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
+      `https://github.com/willroll/hopkey/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
     );
   }
 
   requestAFeature(): void {
     this.windowService.openExternalUrl(
-      `https://github.com/noovolari/leapp/issues/new?labels=enhancement&body=${encodeURIComponent(this.appService.featureBody)}`
+      `https://github.com/willroll/hopkey/issues/new?labels=enhancement&body=${encodeURIComponent(this.appService.featureBody)}`
     );
   }
 
-  openInfoModal(notification: LeappNotification): void {
+  openInfoModal(notification: HopkeyNotification): void {
     this.notificationService.setNotificationAsRead(notification.uuid);
     this.bsModalService.show(InfoDialogComponent, {
       animated: false,
-      class: "leapp-team-early-access-modal",
+      class: "hopkey-team-early-access-modal",
       initialState: {
         title: notification.title,
         description: notification.description,
@@ -362,7 +362,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     });
   }
 
-  openNoovolariModal(notification: LeappNotification): void {
+  openNoovolariModal(notification: HopkeyNotification): void {
     this.notificationService.setNotificationAsRead(notification.uuid);
     this.bsModalService.show(NoovolariDialogComponent, {
       animated: false,

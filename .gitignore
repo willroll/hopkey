@@ -11,7 +11,7 @@ packages/desktop-app/electron/dist
 packages/desktop-app/bazel-out
 packages/desktop-app/.angular
 **/team-service.ts
-**/leapp-team-core
+**/hopkey-team-core
 
 # dependencies
 **/node_modules

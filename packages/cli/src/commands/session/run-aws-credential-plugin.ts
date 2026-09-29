@@ -1,15 +1,15 @@
 import { Config } from "@oclif/core/lib/config/config";
 import { sessionId, pluginName } from "../../flags";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { OperatingSystem, osMap } from "@noovolari/leapp-core/models/operating-system";
-import { AwsCredentialsPlugin } from "@noovolari/leapp-core/plugin-sdk/aws-credentials-plugin";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { LeappCommand } from "../../leapp-command";
+import { Session } from "@hopkey/core/models/session";
+import { OperatingSystem, osMap } from "@hopkey/core/models/operating-system";
+import { AwsCredentialsPlugin } from "@hopkey/core/plugin-sdk/aws-credentials-plugin";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { HopkeyCommand } from "../../hopkey-command";
 
-export default class RunAwsCredentialPlugin extends LeappCommand {
-  static description = "Run a Leapp Plugin";
+export default class RunAwsCredentialPlugin extends HopkeyCommand {
+  static description = "Run a Hopkey Plugin";
 
-  static examples = [`$leapp session run-plugin`, `$leapp session run-plugin --sessionName SESSIONAME --pluginName PLUGINNAME`];
+  static examples = [`$hopkey session run-plugin`, `$hopkey session run-plugin --sessionName SESSIONAME --pluginName PLUGINNAME`];
 
   static flags = {
     sessionId,

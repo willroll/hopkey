@@ -50,8 +50,8 @@ export class PluginManagerService {
   }
 
   verifyAndGeneratePluginFolderIfMissing(): void {
-    if (!this.nativeService.fs.existsSync(this.nativeService.os.homedir() + "/.Leapp/" + this._pluginDir)) {
-      this.nativeService.fs.mkdirSync(this.nativeService.os.homedir() + "/.Leapp/" + this._pluginDir);
+    if (!this.nativeService.fs.existsSync(this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir)) {
+      this.nativeService.fs.mkdirSync(this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir);
     }
   }
 
@@ -62,9 +62,9 @@ export class PluginManagerService {
       files: { exclude: ["signature", ".DS_Store", "package-lock.json"] },
     };
 
-    const pluginDirContent = this.nativeService.fs.readdirSync(this.nativeService.os.homedir() + "/.Leapp/" + this._pluginDir);
+    const pluginDirContent = this.nativeService.fs.readdirSync(this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir);
     for (const pluginName of pluginDirContent) {
-      const pluginFilePath = this.nativeService.os.homedir() + "/.Leapp/" + this._pluginDir + "/" + pluginName;
+      const pluginFilePath = this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir + "/" + pluginName;
       const isDir = this.nativeService.fs.existsSync(pluginFilePath) && this.nativeService.fs.lstatSync(pluginFilePath).isDirectory();
       if (isDir) {
         // VALIDATION PROCESS
@@ -155,14 +155,14 @@ export class PluginManagerService {
   }
 
   async installPlugin(url: string): Promise<void> {
-    const packageName = url.replace("leapp://", "");
-    const pluginsDir = this.nativeService.os.homedir() + "/.Leapp/plugins";
+    const packageName = url.replace("hopkey://", "");
+    const pluginsDir = this.nativeService.os.homedir() + "/.hopkey/plugins";
 
     this.logService.log(new LoggedEntry(`We are ready to install Plugin ${packageName}, please wait...`, this, LogLevel.info, true));
 
     const npmMetadata = await this.http.get(`https://registry.npmjs.org/${packageName}`, { responseType: "json" }).toPromise();
-    if (!npmMetadata["keywords"] || !npmMetadata["keywords"].includes("leapp-plugin")) {
-      throw new LoggedException(`${npmMetadata["name"]} is not a Leapp plugin`, this, LogLevel.error, true);
+    if (!npmMetadata["keywords"] || !npmMetadata["keywords"].includes("hopkey-plugin")) {
+      throw new LoggedException(`${npmMetadata["name"]} is not a Hopkey plugin`, this, LogLevel.error, true);
     }
     const version = npmMetadata["dist-tags"].latest;
     const tarballUrl = npmMetadata.versions[version].dist.tarball;
@@ -212,27 +212,27 @@ export class PluginManagerService {
       errors.push(`${constants.npmRequiredPluginKeyword} keyword`);
     }
 
-    const leappPluginConfig = packageJson.leappPlugin;
-    if (!leappPluginConfig) {
-      errors.push("leappPlugin");
+    const hopkeyPluginConfig = packageJson.hopkeyPlugin;
+    if (!hopkeyPluginConfig) {
+      errors.push("hopkeyPlugin");
     }
 
-    const supportedSessionTypes = leappPluginConfig?.supportedSessions || [SessionType.anytype];
+    const supportedSessionTypes = hopkeyPluginConfig?.supportedSessions || [SessionType.anytype];
     for (const sessionType of supportedSessionTypes) {
       if (this.sessionFactory.getCompatibleTypes(sessionType).length === 0) {
-        errors.push(`leappPlugin.supportedSessions: ${sessionType} is unsupported`);
+        errors.push(`hopkeyPlugin.supportedSessions: ${sessionType} is unsupported`);
       }
     }
-    const icon = leappPluginConfig?.icon || "fas fa-puzzle-piece";
+    const icon = hopkeyPluginConfig?.icon || "fas fa-puzzle-piece";
     const operatingSystems = [OperatingSystem.mac, OperatingSystem.linux, OperatingSystem.windows];
-    const supportedOS = leappPluginConfig?.supportedOS || operatingSystems;
+    const supportedOS = hopkeyPluginConfig?.supportedOS || operatingSystems;
     for (const os of supportedOS) {
       if (!operatingSystems.includes(os)) {
-        errors.push(`leappPlugin.supportedOS: ${os} is unsupported`);
+        errors.push(`hopkeyPlugin.supportedOS: ${os} is unsupported`);
       }
     }
 
-    const url = leappPluginConfig?.url;
+    const url = hopkeyPluginConfig?.url;
 
     if (errors.length) {
       throw new Error(errors.join(", "));

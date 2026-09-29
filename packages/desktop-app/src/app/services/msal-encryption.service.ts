@@ -1,4 +1,4 @@
-import { IMsalEncryptionService } from "@noovolari/leapp-core/interfaces/i-msal-encryption-service";
+import { IMsalEncryptionService } from "@hopkey/core/interfaces/i-msal-encryption-service";
 
 // Convert the native sync service to an async service
 export class MsalEncryptionService implements IMsalEncryptionService {

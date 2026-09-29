@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { IntegrationType } from "@noovolari/leapp-core/models/integration-type";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { IntegrationType } from "@hopkey/core/models/integration-type";
 
 export const force = Flags.boolean({
   description: "force a command without asking for confirmation (-f, --force)", // help description for flag
@@ -22,7 +22,7 @@ export const idpUrlId = Flags.string({
 
 // INTEGRATIONS
 export const integrationId = Flags.string({
-  description: "the Integration Id used to identify the integration inside Leapp",
+  description: "the Integration Id used to identify the integration inside Hopkey",
   hidden: false,
 });
 
@@ -43,7 +43,7 @@ export const integrationRegion = Flags.string({
 
 // PROFILES
 export const profileId = Flags.string({
-  description: "an AWS named profile ID in Leapp",
+  description: "an AWS named profile ID in Hopkey",
   hidden: false,
 });
 
@@ -54,12 +54,12 @@ export const profileName = Flags.string({
 
 // SESSION
 export const sessionId = Flags.string({
-  description: "Session Id to identify the session in Leapp, recover it with $leapp session list -x",
+  description: "Session Id to identify the session in Hopkey, recover it with $hopkey session list -x",
   hidden: false,
 });
 
 export const sessionRole = Flags.string({
-  description: "Session Role of one or more sessions in Leapp",
+  description: "Session Role of one or more sessions in Hopkey",
   hidden: false,
 });
 
@@ -69,12 +69,12 @@ export const noInteractive = Flags.boolean({
 });
 
 export const sessionName = Flags.string({
-  description: "Session Alias to identify the session in Leapp",
+  description: "Session Alias to identify the session in Hopkey",
   hidden: false,
 });
 
 export const region = Flags.string({
-  description: "Session Region for AWS sessions in Leapp",
+  description: "Session Region for AWS sessions in Hopkey",
   hidden: false,
 });
 
@@ -109,7 +109,7 @@ export const mfaDevice = Flags.string({
 });
 export const parentSessionId = Flags.string({
   description:
-    "For AWS IAM Role Chained is the session Id of the session that will assume the chained role. Retrieve it using $leapp session list -x",
+    "For AWS IAM Role Chained is the session Id of the session that will assume the chained role. Retrieve it using $hopkey session list -x",
   hidden: false,
 });
 export const roleSessionName = Flags.string({
@@ -137,7 +137,7 @@ export const ssmInstanceId = Flags.string({
   hidden: false,
 });
 export const pluginName = Flags.string({
-  description: "Unique name of a Leapp Plugin",
+  description: "Unique name of a Hopkey Plugin",
   hidden: false,
 });
 export const print = Flags.boolean({

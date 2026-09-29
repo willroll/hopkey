@@ -1,5 +1,5 @@
-import { IAwsSamlAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-saml-authentication-service";
-import { RemoteProceduresClient } from "@noovolari/leapp-core/services/remote-procedures-client";
+import { IAwsSamlAuthenticationService } from "@hopkey/core/interfaces/i-aws-saml-authentication-service";
+import { RemoteProceduresClient } from "@hopkey/core/services/remote-procedures-client";
 
 export class CliRpcAwsSamlAuthenticationService implements IAwsSamlAuthenticationService {
   constructor(private remoteProceduresClient: RemoteProceduresClient) {}

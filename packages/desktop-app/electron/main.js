@@ -26,12 +26,12 @@ app.disableHardwareAcceleration();
 // Electron is the application wrapper so NOT log is prompted when we build an
 // application, we need to log to a file instead
 var windowDefaultConfig = {
-    dir: path.join(__dirname, "/../../../dist/leapp-client"),
+    dir: path.join(__dirname, "/../../../dist/hopkey-client"),
     browserWindow: {
         width: 1200,
         height: 680,
         title: "",
-        icon: path.join(__dirname, "assets/images/Leapp.png"),
+        icon: path.join(__dirname, "assets/images/Hopkey.png"),
         resizable: true,
         webPreferences: {
             devTools: !environment_1.environment.production,
@@ -178,8 +178,8 @@ var generateMainWindow = function () {
     };
     var createTray = function () {
         if (!taskbar) {
-            taskbar = new Tray(windowDefaultConfig.dir + "/assets/images/LeappTemplate.png");
-            taskbar.setToolTip("Leapp");
+            taskbar = new Tray(windowDefaultConfig.dir + "/assets/images/HopkeyTemplate.png");
+            taskbar.setToolTip("Hopkey");
             taskbar.on("click", function () {
                 trayOpen = !trayOpen;
                 if (trayOpen) {
@@ -230,7 +230,7 @@ var generateMainWindow = function () {
         });
     }
     if (process.platform === "win32") {
-        app.setAppUserModelId("Leapp");
+        app.setAppUserModelId("Hopkey");
     }
 };
 // =============================== //

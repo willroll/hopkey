@@ -1,7 +1,7 @@
 import ListIntegrations from "./list";
 import { ux } from "@oclif/core";
 import { describe, expect, jest, test } from "@jest/globals";
-import { IntegrationType } from "@noovolari/leapp-core/models/integration-type";
+import { IntegrationType } from "@hopkey/core/models/integration-type";
 
 describe("ListIntegrations", () => {
   const getTestCommand = (cliProviderService: any = null, argv: string[] = []): ListIntegrations => {

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { WindowService } from "../../../services/window.service";
 import { OptionsService } from "../../../services/options.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 @Component({
   selector: "app-noovolari-dialog",

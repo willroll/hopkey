@@ -37,7 +37,7 @@ export interface IPluginOutputObject {
  * @property {string} description - the plugin description
  * @property {string} author - the author of the plugin
  * @property {string} url
- * @property {string[]} keywords - npm package keywords. leapp-plugin keyword is required to allow the plugin to be listed in the {@link https://www.leapp.cloud/plugins|Plugin Hub}
+ * @property {string[]} keywords - npm package keywords. hopkey-plugin keyword is required to allow the plugin to be listed in the {@link https://www.leapp.cloud/plugins|Plugin Hub}
  */
 export interface IPluginMetadata {
   version: string;
@@ -53,7 +53,7 @@ export interface IPluginMetadata {
 }
 
 /**
- * This interface represents a generic Leapp plugin. It can be implemented to
+ * This interface represents a generic Hopkey plugin. It can be implemented to
  * create custom plugins.
  *
  * @property {string} pluginType - the type associated with the concrete plugin that implements the IPlugin interface

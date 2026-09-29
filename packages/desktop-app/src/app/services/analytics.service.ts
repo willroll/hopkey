@@ -3,7 +3,7 @@ import posthog from "posthog-js";
 import { User, Role } from "./team-service";
 import { environment } from "../../environments/environment";
 import { AppProviderService } from "./app-provider.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 @Injectable({
   providedIn: "root",
@@ -48,7 +48,7 @@ export class AnalyticsService {
           eventName,
           Object.assign(
             {
-              ["leapp_agent"]: "Desktop App",
+              ["hopkey_agent"]: "Desktop App",
               environment: environment.production ? "production" : "development",
               $set: { email: signedInUser.email },
             },
@@ -87,7 +87,7 @@ export class AnalyticsService {
 
   capturePageView(): void {
     try {
-      this.myPosthog.capture("$pageview", { ["leapp_agent"]: "Desktop App" });
+      this.myPosthog.capture("$pageview", { ["hopkey_agent"]: "Desktop App" });
     } catch (err: any) {
       console.log("PostHog error: " + err.toString());
     }

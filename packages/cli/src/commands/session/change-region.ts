@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { region, sessionId } from "../../flags";
 
-export default class ChangeSessionRegion extends LeappCommand {
+export default class ChangeSessionRegion extends HopkeyCommand {
   static description = "Change a session region";
 
-  static examples = [`$leapp session change-region`, `$leapp session change-region --sessionId SESSIONID --region REGION`];
+  static examples = [`$hopkey session change-region`, `$hopkey session change-region --sessionId SESSIONID --region REGION`];
 
   static flags = {
     sessionId,
@@ -20,7 +20,7 @@ export default class ChangeSessionRegion extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(ChangeSessionRegion);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const selectedSession = await this.selectSession();
         const selectedRegion = await this.selectRegion(selectedSession);
         await this.changeSessionRegion(selectedSession, selectedRegion);

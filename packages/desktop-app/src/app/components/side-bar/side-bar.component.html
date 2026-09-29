@@ -33,13 +33,13 @@
 
         <div class="divider"></div>
 
-        <div [disabled]="doesRemoteWorkspaceExist || isLeappTeamStubbed" mat-menu-item
+        <div [disabled]="doesRemoteWorkspaceExist || isHopkeyTeamStubbed" mat-menu-item
              (click)="doesRemoteWorkspaceExist ? false : loginToRemoteWorkspace()">
           <img class="workspace-menu-icon" src="assets/images/sign-in.svg" alt="sign-in">
           <span>Sign-in Workspace</span>
         </div>
 
-        <div [disabled]="isLeappTeamStubbed" mat-menu-item (click)="showManageWorkspacesDialog()">
+        <div [disabled]="isHopkeyTeamStubbed" mat-menu-item (click)="showManageWorkspacesDialog()">
           <img class="workspace-menu-icon" src="assets/images/buildings.svg" alt="manage-workspaces">
           <span>Manage Workspaces</span>
         </div>
@@ -56,7 +56,7 @@
           <span>Settings...</span>
         </div>
 
-        <div [disabled]="!canLockWorkspace || isLeappTeamStubbed" mat-menu-item (click)="logoutFromRemoteWorkspace(true)">
+        <div [disabled]="!canLockWorkspace || isHopkeyTeamStubbed" mat-menu-item (click)="logoutFromRemoteWorkspace(true)">
           <img class="workspace-menu-icon" src="assets/images/sign-out.svg" alt="sign-out">
           <span>Lock</span>
         </div>

@@ -14,14 +14,14 @@ structured_data_how_to_tip4: "Click on the _Create Session_ button."
 With LocalStack you can emulate AWS cloud services with a fully functional cloud stack on your local machine.
 Develop and test your cloud applications with the full cloud experience, but without the hassle of the remote cloud.
 
-You can use Leapp to create a LocalStack session that can then be used to set your local credential file and access your LocalStack resources.
+You can use Hopkey to create a LocalStack session that can then be used to set your local credential file and access your LocalStack resources.
 
 !!! Info
 
     You need to [install LocalStack](https://docs.localstack.cloud/getting-started/){: target='_blank'} in order to use the AWS cloud emulation features
 
 
-## How to configure a LocalStack session in Leapp
+## How to configure a LocalStack session in Hopkey
 
 1. From the top bar, click on the plus icon to add a new session.
 2. Select _LocalStack_ as the Cloud Provider.

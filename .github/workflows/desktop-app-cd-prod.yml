@@ -1,4 +1,4 @@
-name: Leapp Desktop App CD - prod
+name: Hopkey Desktop App CD - prod
 
 on:
   push:
@@ -80,7 +80,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -91,10 +91,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run test
           npm run enable-team-features-prod
@@ -111,16 +111,16 @@ jobs:
           rm -Rf ./release/builder-effective-config.yaml
           TAG_VERSION=${{ needs.tag-validation.outputs.tag-version }}
           TAG_VERSION=${TAG_VERSION:1}
-          rm "./release/Leapp-${TAG_VERSION}-win.zip" ||:
-          powershell "Compress-Archive './release/Leapp Setup ${TAG_VERSION}.exe' './release/Leapp-${TAG_VERSION}-win.zip'"
-          powershell "Compress-Archive './release/Leapp Setup ${TAG_VERSION}.exe' './release/Leapp-windows.zip'"
-          powershell "Compress-Archive './release/' './release/Leapp-windows-release.zip'"
+          rm "./release/Hopkey-${TAG_VERSION}-win.zip" ||:
+          powershell "Compress-Archive './release/Hopkey Setup ${TAG_VERSION}.exe' './release/Hopkey-${TAG_VERSION}-win.zip'"
+          powershell "Compress-Archive './release/Hopkey Setup ${TAG_VERSION}.exe' './release/Hopkey-windows.zip'"
+          powershell "Compress-Archive './release/' './release/Hopkey-windows-release.zip'"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-windows-release.zip
-          path: packages/desktop-app/release/Leapp-windows-release.zip
+          name: Hopkey-windows-release.zip
+          path: packages/desktop-app/release/Hopkey-windows-release.zip
 
   build-linux:
     runs-on: ubuntu-latest
@@ -135,7 +135,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - name: Inject Team Feature
         if: ${{ env.TEAM_REPOSITORY != '' }}
         run: |
@@ -143,10 +143,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run test
           npm run enable-team-features-prod
@@ -163,8 +163,8 @@ jobs:
 
           TAG_VERSION=${{ needs.tag-validation.outputs.tag-version }}
           TAG_VERSION=${TAG_VERSION:1}
-          zip "./release/Leapp-deb.zip" "./release/Leapp_${TAG_VERSION}_amd64.deb"
-          zip "./release/Leapp-appImage.zip" "./release/Leapp-${TAG_VERSION}.AppImage"
+          zip "./release/Hopkey-deb.zip" "./release/Hopkey_${TAG_VERSION}_amd64.deb"
+          zip "./release/Hopkey-appImage.zip" "./release/Hopkey-${TAG_VERSION}.AppImage"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -194,7 +194,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -205,10 +205,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run test
           npm run enable-team-features-prod
@@ -258,10 +258,10 @@ jobs:
           rm -Rf ./release/builder-effective-config.yaml
           TAG_VERSION=${{ needs.tag-validation.outputs.tag-version }}
           TAG_VERSION=${TAG_VERSION:1}
-          rm "./release/Leapp-${TAG_VERSION}-mac.zip"
-          rm "./release/Leapp-${TAG_VERSION}-mac.zip.blockmap"
-          zip "./release/Leapp-${TAG_VERSION}-mac.zip" "./release/Leapp-${TAG_VERSION}.dmg"
-          zip "./release/Leapp-mac.zip" "./release/Leapp-${TAG_VERSION}.dmg"
+          rm "./release/Hopkey-${TAG_VERSION}-mac.zip"
+          rm "./release/Hopkey-${TAG_VERSION}-mac.zip.blockmap"
+          zip "./release/Hopkey-${TAG_VERSION}-mac.zip" "./release/Hopkey-${TAG_VERSION}.dmg"
+          zip "./release/Hopkey-mac.zip" "./release/Hopkey-${TAG_VERSION}.dmg"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -291,7 +291,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -302,10 +302,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run test
           npm run enable-team-features-prod
@@ -356,10 +356,10 @@ jobs:
           rm -Rf ./release/mac-arm64
           TAG_VERSION=${{ needs.tag-validation.outputs.tag-version }}
           TAG_VERSION=${TAG_VERSION:1}
-          rm "./release/Leapp-${TAG_VERSION}-arm64-mac.zip"
-          rm "./release/Leapp-${TAG_VERSION}-arm64-mac.zip.blockmap"
-          zip "./release/Leapp-${TAG_VERSION}-mac-arm64.zip" "./release/Leapp-${TAG_VERSION}-arm64.dmg"
-          zip "./release/Leapp-arm-mac.zip" "./release/Leapp-${TAG_VERSION}-arm64.dmg"
+          rm "./release/Hopkey-${TAG_VERSION}-arm64-mac.zip"
+          rm "./release/Hopkey-${TAG_VERSION}-arm64-mac.zip.blockmap"
+          zip "./release/Hopkey-${TAG_VERSION}-mac-arm64.zip" "./release/Hopkey-${TAG_VERSION}-arm64.dmg"
+          zip "./release/Hopkey-arm-mac.zip" "./release/Hopkey-${TAG_VERSION}-arm64.dmg"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

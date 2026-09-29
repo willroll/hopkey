@@ -1,59 +1,59 @@
-`leapp team`
+`hopkey team`
 ============
 
 Login to your Team account
 
-* [`leapp team login`](#leapp-team-login)
-* [`leapp team logout`](#leapp-team-logout)
-* [`leapp team status`](#leapp-team-status)
+* [`hopkey team login`](#hopkey-team-login)
+* [`hopkey team logout`](#hopkey-team-logout)
+* [`hopkey team status`](#hopkey-team-status)
 
-## `leapp team login`
+## `hopkey team login`
 
 Login to your Team account
 
 ```
 USAGE
-  $ leapp team login
+  $ hopkey team login
 
 DESCRIPTION
   Login to your Team account
 
 EXAMPLES
-  $leapp team login
+  $hopkey team login
 ```
 
-_See code: [src/commands/team/login.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/team/login.ts)_
+_See code: [src/commands/team/login.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/team/login.ts)_
 
-## `leapp team logout`
+## `hopkey team logout`
 
 Logout from your Team account
 
 ```
 USAGE
-  $ leapp team logout
+  $ hopkey team logout
 
 DESCRIPTION
   Logout from your Team account
 
 EXAMPLES
-  $leapp team logout
+  $hopkey team logout
 ```
 
-_See code: [src/commands/team/logout.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/team/logout.ts)_
+_See code: [src/commands/team/logout.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/team/logout.ts)_
 
-## `leapp team status`
+## `hopkey team status`
 
 Get the team login status
 
 ```
 USAGE
-  $ leapp team status
+  $ hopkey team status
 
 DESCRIPTION
   Get the team login status
 
 EXAMPLES
-  $leapp team status
+  $hopkey team status
 ```
 
-_See code: [src/commands/team/status.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/team/status.ts)_
+_See code: [src/commands/team/status.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/team/status.ts)_

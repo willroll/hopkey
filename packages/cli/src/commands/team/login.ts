@@ -1,10 +1,10 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 
-export default class TeamLogin extends LeappCommand {
+export default class TeamLogin extends HopkeyCommand {
   static description = "Login to your Team account";
 
-  static examples = [`$leapp team login`];
+  static examples = [`$hopkey team login`];
 
   static flags = {};
 

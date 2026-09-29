@@ -1,23 +1,23 @@
-`leapp workspace`
+`hopkey workspace`
 =================
 
 Show the current workspace
 
-* [`leapp workspace`](#leapp-workspace)
+* [`hopkey workspace`](#hopkey-workspace)
 
-## `leapp workspace`
+## `hopkey workspace`
 
 Show the current workspace
 
 ```
 USAGE
-  $ leapp workspace
+  $ hopkey workspace
 
 DESCRIPTION
   Show the current workspace
 
 EXAMPLES
-  $leapp workspace
+  $hopkey workspace
 ```
 
-_See code: [src/commands/workspace.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/workspace.ts)_
+_See code: [src/commands/workspace.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/workspace.ts)_

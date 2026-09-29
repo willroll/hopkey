@@ -1,8 +1,8 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { AwsIamUserService } from "@noovolari/leapp-core/services/session/aws/aws-iam-user-service";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { AwsIamUserService } from "@hopkey/core/services/session/aws/aws-iam-user-service";
 import CurrentSession from "./current";
-import { AzureSessionService } from "@noovolari/leapp-core/services/session/azure/azure-session-service";
+import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-session-service";
 
 const awsProvider = "aws";
 const azureProvider = "azure";

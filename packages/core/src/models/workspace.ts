@@ -10,7 +10,7 @@ import Segment from "./segment";
 import { AwsSsoIntegration } from "./aws/aws-sso-integration";
 import { AzureIntegration } from "./azure/azure-integration";
 import PluginStatus from "./plugin-status";
-import { LeappNotification } from "./notification";
+import { HopkeyNotification } from "./notification";
 import { RemoteWorkspacesSettingsMap } from "./remote-workspace-settings-map";
 
 export class Workspace {
@@ -28,7 +28,7 @@ export class Workspace {
   private _profiles: AwsNamedProfile[];
   private _remoteWorkspacesSettingsMap: RemoteWorkspacesSettingsMap;
 
-  private _notifications: LeappNotification[];
+  private _notifications: HopkeyNotification[];
 
   private _pluginsStatus: PluginStatus[];
 
@@ -250,11 +250,11 @@ export class Workspace {
     this._samlRoleSessionDuration = duration;
   }
 
-  get notifications(): LeappNotification[] {
+  get notifications(): HopkeyNotification[] {
     return this._notifications;
   }
 
-  set notifications(notifications: LeappNotification[]) {
+  set notifications(notifications: HopkeyNotification[]) {
     this._notifications = notifications;
   }
 

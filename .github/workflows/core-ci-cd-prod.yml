@@ -1,4 +1,4 @@
-name: Leapp Core CI/CD - prod
+name: Hopkey Core CI/CD - prod
 
 on:
   push:

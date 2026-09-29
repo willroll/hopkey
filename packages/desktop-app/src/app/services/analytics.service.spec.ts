@@ -59,7 +59,7 @@ describe("AnalyticsService", () => {
     const spy2 = spyOn((service2 as any).myPosthog, "capture").and.stub();
     await service2.captureEvent("event", { dummy: "test" });
     expect(spy2).toHaveBeenCalledWith("event", {
-      ["leapp_agent"]: "Desktop App",
+      ["hopkey_agent"]: "Desktop App",
       environment: "development",
       $set: { email: "mocked@email.com" },
       dummy: "test",
@@ -109,7 +109,7 @@ describe("AnalyticsService", () => {
     const spy = spyOn((service as any).myPosthog, "capture").and.stub();
     service.capturePageView();
 
-    expect(spy).toHaveBeenCalledWith("$pageview", { ["leapp_agent"]: "Desktop App" });
+    expect(spy).toHaveBeenCalledWith("$pageview", { ["hopkey_agent"]: "Desktop App" });
   });
   it("reset()", () => {
     const spy = spyOn((service as any).myPosthog, "reset").and.stub();

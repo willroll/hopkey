@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import SetWorkspace from "./set-workspace";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 describe("SetWorkspace", () => {
   const getTestCommand = (cliProviderService: any = null, argv = []): any => {

@@ -1,9 +1,9 @@
-## Default Leapp directories
+## Default Hopkey directories
 
-Here the user can find all the directories that Leapp uses **directly** or **indirectly**.
+Here the user can find all the directories that Hopkey uses **directly** or **indirectly**.
 
 ### Installation path
-By default, Leapp is installed in the following locations:
+By default, Hopkey is installed in the following locations:
 
 === "MacOS"
 
@@ -14,47 +14,47 @@ By default, Leapp is installed in the following locations:
 === "Linux"
 
     ```
-    /opt/Leapp
+    /opt/Hopkey
     ```
 
 === "Windows"
 
     ```
-    C:\Users\<USER>\AppData\Local\Programs\Leapp
+    C:\Users\<USER>\AppData\Local\Programs\Hopkey
     ```
 
 ### Configuration files
-By default, Leapp stores the configuration files in the following locations:
+By default, Hopkey stores the configuration files in the following locations:
 
 === "MacOS"
 
     ```
-    ~/.Leapp
+    ~/.hopkey
     ```
 
 === "Linux"
 
     ```
-    ~/.Leapp
+    ~/.hopkey
     ```
 
 === "Windows"
 
     ```
-    C:\Users\<USER>\.Leapp
+    C:\Users\<USER>\.hopkey
     ```
 
 !!! Info
 
-    - **Leapp-lock.json** stores the Leapp configuration and is **encrypted**.
-        - On startup, if Leapp-lock.json is not found, Leapp will create an empty version of it.
-    - **Leapp-lock.backup.bin** stores a backup of Leapp-lock.json and is updated on startup if Leapp-lock.json is considered valid.
-        - On startup, if Leapp-lock.json is corrupted, Leapp-lock.backup.bin will be used to restore it.
+    - **hopkey-lock.json** stores the Hopkey configuration and is **encrypted**.
+        - On startup, if hopkey-lock.json is not found, Hopkey will create an empty version of it.
+    - **hopkey-lock.backup.bin** stores a backup of hopkey-lock.json and is updated on startup if hopkey-lock.json is considered valid.
+        - On startup, if hopkey-lock.json is corrupted, hopkey-lock.backup.bin will be used to restore it.
         - If both files are corrupted, a new empty configuration will be created.
-    - **.latest** contains the latest version number of Leapp. If missing, it will be created again on startup.
+    - **.latest** contains the latest version number of Hopkey. If missing, it will be created again on startup.
 
 ### Credentials file
-By default, Leapp writes the credentials file in the following locations:
+By default, Hopkey writes the credentials file in the following locations:
 
 === "MacOS"
 
@@ -74,24 +74,24 @@ By default, Leapp writes the credentials file in the following locations:
     C:\Users\<USER>\.aws
     ```
 ### Logs file
-By default, Leapp writes logs to the following locations:
+By default, Hopkey writes logs to the following locations:
 
 === "MacOS"
 
     ```
-    ~/Library/Logs/Leapp/log.electronService.log
+    ~/Library/Logs/Hopkey/log.electronService.log
     ```
 
 === "Linux"
 
     ```
-    ~/.config/Leapp/logs/log.electronService.log
+    ~/.config/Hopkey/logs/log.electronService.log
     ```
 
 === "Windows"
 
     ```
-    C:\Users\<USER>\AppData\Roaming\Leapp\log.electronService.log
+    C:\Users\<USER>\AppData\Roaming\Hopkey\log.electronService.log
     ```
 !!! Info
 

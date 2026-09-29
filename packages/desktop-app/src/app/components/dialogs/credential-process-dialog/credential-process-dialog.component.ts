@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { WindowService } from "../../../services/window.service";
 
 @Component({
@@ -41,6 +41,6 @@ export class CredentialProcessDialogComponent implements OnInit {
   }
 
   openDoc(): void {
-    this.windowService.openExternalUrl("https://docs.leapp.cloud/latest/cli/");
+    this.windowService.openExternalUrl("https://willroll.github.io/hopkey/latest/cli/");
   }
 }

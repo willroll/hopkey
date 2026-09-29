@@ -1,24 +1,24 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
+import { Session } from "@hopkey/core/models/session";
+import { SessionStatus } from "@hopkey/core/models/session-status";
 import { sessionRole, sessionId, noInteractive } from "../../flags";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { AwsIamRoleChainedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-chained-session";
-import { AwsSsoRoleSession } from "@noovolari/leapp-core/models/aws/aws-sso-role-session";
-import { AzureSession } from "@noovolari/leapp-core/models/azure/azure-session";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { AwsIamRoleChainedSession } from "@hopkey/core/models/aws/aws-iam-role-chained-session";
+import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
+import { AzureSession } from "@hopkey/core/models/azure/azure-session";
 import { Args } from "@oclif/core";
 
-export default class StopSession extends LeappCommand {
+export default class StopSession extends HopkeyCommand {
   static description = "Stop a session";
 
   static examples = [
-    `$leapp session stop`,
-    `$leapp session stop SESSIONNAME`,
-    `$leapp session stop SESSIONNAME --sessionRole SESSIONROLE`,
-    `$leapp session stop SESSIONNAME --noInteractive`,
-    `$leapp session stop --sessionId SESSIONID`,
+    `$hopkey session stop`,
+    `$hopkey session stop SESSIONNAME`,
+    `$hopkey session stop SESSIONNAME --sessionRole SESSIONROLE`,
+    `$hopkey session stop SESSIONNAME --noInteractive`,
+    `$hopkey session stop --sessionId SESSIONID`,
   ];
 
   static flags = {
@@ -28,7 +28,7 @@ export default class StopSession extends LeappCommand {
   };
 
   static args = {
-    sessionName: Args.string({ required: false, description: "Name of the Leapp session" }),
+    sessionName: Args.string({ required: false, description: "Name of the Hopkey session" }),
   };
 
   constructor(argv: string[], config: Config) {

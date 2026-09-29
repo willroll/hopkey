@@ -1,5 +1,5 @@
 owner: Noovolari
-repo: leapp
+repo: hopkey
 provider: github
 releaseType: release
-updaterCacheDirName: leapp-updater
+updaterCacheDirName: hopkey-updater

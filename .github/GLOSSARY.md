@@ -2,7 +2,7 @@
 # Identity Provider
 
 Trusted system entity responsible for managing information of principals and provide authentication. 
-Leapp defines **only one** Identity Provider to have a single identity source to access the multi-cloud environment.
+Hopkey defines **only one** Identity Provider to have a single identity source to access the multi-cloud environment.
 
 # Principal
 
@@ -81,7 +81,7 @@ to perform this action from different Cloud Accounts.
 # Cloud Policy
 
 It's a set of rules and permissions associated with a Cloud Role. It defines access rights to Cloud Assets 
-and the right to perform an Assume Role action. Leapp distinguishes between Access and Trust Policies.
+and the right to perform an Assume Role action. Hopkey distinguishes between Access and Trust Policies.
 
 ### Access Policy
 
@@ -94,7 +94,7 @@ The policy that implements the trust relationship between two entities.
 # Application
 
 A logical group of parameters defined inside the Identity Provider. This set of parameters enables a correct 
-federation process between the Identity Provider and a Federated Account. As far as now, Leapp supports a single 
+federation process between the Identity Provider and a Federated Account. As far as now, Hopkey supports a single 
 type of Application: G Suite SAML App.
 
 ### SAML App
@@ -111,7 +111,7 @@ A way to access a Cloud Account's assets through a set of credentials.
 
 # Federated Access
 It's a way to obtain access to cloud assets in an account federated with external Identity Provider.
-Leapp currently supports 2 types of federated access:
+Hopkey currently supports 2 types of federated access:
 
 - **aws Federated Access** - A strategy to allow a Principal on G Suite to access a Federated Account on aws. 
 - **Azure Federated Access** - A strategy to allow access to one or more Azure Subscriptions, that belong to an Azure Tenant, through means of an Azure Active Directory.

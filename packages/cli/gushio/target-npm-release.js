@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'release',
-    description: 'Release the leapp-cli tool on NPM',
+    description: 'Release the hopkey-cli tool on NPM',
     version: '0.1',
   },
   run: async () => {
@@ -10,7 +10,7 @@ module.exports = {
     const checkNpmCoreVersion = require('./check-npm-core-version')
 
     try {
-      console.log('Publishing leapp-cli tool... ')
+      console.log('Publishing hopkey-cli tool... ')
 
       await checkNpmCoreVersion(path, shellJs)
 
@@ -19,7 +19,7 @@ module.exports = {
       if (result.code !== 0) {
         throw new Error(result.stderr)
       }
-      console.log('leapp-cli published on npm successfully')
+      console.log('hopkey-cli published on npm successfully')
     } catch (e) {
       e.message = e.stack.red
       throw e

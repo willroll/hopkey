@@ -3,32 +3,32 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { AppService } from "../../../services/app.service";
 import { Router } from "@angular/router";
 import { MatTabGroup } from "@angular/material/tabs";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { LoggedEntry, LogLevel } from "@noovolari/leapp-core/services/log-service";
+import { constants } from "@hopkey/core/models/constants";
+import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
 import { MessageToasterService, ToastLevel } from "../../../services/message-toaster.service";
 import { WindowService } from "../../../services/window.service";
 import { AppProviderService } from "../../../services/app-provider.service";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { CredentialProcessDialogComponent } from "../credential-process-dialog/credential-process-dialog.component";
 import { OptionsService } from "../../../services/options.service";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { SessionService } from "@noovolari/leapp-core/services/session/session-service";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { SessionService } from "@hopkey/core/services/session/session-service";
+import { SessionStatus } from "@hopkey/core/models/session-status";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
 import { AppNativeService } from "../../../services/app-native.service";
-import { PluginContainer } from "@noovolari/leapp-core/plugin-sdk/plugin-manager-service";
-import { BillingPeriod, LeappProPreCheckoutDialogComponent } from "../leapp-pro-pre-checkout-dialog/leapp-pro-pre-checkout-dialog.component";
+import { PluginContainer } from "@hopkey/core/plugin-sdk/plugin-manager-service";
+import { BillingPeriod, HopkeyProPreCheckoutDialogComponent } from "../hopkey-pro-pre-checkout-dialog/hopkey-pro-pre-checkout-dialog.component";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { colorThemeSubject } from "../../check-icon-svg/check-icon-svg.component";
 
-export enum LeappPlanStatus {
+export enum HopkeyPlanStatus {
   free = "free",
   proPending = "proPending",
   proEnabled = "proEnabled",
   enterprise = "enterprise",
 }
 
-export const globalLeappProPlanStatus = new BehaviorSubject<LeappPlanStatus>(LeappPlanStatus.free);
+export const globalHopkeyProPlanStatus = new BehaviorSubject<HopkeyPlanStatus>(HopkeyPlanStatus.free);
 
 @Component({
   selector: "app-options-dialog",
@@ -104,9 +104,9 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
   extensionEnabled: boolean;
 
-  eEnabledLeappPlanStatus = LeappPlanStatus;
-  leappStatusSubscription: Subscription;
-  leappPlanStatus;
+  eEnabledHopkeyPlanStatus = HopkeyPlanStatus;
+  hopkeyStatusSubscription: Subscription;
+  hopkeyPlanStatus;
 
   exporting: boolean;
   isUserSignedIn: boolean;
@@ -146,7 +146,7 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.leappStatusSubscription?.unsubscribe();
+    this.hopkeyStatusSubscription?.unsubscribe();
     this.signedInUserStateSubscription?.unsubscribe();
   }
 
@@ -186,17 +186,17 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.selectedSsmRegionBehaviour = this.optionsService.ssmRegionBehaviour || constants.ssmRegionNo;
 
-    this.leappStatusSubscription = globalLeappProPlanStatus.subscribe((value) => (this.leappPlanStatus = value));
+    this.hopkeyStatusSubscription = globalHopkeyProPlanStatus.subscribe((value) => (this.hopkeyPlanStatus = value));
 
     try {
-      const plan = await this.appProviderService.keychainService.getSecret("Leapp", "leapp-enabled-plan");
+      const plan = await this.appProviderService.keychainService.getSecret("Hopkey", "hopkey-enabled-plan");
       if (plan) {
-        globalLeappProPlanStatus.next(plan as unknown as LeappPlanStatus);
+        globalHopkeyProPlanStatus.next(plan as unknown as HopkeyPlanStatus);
       } else {
-        globalLeappProPlanStatus.next(LeappPlanStatus.free);
+        globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
       }
     } catch (err) {
-      globalLeappProPlanStatus.next(LeappPlanStatus.free);
+      globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
     }
 
     const selectedWorkspace = this.appProviderService.teamService.workspacesState.getValue().find((workspaceState) => workspaceState.selected);
@@ -576,7 +576,7 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
   openPluginFolder(): void {
     this.appProviderService.pluginManagerService.verifyAndGeneratePluginFolderIfMissing();
-    this.appNativeService.shell.showItemInFolder(this.appNativeService.path.join(this.appNativeService.os.homedir(), ".Leapp", "plugins"));
+    this.appNativeService.shell.showItemInFolder(this.appNativeService.path.join(this.appNativeService.os.homedir(), ".hopkey", "plugins"));
   }
 
   toggleExtension(): void {
@@ -584,8 +584,13 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     this.optionsService.extensionEnabled = this.extensionEnabled;
   }
 
-  openLeappProPreCheckoutDialog(): void {
-    this.modalService.show(LeappProPreCheckoutDialogComponent, { animated: false, class: "pre-checkout-modal", backdrop: "static", keyboard: false });
+  openHopkeyProPreCheckoutDialog(): void {
+    this.modalService.show(HopkeyProPreCheckoutDialogComponent, {
+      animated: false,
+      class: "pre-checkout-modal",
+      backdrop: "static",
+      keyboard: false,
+    });
   }
 
   setBillingPeriod(): void {
@@ -593,8 +598,8 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   async contactSupport(): Promise<void> {
-    const email = await this.appProviderService.keychainService.getSecret("Leapp", "leapp-enabled-plan-email");
-    this.windowService.openExternalUrl(`mailto:support@noovolari.com?subject=Leapp%20Sign-up%20support%20request%20${email}`);
+    const email = await this.appProviderService.keychainService.getSecret("Hopkey", "hopkey-enabled-plan-email");
+    this.windowService.openExternalUrl(`mailto:support@noovolari.com?subject=Hopkey%20Sign-up%20support%20request%20${email}`);
   }
 
   contactSales(): void {

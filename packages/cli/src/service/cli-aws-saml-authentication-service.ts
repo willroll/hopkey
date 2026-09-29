@@ -1,8 +1,8 @@
 const puppeteer = require("puppeteer");
-import { IAwsSamlAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-saml-authentication-service";
-import { AwsSamlAssertionExtractionService } from "@noovolari/leapp-core/services/aws-saml-assertion-extraction-service";
-import { CloudProviderType } from "@noovolari/leapp-core/models/cloud-provider-type";
-import { LoggedException, LogLevel } from "@noovolari/leapp-core/services/log-service";
+import { IAwsSamlAuthenticationService } from "@hopkey/core/interfaces/i-aws-saml-authentication-service";
+import { AwsSamlAssertionExtractionService } from "@hopkey/core/services/aws-saml-assertion-extraction-service";
+import { CloudProviderType } from "@hopkey/core/models/cloud-provider-type";
+import { LoggedException, LogLevel } from "@hopkey/core/services/log-service";
 
 export class CliAwsSamlAuthenticationService implements IAwsSamlAuthenticationService {
   private browser: any;

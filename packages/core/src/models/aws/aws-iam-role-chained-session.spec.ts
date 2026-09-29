@@ -25,6 +25,6 @@ describe("AWS IAM Role Chained Session Model", () => {
   test("should create without a role session name", () => {
     const mockedChainedSession = new AwsIamRoleChainedSession(null, null, null, null, null);
     expect(mockedChainedSession).toBeInstanceOf(AwsIamRoleChainedSession);
-    expect(mockedChainedSession.roleSessionName).toEqual(`assumed-from-leapp`);
+    expect(mockedChainedSession.roleSessionName).toEqual(`assumed-from-hopkey`);
   });
 });

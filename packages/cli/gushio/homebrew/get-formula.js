@@ -1,7 +1,7 @@
 module.exports = (version, tarballUrl, tarballSha256) => `require "language/node"
 
-class LeappCli < Formula
-  desc "Install Leapp CLI"
+class HopkeyCli < Formula
+  desc "Install Hopkey CLI"
   homepage "https://leapp.cloud"
   version "${version}"
   url "${tarballUrl}"
@@ -17,6 +17,6 @@ class LeappCli < Formula
   end
 
   test do
-    system bin/"leapp", "version"
+    system bin/"hopkey", "version"
   end
 end`

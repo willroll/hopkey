@@ -5,14 +5,14 @@ import "jasmine";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { serialize } from "class-transformer";
 import { AppService } from "./app/services/app.service";
-import { Workspace } from "@noovolari/leapp-core/models/workspace";
-import { FileService } from "@noovolari/leapp-core/services/file-service";
-import { KeychainService } from "@noovolari/leapp-core/services/keychain-service";
+import { Workspace } from "@hopkey/core/models/workspace";
+import { FileService } from "@hopkey/core/services/file-service";
+import { KeychainService } from "@hopkey/core/services/keychain-service";
 import { HttpClient, HttpHandler } from "@angular/common/http";
 import { AppNativeService } from "./app/services/app-native.service";
 import { AppProviderService } from "./app/services/app-provider.service";
 import { MessageToasterService } from "./app/services/message-toaster.service";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
 
 export class MockTray {
   constructor() {}
@@ -71,7 +71,7 @@ const mustInjected = (): any[] => {
   const spyMessageToasterService = jasmine.createSpyObj("MessageToasterService", ["toast"]);
   spyMessageToasterService.toast.and.returnValue(true);
 
-  const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+  const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
     fileService: spyFileService,
     loggingService: spyLoggingService,
     workspaceService: {
@@ -99,7 +99,7 @@ const mustInjected = (): any[] => {
     { provide: KeychainService, useValue: spyKeychainService },
     { provide: MatSnackBar, useValue: spyMatSnackBar },
     { provide: AppNativeService, useValue: spyElectronService },
-    { provide: AppProviderService, useValue: spyLeappCoreService },
+    { provide: AppProviderService, useValue: spyHopkeyCoreService },
     { provide: MessageToasterService, useValue: spyMessageToasterService },
   ];
 };

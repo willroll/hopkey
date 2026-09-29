@@ -39,13 +39,13 @@ The **Expiration** field allows the generated credentials to be cached and reuse
 
     Temporary credentials in the credentials file reduce **potential blast radius** in case of machine exploit but they require to be refreshed every time they expire.
 
-### How Leapp works with Credential Process
+### How Hopkey works with Credential Process
 
 !!! Info
 
-    **Requirements**: this credentials generation method requires that both Leapp desktop app and CLI are installed.
+    **Requirements**: this credentials generation method requires that both Hopkey desktop app and CLI are installed.
 
-1) Open your Leapp desktop app and go to the settings panel (<img src="../../images/gear.png" width="20" alt="option icon" />).
+1) Open your Hopkey desktop app and go to the settings panel (<img src="../../images/gear.png" width="20" alt="option icon" />).
 
 2) In the *general section* change the *AWS Credential Generation* from "credential-file-method" to **"credential-process-method"**.
 
@@ -57,7 +57,7 @@ The **Expiration** field allows the generated credentials to be cached and reuse
 
 ```yaml
 [profile PROFILE_NAME]
-credential_process=leapp session generate SESSION_ID
+credential_process=hopkey session generate SESSION_ID
 region=REGION
 ```
 

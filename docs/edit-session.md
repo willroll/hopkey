@@ -1,10 +1,10 @@
-Leapp allows the user to **edit an existing session** excluding those generated from an AWS integration.
+Hopkey allows the user to **edit an existing session** excluding those generated from an AWS integration.
 
 !!! Info
   
     Integration derived Sessions can’t be changed
 
-To edit an existing session just *right-click on a session* in the Leapp list (see below), and select "edit session".
+To edit an existing session just *right-click on a session* in the Hopkey list (see below), and select "edit session".
 A new modal will appear, allowing the user to choose which parameters to change.
 
 ![edit session](../images/editsession.png)
@@ -43,15 +43,15 @@ After modifying all the parameters, a user can test their validity with *test cr
 
 ![](../images/testconnection.png)
 
-Clicking this button allows Leapp to do a dry run on your parameters, and if valid, a new set of credentials 
+Clicking this button allows Hopkey to do a dry run on your parameters, and if valid, a new set of credentials 
 will be generated (but not used) and an informative toast will appear to tell you that they can be used successfully.
 
 ### How we handle Secrets when Editing a Session
 
 **No secrets will be saved in plain text on your machine**. 
-Leapp saves secrets by replacing values in the system keychain, 
+Hopkey saves secrets by replacing values in the system keychain, 
 using a combination of an informative name plus the session hidden id.
 
 This way we reduce potential blast radius of an attacker tampering your machine.
 
-When editing a session, Leapp will hide your secrets and you are also **unable to copy/paste them from the App**.
+When editing a session, Hopkey will hide your secrets and you are also **unable to copy/paste them from the App**.

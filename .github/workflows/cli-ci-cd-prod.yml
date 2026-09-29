@@ -1,4 +1,4 @@
-name: Leapp CLI CI/CD - prod
+name: Hopkey CLI CI/CD - prod
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -44,10 +44,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run test
           npm run enable-team-features-prod
@@ -123,7 +123,7 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: main
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -134,10 +134,10 @@ jobs:
           npm install
           npm run build
           cd ../..
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-core
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-core
           npm run bootstrap
-          cd ../leapp-team-service
+          cd ../hopkey-team-service
           npm install
           npm run enable-team-features-prod
       - name: Bootstrap

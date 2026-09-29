@@ -3,9 +3,9 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { AppComponent } from "./app.component";
 import { mustInjected } from "../base-injectables";
 import { AppProviderService } from "./services/app-provider.service";
-import { Workspace } from "@noovolari/leapp-core/models/workspace";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { LoggedEntry, LogLevel } from "@noovolari/leapp-core/services/log-service";
+import { Workspace } from "@hopkey/core/models/workspace";
+import { constants } from "@hopkey/core/models/constants";
+import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
 
 describe("AppComponent", () => {
   beforeEach(waitForAsync(() => {
@@ -22,7 +22,7 @@ describe("AppComponent", () => {
       createWorkspace: () => {},
       getWorkspace: (): Workspace => new Workspace(),
     });
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       workspaceService: spyBehaviouralSubjectService,
       repository: spyRepositoryService,
       awsCoreService: { getRegions: () => [] },
@@ -30,7 +30,7 @@ describe("AppComponent", () => {
 
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyLeappCoreService })),
+      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyHopkeyCoreService })),
       declarations: [AppComponent],
     }).compileComponents();
   }));
@@ -44,9 +44,9 @@ describe("AppComponent", () => {
     (app as any).fileService = {};
     (app as any).fileService.readFileSync = jasmine
       .createSpy()
-      .and.returnValue("leapp://01255ef8-open-leapp?email=test&firstName=n&lastName=g&teamName=t");
+      .and.returnValue("hopkey://01255ef8-open-hopkey?email=test&firstName=n&lastName=g&teamName=t");
     (app as any).fileService.existsSync = jasmine.createSpy().and.returnValue(true);
-    (app as any).isOpenLeappDeepLink = jasmine.createSpy().and.returnValue(true);
+    (app as any).isOpenHopkeyDeepLink = jasmine.createSpy().and.returnValue(true);
     (app as any).awsSsoRoleService = { setAwsIntegrationDelegate: () => {} };
     (app as any).windowService = { blockDevToolInProductionMode: () => {} };
     (app as any).updaterService = { createFoldersIfMissing: () => {} };
@@ -103,7 +103,7 @@ describe("AppComponent", () => {
 
     app = fixture.debugElement.componentInstance;
     (app as any).behaviouralSubjectService = { sessions: [] };
-    (app as any).isOpenLeappDeepLink = jasmine.createSpy().and.returnValue(true);
+    (app as any).isOpenHopkeyDeepLink = jasmine.createSpy().and.returnValue(true);
     (app as any).router.navigate = jasmine.createSpy().and.callFake(() => {});
     (app as any).pluginManagerService = { installPlugin: jasmine.createSpy().and.returnValue("") };
 
@@ -131,7 +131,7 @@ describe("AppComponent", () => {
       }
     };
     const mockedCallback2 = (url) => {
-      if ((app as any).isOpenLeappDeepLink(url)) {
+      if ((app as any).isOpenHopkeyDeepLink(url)) {
         const afterQuestionMark = url.split("?")[1];
         const splitByAmpersand = afterQuestionMark?.split("&");
         const teamMemberEmail = splitByAmpersand[0]?.split("=")[1];
@@ -168,7 +168,7 @@ describe("AppComponent", () => {
     expect((app as any).appProviderService.sessionManagementService.updateSessions).toHaveBeenCalled();
 
     ipcRenderer.on("PLUGIN_URL", null);
-    expect((app as any).isOpenLeappDeepLink).toHaveBeenCalled();
+    expect((app as any).isOpenHopkeyDeepLink).toHaveBeenCalled();
     expect((app as any).router.navigate).toHaveBeenCalled();
   });
 
@@ -176,9 +176,9 @@ describe("AppComponent", () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
 
-    let result = (app as any).isOpenLeappDeepLink("https://01255ef8-open-leapp?email=test@gmail.com");
+    let result = (app as any).isOpenHopkeyDeepLink("https://01255ef8-open-hopkey?email=test@gmail.com");
     expect(result).toBeTruthy();
-    result = (app as any).isOpenLeappDeepLink("https://open-plugin-name");
+    result = (app as any).isOpenHopkeyDeepLink("https://open-plugin-name");
     expect(result).toBeFalsy();
   });
 

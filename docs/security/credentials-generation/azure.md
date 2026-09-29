@@ -17,7 +17,7 @@ After that, these are the steps required to log in and then retrieve Azure sessi
 
 1. *msal_token_cache* and *azureProfile.json* files are cleaned for security reasons.
 2. We execute `az login --tenantId <TENANTID>`. We do this to obtain the updated user profile and the refresh token (associated to this integration).
-3. We extract all the Azure subscriptions associated with the integration and for each one we map a Leapp Azure session.
+3. We extract all the Azure subscriptions associated with the integration and for each one we map a Hopkey Azure session.
 4. We extract the *refresh token*, *account*, and *profile* information from *msal_token_cache* and *azureProfile.json* and persist them in the [System's vault](../system-vault.md){: target='_blank'}.
 5. We also remove the previous information from the original files, to increase security and avoid external tampering.
 
@@ -25,9 +25,9 @@ After that, these are the steps required to log in and then retrieve Azure sessi
 
 !!! info
 
-    In the current version of Leapp we can only start one Azure session at a time.
+    In the current version of Hopkey we can only start one Azure session at a time.
 
-For each subscription retrieved upon login to a specific integration, we define a new Leapp Azure Session.
+For each subscription retrieved upon login to a specific integration, we define a new Hopkey Azure Session.
 To start an Azure session we follow these steps.
 
 1. Recover *refresh token*, *account*, and *profile* information from the Vault and we use them alongside sessionId (Subscription id) in the start operation.
@@ -67,4 +67,4 @@ To stop the session (because we only have one active at a time) we do the follow
   
 !!! info
 
-    Leapp enhances security by forcingly refresh access token every 20 minutes and by removing refresh token from the msal_token_cache.
+    Hopkey enhances security by forcingly refresh access token every 20 minutes and by removing refresh token from the msal_token_cache.

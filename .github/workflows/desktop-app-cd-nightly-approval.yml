@@ -1,4 +1,4 @@
-name: Leapp Desktop App CD - nightly - approval
+name: Hopkey Desktop App CD - nightly - approval
 
 on:
   workflow_dispatch:
@@ -65,15 +65,15 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: development
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
       - name: Inject Team Feature
         if: ${{ env.TEAM_REPOSITORY != '' }}
         run: |
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-service
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-service
           npm run enable-team-features-dev
       - name: Build Win desktop app (nightly)
         shell: bash
@@ -86,8 +86,8 @@ jobs:
           rm -Rf ./release/builder-debug.yml
           rm -Rf ./release/builder-effective-config.yaml
           TAG_VERSION=$(cat nightly-version)
-          rm "./release/Leapp-$TAG_VERSION-win.zip" ||:
-          powershell "Compress-Archive './release/Leapp Setup $TAG_VERSION.exe' './release/Leapp-$TAG_VERSION-win.zip'"
+          rm "./release/Hopkey-$TAG_VERSION-win.zip" ||:
+          powershell "Compress-Archive './release/Hopkey Setup $TAG_VERSION.exe' './release/Hopkey-$TAG_VERSION-win.zip'"
       - name: Prepare tag version for artifact upload
         id: release
         shell: bash
@@ -98,8 +98,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-${{ steps.release.outputs.TAG_VERSION }}-win.zip
-          path: packages/desktop-app/release/Leapp-${{ steps.release.outputs.TAG_VERSION }}-win.zip
+          name: Hopkey-${{ steps.release.outputs.TAG_VERSION }}-win.zip
+          path: packages/desktop-app/release/Hopkey-${{ steps.release.outputs.TAG_VERSION }}-win.zip
 
   build-linux:
     runs-on: ubuntu-latest
@@ -112,15 +112,15 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: development
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
       - name: Inject Team Feature
         if: ${{ env.TEAM_REPOSITORY != '' }}
         run: |
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-service
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-service
           npm run enable-team-features-dev
       - name: Build Linux desktop app (nightly)
         run: |
@@ -140,13 +140,13 @@ jobs:
       - name: Upload artifacts (.deb)
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-${{ steps.release.outputs.TAG_VERSION }}_amd64.deb
-          path: packages/desktop-app/release/Leapp_${{ steps.release.outputs.TAG_VERSION }}_amd64.deb
+          name: Hopkey-${{ steps.release.outputs.TAG_VERSION }}_amd64.deb
+          path: packages/desktop-app/release/Hopkey_${{ steps.release.outputs.TAG_VERSION }}_amd64.deb
       - name: Upload artifacts (.AppImage)
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-${{ steps.release.outputs.TAG_VERSION }}.AppImage
-          path: packages/desktop-app/release/Leapp-${{ steps.release.outputs.TAG_VERSION }}.AppImage
+          name: Hopkey-${{ steps.release.outputs.TAG_VERSION }}.AppImage
+          path: packages/desktop-app/release/Hopkey-${{ steps.release.outputs.TAG_VERSION }}.AppImage
 
   build-macos-x64:
     runs-on: macos-latest
@@ -159,15 +159,15 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: development
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
       - name: Inject Team Feature
         if: ${{ env.TEAM_REPOSITORY != '' }}
         run: |
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-service
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-service
           npm run enable-team-features-dev
       - name: Build macOS x64 desktop app (nightly)
         uses: nick-fields/retry@v3
@@ -212,9 +212,9 @@ jobs:
           rm -Rf ./release/builder-debug.yml
           rm -Rf ./release/builder-effective-config.yaml
           TAG_VERSION=$(cat nightly-version)
-          rm "./release/Leapp-$TAG_VERSION-mac.zip"
-          rm "./release/Leapp-$TAG_VERSION-mac.zip.blockmap"
-          zip "./release/Leapp-$TAG_VERSION-mac.zip" "./release/Leapp-$TAG_VERSION.dmg"
+          rm "./release/Hopkey-$TAG_VERSION-mac.zip"
+          rm "./release/Hopkey-$TAG_VERSION-mac.zip.blockmap"
+          zip "./release/Hopkey-$TAG_VERSION-mac.zip" "./release/Hopkey-$TAG_VERSION.dmg"
       - name: Prepare tag version for artifact upload
         id: release
         run: |
@@ -224,8 +224,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-${{ steps.release.outputs.TAG_VERSION }}.dmg
-          path: packages/desktop-app/release/Leapp-${{ steps.release.outputs.TAG_VERSION }}.dmg
+          name: Hopkey-${{ steps.release.outputs.TAG_VERSION }}.dmg
+          path: packages/desktop-app/release/Hopkey-${{ steps.release.outputs.TAG_VERSION }}.dmg
 
   build-macos-arm:
     runs-on: macos-latest
@@ -238,15 +238,15 @@ jobs:
           repository: ${{ env.TEAM_REPOSITORY }}
           ref: development
           token: ${{ secrets.GH_TOKEN }}
-          path: leapp-team
+          path: hopkey-team
       - uses: actions/setup-python@v4
         with:
           python-version: "3.11"
       - name: Inject Team Feature
         if: ${{ env.TEAM_REPOSITORY != '' }}
         run: |
-          mv leapp-team ..
-          cd ../leapp-team/packages/leapp-team-service
+          mv hopkey-team ..
+          cd ../hopkey-team/packages/hopkey-team-service
           npm run enable-team-features-dev
       - name: Build macOS arm64 desktop app (nightly)
         uses: nick-fields/retry@v3
@@ -292,9 +292,9 @@ jobs:
           rm -Rf ./release/builder-effective-config.yaml
           rm -Rf ./release/mac-arm64
           TAG_VERSION=$(cat nightly-version)
-          rm "./release/Leapp-$TAG_VERSION-arm64-mac.zip"
-          rm "./release/Leapp-$TAG_VERSION-arm64-mac.zip.blockmap"
-          zip "./release/Leapp-$TAG_VERSION-mac-arm64.zip" "./release/Leapp-$TAG_VERSION-arm64.dmg"
+          rm "./release/Hopkey-$TAG_VERSION-arm64-mac.zip"
+          rm "./release/Hopkey-$TAG_VERSION-arm64-mac.zip.blockmap"
+          zip "./release/Hopkey-$TAG_VERSION-mac-arm64.zip" "./release/Hopkey-$TAG_VERSION-arm64.dmg"
       - name: Prepare tag version for artifact upload
         id: release
         run: |
@@ -304,8 +304,8 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Leapp-${{ steps.release.outputs.TAG_VERSION }}-arm64.dmg
-          path: packages/desktop-app/release/Leapp-${{ steps.release.outputs.TAG_VERSION }}-arm64.dmg
+          name: Hopkey-${{ steps.release.outputs.TAG_VERSION }}-arm64.dmg
+          path: packages/desktop-app/release/Hopkey-${{ steps.release.outputs.TAG_VERSION }}-arm64.dmg
 
   post-to-slack:
     runs-on: ubuntu-latest
@@ -320,6 +320,6 @@ jobs:
           # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
           channel-id: "C05S4TSQ919"
           # For posting a simple plain text message
-          slack-message: "${{ github.ref }} approval builds: https://github.com/Noovolari/leapp/actions/runs/${{ github.run_id }}"
+          slack-message: "${{ github.ref }} approval builds: https://github.com/willroll/hopkey/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}

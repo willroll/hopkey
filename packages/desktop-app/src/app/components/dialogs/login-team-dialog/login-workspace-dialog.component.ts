@@ -2,11 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { AppService } from "../../../services/app.service";
 import { OptionsService } from "../../../services/options.service";
 import { AppProviderService } from "../../../services/app-provider.service";
-import { LoggedEntry, LogLevel, LogService } from "@noovolari/leapp-core/services/log-service";
+import { LoggedEntry, LogLevel, LogService } from "@hopkey/core/services/log-service";
 import { ApiErrorCodes, FormErrorCodes, TeamService } from "../../../services/team-service";
 
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
-import { globalLeappProPlanStatus, LeappPlanStatus } from "../options-dialog/options-dialog.component";
+import { globalHopkeyProPlanStatus, HopkeyPlanStatus } from "../options-dialog/options-dialog.component";
 import { AnalyticsService } from "../../../services/analytics.service";
 
 @Component({
@@ -61,9 +61,9 @@ export class LoginWorkspaceDialogComponent implements OnInit {
         await this.analyticsService.captureEvent("Sign In");
 
         const teamOrPro = this.teamService.workspacesState.getValue().find((wState) => wState.type === "pro" || wState.type === "team");
-        const planStatus = teamOrPro.type === "team" ? LeappPlanStatus.enterprise : LeappPlanStatus.proEnabled;
-        await this.appProviderService.keychainService.saveSecret("Leapp", "leapp-enabled-plan", planStatus);
-        globalLeappProPlanStatus.next(planStatus);
+        const planStatus = teamOrPro.type === "team" ? HopkeyPlanStatus.enterprise : HopkeyPlanStatus.proEnabled;
+        await this.appProviderService.keychainService.saveSecret("Hopkey", "hopkey-enabled-plan", planStatus);
+        globalHopkeyProPlanStatus.next(planStatus);
         this.closeModal();
         if (doesWorkspaceExist) {
           await this.teamService.pullFromRemote();

@@ -1,10 +1,10 @@
 import { ux } from "@oclif/core";
 import { Config } from "@oclif/core/lib/config/config";
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 
-export default class ListIntegrations extends LeappCommand {
+export default class ListIntegrations extends HopkeyCommand {
   static description = "Show integrations list";
-  static examples = ["$leapp integration list"];
+  static examples = ["$hopkey integration list"];
 
   static flags = {
     ...ux.table.flags(),

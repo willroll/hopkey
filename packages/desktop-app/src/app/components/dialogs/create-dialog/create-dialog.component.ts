@@ -5,24 +5,24 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as uuid from "uuid";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { openIntegrationEvent } from "../../integration-bar/integration-bar.component";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { AwsIamRoleFederatedService } from "@noovolari/leapp-core/services/session/aws/aws-iam-role-federated-service";
-import { AwsIamUserService } from "@noovolari/leapp-core/services/session/aws/aws-iam-user-service";
-import { AwsIamRoleChainedService } from "@noovolari/leapp-core/services/session/aws/aws-iam-role-chained-service";
-import { LogLevel, LogService, LoggedEntry } from "@noovolari/leapp-core/services/log-service";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { AwsIamRoleFederatedService } from "@hopkey/core/services/session/aws/aws-iam-role-federated-service";
+import { AwsIamUserService } from "@hopkey/core/services/session/aws/aws-iam-user-service";
+import { AwsIamRoleChainedService } from "@hopkey/core/services/session/aws/aws-iam-role-chained-service";
+import { LogLevel, LogService, LoggedEntry } from "@hopkey/core/services/log-service";
 import { AppProviderService } from "../../../services/app-provider.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { WindowService } from "../../../services/window.service";
-import { AwsIamRoleFederatedSessionRequest } from "@noovolari/leapp-core/services/session/aws/aws-iam-role-federated-session-request";
-import { AwsIamUserSessionRequest } from "@noovolari/leapp-core/services/session/aws/aws-iam-user-session-request";
-import { AwsIamRoleChainedSessionRequest } from "@noovolari/leapp-core/services/session/aws/aws-iam-role-chained-session-request";
+import { AwsIamRoleFederatedSessionRequest } from "@hopkey/core/services/session/aws/aws-iam-role-federated-session-request";
+import { AwsIamUserSessionRequest } from "@hopkey/core/services/session/aws/aws-iam-user-session-request";
+import { AwsIamRoleChainedSessionRequest } from "@hopkey/core/services/session/aws/aws-iam-role-chained-session-request";
 import { MessageToasterService, ToastLevel } from "../../../services/message-toaster.service";
-import { LeappParseError } from "@noovolari/leapp-core/errors/leapp-parse-error";
-import { AzureSessionService } from "@noovolari/leapp-core/services/session/azure/azure-session-service";
+import { HopkeyParseError } from "@hopkey/core/errors/hopkey-parse-error";
+import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-session-service";
 import { OptionsService } from "../../../services/options.service";
-import { LocalstackSessionRequest } from "@noovolari/leapp-core/services/session/localstack/localstack-session-request";
-import { LocalstackSessionService } from "@noovolari/leapp-core/services/session/localstack/localstack-session-service";
+import { LocalstackSessionRequest } from "@hopkey/core/services/session/localstack/localstack-session-request";
+import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 
 @Component({
   selector: "app-create-dialog",
@@ -109,23 +109,23 @@ export class CreateDialogComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private bsModalService: BsModalService,
-    public leappCoreService: AppProviderService,
+    public hopkeyCoreService: AppProviderService,
     private windowService: WindowService,
     private messageToasterService: MessageToasterService
   ) {
-    this.behaviouralSubjectService = leappCoreService.behaviouralSubjectService;
-    this.awsIamRoleFederatedService = leappCoreService.awsIamRoleFederatedService;
-    this.awsIamUserService = leappCoreService.awsIamUserService;
-    this.awsIamRoleChainedService = leappCoreService.awsIamRoleChainedService;
-    this.azureSessionService = leappCoreService.azureSessionService;
-    this.localstackSessionService = leappCoreService.localstackSessionService;
-    this.loggingService = leappCoreService.logService;
+    this.behaviouralSubjectService = hopkeyCoreService.behaviouralSubjectService;
+    this.awsIamRoleFederatedService = hopkeyCoreService.awsIamRoleFederatedService;
+    this.awsIamUserService = hopkeyCoreService.awsIamUserService;
+    this.awsIamRoleChainedService = hopkeyCoreService.awsIamRoleChainedService;
+    this.azureSessionService = hopkeyCoreService.azureSessionService;
+    this.localstackSessionService = hopkeyCoreService.localstackSessionService;
+    this.loggingService = hopkeyCoreService.logService;
   }
 
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       // Get the workspace and the accounts you need
-      const workspace = this.leappCoreService.workspaceService.getWorkspace();
+      const workspace = this.hopkeyCoreService.workspaceService.getWorkspace();
 
       // We get all the applicable idp urls
       if (workspace.idpUrls && workspace.idpUrls.length > 0) {
@@ -149,7 +149,7 @@ export class CreateDialogComponent implements OnInit {
       this.firstTime = params["firstTime"] || !this.hasOneGoodSession;
 
       // Show the assumable accounts
-      this.assumerAwsSessions = this.leappCoreService.sessionManagementService.getAssumableSessions().map((session) => ({
+      this.assumerAwsSessions = this.hopkeyCoreService.sessionManagementService.getAssumableSessions().map((session) => ({
         sessionName: session.sessionName,
         session,
       }));
@@ -160,8 +160,8 @@ export class CreateDialogComponent implements OnInit {
       }
 
       // Get all regions and locations from app service lists
-      this.regions = this.leappCoreService.awsCoreService.getRegions();
-      this.locations = this.leappCoreService.azureCoreService.getLocations();
+      this.regions = this.hopkeyCoreService.awsCoreService.getRegions();
+      this.locations = this.hopkeyCoreService.azureCoreService.getLocations();
 
       // Select default values
       this.selectedRegion = workspace.defaultRegion || constants.defaultRegion || this.regions[0].region;
@@ -289,15 +289,15 @@ export class CreateDialogComponent implements OnInit {
   }
 
   /**
-   * Open the Leapp documentation in the default browser
+   * Open the Hopkey documentation in the default browser
    *
    */
   openAccessStrategyDocumentation(): void {
-    let url = "https://docs.leapp.cloud/latest/configuring-session/configure-aws-iam-role-federated/";
+    let url = "https://willroll.github.io/hopkey/latest/configuring-session/configure-aws-iam-role-federated/";
     if (this.provider === SessionType.awsIamRoleChained) {
-      url = "https://docs.leapp.cloud/latest/configuring-session/configure-aws-iam-role-chained/";
+      url = "https://willroll.github.io/hopkey/latest/configuring-session/configure-aws-iam-role-chained/";
     } else if (this.provider === SessionType.awsIamUser) {
-      url = "https://docs.leapp.cloud/latest/configuring-session/configure-aws-iam-user/";
+      url = "https://willroll.github.io/hopkey/latest/configuring-session/configure-aws-iam-user/";
     }
     this.windowService.openExternalUrl(url);
   }
@@ -430,9 +430,9 @@ export class CreateDialogComponent implements OnInit {
       }
 
       try {
-        await this.leappCoreService.teamService.pushToRemote();
+        await this.hopkeyCoreService.teamService.pushToRemote();
       } catch (error) {
-        this.leappCoreService.teamService.setSyncState("failed");
+        this.hopkeyCoreService.teamService.setSyncState("failed");
         throw error;
       }
 
@@ -451,13 +451,13 @@ export class CreateDialogComponent implements OnInit {
    */
   private addIpdUrlToWorkspace() {
     if (this.sessionType === SessionType.awsIamRoleFederated) {
-      const validate = this.leappCoreService.idpUrlService.validateIdpUrl(this.selectedIdpUrl.label);
+      const validate = this.hopkeyCoreService.idpUrlService.validateIdpUrl(this.selectedIdpUrl.label);
       if (validate === true) {
-        const idpUrl = this.leappCoreService.idpUrlService.createIdpUrl(this.selectedIdpUrl.label);
+        const idpUrl = this.hopkeyCoreService.idpUrlService.createIdpUrl(this.selectedIdpUrl.label);
         this.selectedIdpUrl.value = idpUrl.id;
       } else {
         if (validate.toString() !== "IdP URL already exists") {
-          throw new LeappParseError(this, validate.toString());
+          throw new HopkeyParseError(this, validate.toString());
         }
       }
     }
@@ -469,16 +469,16 @@ export class CreateDialogComponent implements OnInit {
    * @private
    */
   private addProfileToWorkspace() {
-    const validate = this.leappCoreService.namedProfileService.validateNewProfileName(this.selectedProfile.label);
+    const validate = this.hopkeyCoreService.namedProfileService.validateNewProfileName(this.selectedProfile.label);
     if (validate === true) {
-      const profile = this.leappCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label);
+      const profile = this.hopkeyCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label);
       this.selectedProfile.value = profile.id;
     } else {
       if (
         validate.toString() !== "Profile already exists" &&
-        this.leappCoreService.namedProfileService.getDefaultProfileId() !== this.selectedProfile.value
+        this.hopkeyCoreService.namedProfileService.getDefaultProfileId() !== this.selectedProfile.value
       ) {
-        throw new LeappParseError(this, validate.toString());
+        throw new HopkeyParseError(this, validate.toString());
       }
     }
   }

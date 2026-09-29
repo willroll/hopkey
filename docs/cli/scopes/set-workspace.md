@@ -1,30 +1,30 @@
-`leapp set-workspace`
+`hopkey set-workspace`
 =====================
 
-Set the current Leapp workspace
+Set the current Hopkey workspace
 
-* [`leapp set-workspace [WORKSPACENAME]`](#leapp-set-workspace-workspacename)
+* [`hopkey set-workspace [WORKSPACENAME]`](#hopkey-set-workspace-workspacename)
 
-## `leapp set-workspace [WORKSPACENAME]`
+## `hopkey set-workspace [WORKSPACENAME]`
 
-Set the current Leapp workspace
+Set the current Hopkey workspace
 
 ```console
 USAGE
-  $ leapp set-workspace [WORKSPACENAME]
+  $ hopkey set-workspace [WORKSPACENAME]
 
 ARGUMENTS
-  WORKSPACENAME  name of the Leapp Team remote workspace or local
+  WORKSPACENAME  name of the Hopkey Team remote workspace or local
 
 DESCRIPTION
-  Set the current Leapp workspace
+  Set the current Hopkey workspace
 
 EXAMPLES
-  $leapp team set-workspace
+  $hopkey team set-workspace
 
-  $leapp team set-workspace local
+  $hopkey team set-workspace local
 
-  $leapp team set-workspace WORKSPACE-NAME
+  $hopkey team set-workspace WORKSPACE-NAME
 ```
 
-_See code: [dist/commands/set-workspace.ts](https://github.com/noovolari/leapp/blob/v0.1.65/dist/commands/set-workspace.ts)_
+_See code: [dist/commands/set-workspace.ts](https://github.com/willroll/hopkey/blob/v0.1.65/dist/commands/set-workspace.ts)_

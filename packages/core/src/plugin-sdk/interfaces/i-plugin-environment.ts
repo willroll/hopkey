@@ -36,8 +36,8 @@ export interface IPluginEnvironment {
   openExternalUrl(loginUrl: string): void;
 
   /**
-   * Create a new Leapp Session from the createSessionData parameter. The type of its argument is SessionData.
-   * In particular, SessionData is an abstract class that contains Leapp Session metadata.
+   * Create a new Hopkey Session from the createSessionData parameter. The type of its argument is SessionData.
+   * In particular, SessionData is an abstract class that contains Hopkey Session metadata.
    * You have to pass a concrete implementation of the SessionData abstract clas to createSession.
    * Available concrete implementations are:
    *
@@ -45,7 +45,7 @@ export interface IPluginEnvironment {
    * - AwsIamRoleFederatedSessionData;
    * - AwsIamRoleChainedSessionData.
    *
-   * @param {SessionData} createSessionRequest - the metadata used to create the Leapp Session
+   * @param {SessionData} createSessionRequest - the metadata used to create the Hopkey Session
    * @see AwsIamUserSession
    * @see AwsIamRoleFederatedSession
    * @see AwsIamRoleChainedSession
@@ -56,14 +56,14 @@ export interface IPluginEnvironment {
   createSession(createSessionRequest: SessionData): Promise<string>;
 
   /**
-   * This method allows you to clone the given Leapp Session.
-   * This operation is allowed for the following Leapp Session types:
+   * This method allows you to clone the given Hopkey Session.
+   * This operation is allowed for the following Hopkey Session types:
    *
    * - AwsIamUserSession;
    * - AwsIamRoleFederatedSession;
    * - AwsIamRoleChainedSession.
    *
-   * @param {Session} session - the Leapp Session to clone
+   * @param {Session} session - the Hopkey Session to clone
    * @see Session
    * @see AwsIamUserSession
    * @see AwsIamRoleFederatedSession
@@ -73,14 +73,14 @@ export interface IPluginEnvironment {
 
   /**
    * This method allows you to update the given session with the given updateSessionData.
-   * This operation is allowed for the following Leapp Session types:
+   * This operation is allowed for the following Hopkey Session types:
    *
    * - AwsIamUserSession;
    * - AwsIamRoleFederatedSession;
    * - AwsIamRoleChainedSession.
    *
-   * @param {SessionData} createSessionRequest - the metadata used to update the given Leapp Session
-   * @param {Session} session - the Leapp Session that I want to update
+   * @param {SessionData} createSessionRequest - the metadata used to update the given Hopkey Session
+   * @param {Session} session - the Hopkey Session that I want to update
    * @see SessionData
    * @see Session
    * @see AwsIamUserSession

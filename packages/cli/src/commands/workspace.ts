@@ -1,11 +1,11 @@
-import { LeappCommand } from "../leapp-command";
+import { HopkeyCommand } from "../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
-export default class Workspace extends LeappCommand {
+export default class Workspace extends HopkeyCommand {
   static description = "Show the current workspace";
 
-  static examples = [`$leapp workspace`];
+  static examples = [`$hopkey workspace`];
 
   static flags = {};
 

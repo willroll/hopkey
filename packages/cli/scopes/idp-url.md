@@ -1,20 +1,20 @@
-`leapp idp-url`
+`hopkey idp-url`
 ===============
 
 SAML 2.0 Identity providers URL management
 
-* [`leapp idp-url create`](#leapp-idp-url-create)
-* [`leapp idp-url delete`](#leapp-idp-url-delete)
-* [`leapp idp-url edit`](#leapp-idp-url-edit)
-* [`leapp idp-url list`](#leapp-idp-url-list)
+* [`hopkey idp-url create`](#hopkey-idp-url-create)
+* [`hopkey idp-url delete`](#hopkey-idp-url-delete)
+* [`hopkey idp-url edit`](#hopkey-idp-url-edit)
+* [`hopkey idp-url list`](#hopkey-idp-url-list)
 
-## `leapp idp-url create`
+## `hopkey idp-url create`
 
 Create a new identity provider URL
 
 ```
 USAGE
-  $ leapp idp-url create [--idpUrl <value>]
+  $ hopkey idp-url create [--idpUrl <value>]
 
 FLAGS
   --idpUrl=<value>  the idp url address we want to create
@@ -23,20 +23,20 @@ DESCRIPTION
   Create a new identity provider URL
 
 EXAMPLES
-  $leapp idp-url create
+  $hopkey idp-url create
 
-  $leapp idp-url create --idpUrl ADDRESS
+  $hopkey idp-url create --idpUrl ADDRESS
 ```
 
-_See code: [src/commands/idp-url/create.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/idp-url/create.ts)_
+_See code: [src/commands/idp-url/create.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/idp-url/create.ts)_
 
-## `leapp idp-url delete`
+## `hopkey idp-url delete`
 
 Delete an identity provider URL
 
 ```
 USAGE
-  $ leapp idp-url delete [--idpUrlId <value>] [-f]
+  $ hopkey idp-url delete [--idpUrlId <value>] [-f]
 
 FLAGS
   -f, --force             force a command without asking for confirmation (-f, --force)
@@ -46,22 +46,22 @@ DESCRIPTION
   Delete an identity provider URL
 
 EXAMPLES
-  $leapp idp-url delete
+  $hopkey idp-url delete
 
-  $leapp idp-url delete --idpUrlId ID
+  $hopkey idp-url delete --idpUrlId ID
 
-  $leapp idp-url delete --idpUrlId ID [--force, -f]
+  $hopkey idp-url delete --idpUrlId ID [--force, -f]
 ```
 
-_See code: [src/commands/idp-url/delete.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/idp-url/delete.ts)_
+_See code: [src/commands/idp-url/delete.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/idp-url/delete.ts)_
 
-## `leapp idp-url edit`
+## `hopkey idp-url edit`
 
 Edit an identity provider URL
 
 ```
 USAGE
-  $ leapp idp-url edit [--idpUrlId <value>] [--idpUrl <value>]
+  $ hopkey idp-url edit [--idpUrlId <value>] [--idpUrl <value>]
 
 FLAGS
   --idpUrl=<value>    the idp url address we want to create
@@ -71,20 +71,20 @@ DESCRIPTION
   Edit an identity provider URL
 
 EXAMPLES
-  $leapp idp-url edit
+  $hopkey idp-url edit
 
-  $leapp idp-url edit --idpUrlId ID --idpUrl ADDRESS
+  $hopkey idp-url edit --idpUrlId ID --idpUrl ADDRESS
 ```
 
-_See code: [src/commands/idp-url/edit.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/idp-url/edit.ts)_
+_See code: [src/commands/idp-url/edit.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/idp-url/edit.ts)_
 
-## `leapp idp-url list`
+## `hopkey idp-url list`
 
 Show identity providers list
 
 ```
 USAGE
-  $ leapp idp-url list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
+  $ hopkey idp-url list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
     [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -102,7 +102,7 @@ DESCRIPTION
   Show identity providers list
 
 EXAMPLES
-  $leapp idp-url list
+  $hopkey idp-url list
 ```
 
-_See code: [src/commands/idp-url/list.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/idp-url/list.ts)_
+_See code: [src/commands/idp-url/list.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/idp-url/list.ts)_

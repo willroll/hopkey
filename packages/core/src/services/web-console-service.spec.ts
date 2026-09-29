@@ -64,7 +64,7 @@ describe("WebConsoleService", () => {
     let truthUrl =
       "https://us-east-1.signin.aws.amazon.com/oauth?Action=logout&redirect_uri=" +
       "https%3A%2F%2Fus-east-1.signin.aws.amazon.com%2Ffederation%3FAction%3Dlogin" +
-      "%26Issuer%3DLeapp%26Destination%3Dhttps%253A%252F%252Feu-west-1.console.aws.amazon.com%252F" +
+      "%26Issuer%3DHopkey%26Destination%3Dhttps%253A%252F%252Feu-west-1.console.aws.amazon.com%252F" +
       "console%252Fhome%253Fregion%253Deu-west-1%26SigninToken%3Dmocked-aws_session_token";
 
     const webConsoleService: WebConsoleService = getService();
@@ -75,7 +75,7 @@ describe("WebConsoleService", () => {
     truthUrl =
       "https://us-east-1.signin.amazonaws-us-gov.com/oauth?Action=logout&redirect_uri=" +
       "https%3A%2F%2Fus-east-1.signin.amazonaws-us-gov.com%2Ffederation%3FAction%3Dlogin" +
-      "%26Issuer%3DLeapp%26Destination%3Dhttps%253A%252F%252Fconsole.amazonaws-us-gov.com%252F" +
+      "%26Issuer%3DHopkey%26Destination%3Dhttps%253A%252F%252Fconsole.amazonaws-us-gov.com%252F" +
       "console%252Fhome%253Fregion%253Dus-gov-%26SigninToken%3Dmocked-aws_session_token";
 
     const result2 = await webConsoleService.getWebConsoleUrl(credentialsInfo, mockedSessionRegion);

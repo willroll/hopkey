@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { IdpUrl } from "@noovolari/leapp-core/models/idp-url";
+import { IdpUrl } from "@hopkey/core/models/idp-url";
 import { idpUrl } from "../../flags";
 
-export default class CreateIdpUrl extends LeappCommand {
+export default class CreateIdpUrl extends HopkeyCommand {
   static description = "Create a new identity provider URL";
 
-  static examples = [`$leapp idp-url create`, `$leapp idp-url create --idpUrl ADDRESS`];
+  static examples = [`$hopkey idp-url create`, `$hopkey idp-url create --idpUrl ADDRESS`];
 
   static flags = {
     idpUrl,

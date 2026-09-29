@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'nightly',
-    description: 'Release the leapp-core library on NPM under the branch Nightly',
+    description: 'Release the hopkey-core library on NPM under the branch Nightly',
     version: '0.1',
   },
   deps: [],
@@ -16,11 +16,11 @@ module.exports = {
     let originalPackage;
 
     try {
-      console.log('Reading leapp-core library package.json... ')
+      console.log('Reading hopkey-core library package.json... ')
       corePackage = await readPackageJsonFunction(path, "core");
       originalPackage = JSON.parse(JSON.stringify(corePackage));
 
-      corePackage["name"] = `@noovolari/leapp-core-nightly`;
+      corePackage["name"] = `@hopkey/core-nightly`;
       corePackage["version"] = corePackage["version"] + `-nightly.${getNightlyVersion()}`;
 
       await writePackageJsonFunction(path, "core", corePackage);
@@ -34,7 +34,7 @@ module.exports = {
       if (result.code !== 0) {
         throw new Error(result.stderr)
       }
-      console.log('leapp-core published on npm')
+      console.log('hopkey-core published on npm')
     } catch (e) {
       e.message = e.stack.red
       throw e

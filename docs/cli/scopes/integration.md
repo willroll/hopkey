@@ -1,22 +1,22 @@
-`leapp integration`
+`hopkey integration`
 ===================
 
-Leapp Integrations management
+Hopkey Integrations management
 
-* [`leapp integration create`](#leapp-integration-create)
-* [`leapp integration delete`](#leapp-integration-delete)
-* [`leapp integration list`](#leapp-integration-list)
-* [`leapp integration login`](#leapp-integration-login)
-* [`leapp integration logout`](#leapp-integration-logout)
-* [`leapp integration sync`](#leapp-integration-sync)
+* [`hopkey integration create`](#hopkey-integration-create)
+* [`hopkey integration delete`](#hopkey-integration-delete)
+* [`hopkey integration list`](#hopkey-integration-list)
+* [`hopkey integration login`](#hopkey-integration-login)
+* [`hopkey integration logout`](#hopkey-integration-logout)
+* [`hopkey integration sync`](#hopkey-integration-sync)
 
-## `leapp integration create`
+## `hopkey integration create`
 
 Create a new integration
 
 ```console
 USAGE
-  $ leapp integration create [--integrationAlias <value>] [--integrationPortalUrl <value>] [--integrationRegion <value>]
+  $ hopkey integration create [--integrationAlias <value>] [--integrationPortalUrl <value>] [--integrationRegion <value>]
     [--integrationType AWS-SSO|AZURE] [--integrationTenantId <value>] [--integrationLocation <value>]
 
 FLAGS
@@ -32,40 +32,40 @@ DESCRIPTION
   Create a new integration
 
 EXAMPLES
-  $leapp integration create
+  $hopkey integration create
 
-  $leapp integration create --integrationType AWS-SSO --integrationAlias ALIAS --integrationPortalUrl URL --integrationRegion REGION
+  $hopkey integration create --integrationType AWS-SSO --integrationAlias ALIAS --integrationPortalUrl URL --integrationRegion REGION
 
-  $leapp integration create --integrationType AZURE --integrationAlias ALIAS --integrationTenantId TENANT --integrationLocation LOCATION
+  $hopkey integration create --integrationType AZURE --integrationAlias ALIAS --integrationTenantId TENANT --integrationLocation LOCATION
 ```
 
-## `leapp integration delete`
+## `hopkey integration delete`
 
 Delete an integration
 
 ```console
 USAGE
-  $ leapp integration delete [--integrationId <value>]
+  $ hopkey integration delete [--integrationId <value>]
 
 FLAGS
-  --integrationId=<value>  the Integration Id used to identify the integration inside Leapp
+  --integrationId=<value>  the Integration Id used to identify the integration inside Hopkey
 
 DESCRIPTION
   Delete an integration
 
 EXAMPLES
-  $leapp integration delete
+  $hopkey integration delete
 
-  $leapp integration delete --integrationId ID
+  $hopkey integration delete --integrationId ID
 ```
 
-## `leapp integration list`
+## `hopkey integration list`
 
 Show integrations list
 
 ```console
 USAGE
-  $ leapp integration list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
+  $ hopkey integration list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
     [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -83,65 +83,65 @@ DESCRIPTION
   Show integrations list
 
 EXAMPLES
-  $leapp integration list
+  $hopkey integration list
 ```
 
-## `leapp integration login`
+## `hopkey integration login`
 
 Login to synchronize integration sessions
 
 ```console
 USAGE
-  $ leapp integration login [--integrationId <value>]
+  $ hopkey integration login [--integrationId <value>]
 
 FLAGS
-  --integrationId=<value>  the Integration Id used to identify the integration inside Leapp
+  --integrationId=<value>  the Integration Id used to identify the integration inside Hopkey
 
 DESCRIPTION
   Login to synchronize integration sessions
 
 EXAMPLES
-  $leapp integration login
+  $hopkey integration login
 
-  $leapp integration login --integrationId ID
+  $hopkey integration login --integrationId ID
 ```
 
-## `leapp integration logout`
+## `hopkey integration logout`
 
 Logout from an integration
 
 ```console
 USAGE
-  $ leapp integration logout [--integrationId <value>]
+  $ hopkey integration logout [--integrationId <value>]
 
 FLAGS
-  --integrationId=<value>  the Integration Id used to identify the integration inside Leapp
+  --integrationId=<value>  the Integration Id used to identify the integration inside Hopkey
 
 DESCRIPTION
   Logout from an integration
 
 EXAMPLES
-  $leapp integration logout
+  $hopkey integration logout
 
-  $leapp integration logout --integrationId ID
+  $hopkey integration logout --integrationId ID
 ```
 
-## `leapp integration sync`
+## `hopkey integration sync`
 
 Synchronize integration sessions
 
 ```console
 USAGE
-  $ leapp integration sync [--integrationId <value>]
+  $ hopkey integration sync [--integrationId <value>]
 
 FLAGS
-  --integrationId=<value>  the Integration Id used to identify the integration inside Leapp
+  --integrationId=<value>  the Integration Id used to identify the integration inside Hopkey
 
 DESCRIPTION
   Synchronize integration sessions
 
 EXAMPLES
-  $leapp integration sync
+  $hopkey integration sync
 
-  $leapp integration sync --integrationId ID
+  $hopkey integration sync --integrationId ID
 ```

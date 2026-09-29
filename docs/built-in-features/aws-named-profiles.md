@@ -18,9 +18,9 @@ Named Profiles are used by AWS to maintain more than one set of active credentia
 
 Named Profiles have a default profile which is the one you get from [aws configure](https://docs.aws.amazon.com/cli/latest/reference/configure/){: target='_blank'} command.
 
-With Leapp you can group and activate more than one credential set at a time through [Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html){: target='_blank'}.
+With Hopkey you can group and activate more than one credential set at a time through [Named Profiles](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html){: target='_blank'}.
 
-## How to configure a Named Profile in Leapp
+## How to configure a Named Profile in Hopkey
 
 Named Profiles can be created in **3 ways**:
 
@@ -51,9 +51,9 @@ The new name is directly added to the Named Profile list and can then be used fo
 Named profiles can be managed from the Option menu.
 
 
-In the Option menu, under the Profiles tab, you can add or edit a new Named Profile, and you can also remove unwanted ones. When removing a Named Profile, Leapp will warn you about which sessions are using that profile, and those sessions will be reverted to the default Named Profile.
+In the Option menu, under the Profiles tab, you can add or edit a new Named Profile, and you can also remove unwanted ones. When removing a Named Profile, Hopkey will warn you about which sessions are using that profile, and those sessions will be reverted to the default Named Profile.
 
 The input form can be used to add or edit a Named Profile: if it's empty, you can use it to add a new named profile. When selecting the <img width="32" alt="Screenshot 2022-02-03 at 15 32 11" src="https://user-images.githubusercontent.com/9497292/152363026-6b933ce9-6ad1-4ae6-a6db-eefa5769764e.png"> button, you will be able to edit the name of the Named Profile from within the input form.
 
 !!! Warning
-    Remember that when you change the profile of a session, the session will be immediately put in stop mode. That's because Leapp would have to change the credential file, so you will need to restart the session again.
+    Remember that when you change the profile of a session, the session will be immediately put in stop mode. That's because Hopkey would have to change the credential file, so you will need to restart the session again.

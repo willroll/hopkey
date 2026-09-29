@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { compactMode } from "../../components/command-bar/command-bar.component";
 import { AppNativeService } from "../../services/app-native.service";
 import { AppProviderService } from "../../services/app-provider.service";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
 
 @Component({
   selector: "app-main-layout",

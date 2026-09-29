@@ -1,12 +1,12 @@
 # Workspaces
 
-A **Workspace** is a global configuration that contains all the relevant information about your Leapp setup (sessions, integrations, app preferences, etc.).
+A **Workspace** is a global configuration that contains all the relevant information about your Hopkey setup (sessions, integrations, app preferences, etc.).
 
 There are two types of workspace: **Local** and **Remote**.
 
 ## Local
 
-A **Local workspace** is the **default** workspace that comes with your Leapp installation. It's a private configuration that contains your personal
+A **Local workspace** is the **default** workspace that comes with your Hopkey installation. It's a private configuration that contains your personal
 preferences and **all sessions and integrations that you created yourself**. 
 
 A local workspace is associated to a **single machine** and if you need to migrate your configuration to another one you will have to do it
@@ -16,16 +16,16 @@ Alternatively, you can use **Remote workspaces**.
 
 ## Remote
 
-A **Remote workspace** is a **[Leapp Team](https://www.leapp.cloud/team)** configuration set **created remotely by a Leapp Team manager**. 
+A **Remote workspace** is a **[Hopkey Team](https://www.leapp.cloud/team)** configuration set **created remotely by a Hopkey Team manager**. 
 
 When you **sync** a remote workspace, you will receive sessions and integrations **automatically**, without having to configure them yourself. 
 
-A remote workspace is **persisted online** by using **[Zero-Knowledge encryption](https://docs.leapp.cloud/latest/security/zero-knowledge/)**.
+A remote workspace is **persisted online** by using **[Zero-Knowledge encryption](https://willroll.github.io/hopkey/latest/security/zero-knowledge/)**.
 
-You will have access to the same configurations **instantly** on any machine, by logging in to your Leapp Team account after having been invited by your Leapp Team manager.
+You will have access to the same configurations **instantly** on any machine, by logging in to your Hopkey Team account after having been invited by your Hopkey Team manager.
 
 !!! Info
-    Both your local and remote workspaces are saved on your machine as encrypted files inside your <home>/.Leapp directory.
+    Both your local and remote workspaces are saved on your machine as encrypted files inside your <home>/.hopkey directory.
 
 ## Actions
 

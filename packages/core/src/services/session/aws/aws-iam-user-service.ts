@@ -3,7 +3,7 @@ import { IMfaCodePrompter } from "../../../interfaces/i-mfa-code-prompter";
 import { IBehaviouralNotifier } from "../../../interfaces/i-behavioural-notifier";
 import { AwsIamUserSession } from "../../../models/aws/aws-iam-user-session";
 import { constants } from "../../../models/constants";
-import { Credentials as LeappCredentials } from "../../../models/credentials";
+import { Credentials as HopkeyCredentials } from "../../../models/credentials";
 import { CredentialsInfo } from "../../../models/credentials-info";
 import { Session } from "../../../models/session";
 import { AwsCoreService } from "../../aws-core-service";
@@ -104,7 +104,7 @@ export class AwsIamUserService extends AwsSessionService {
   async applyCredentials(sessionId: string, credentialsInfo: CredentialsInfo): Promise<void> {
     const session = this.repository.getSessionById(sessionId);
     const profileName = this.repository.getProfileName((session as AwsIamUserSession).profileId);
-    const credentialObject: { [key: string]: LeappCredentials } = {};
+    const credentialObject: { [key: string]: HopkeyCredentials } = {};
 
     credentialObject[profileName] = {
       // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/naming-convention

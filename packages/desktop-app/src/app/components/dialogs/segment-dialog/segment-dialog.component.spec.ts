@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SegmentDialogComponent } from "./segment-dialog.component";
 import { mustInjected } from "../../../../base-injectables";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { AppProviderService } from "../../../services/app-provider.service";
 
 describe("SegmentDialogComponent", () => {
@@ -19,7 +19,7 @@ describe("SegmentDialogComponent", () => {
       getSegments: [],
       getColorTheme: () => constants.darkTheme,
     });
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       workspaceService: spyBehaviouralSubjectService,
       workspaceOptionService: { segments: [] },
       repository: spyRepositoryService,
@@ -31,7 +31,7 @@ describe("SegmentDialogComponent", () => {
 
     await TestBed.configureTestingModule({
       declarations: [SegmentDialogComponent],
-      providers: [].concat(mustInjected().concat([{ provide: AppProviderService, useValue: spyLeappCoreService }])),
+      providers: [].concat(mustInjected().concat([{ provide: AppProviderService, useValue: spyHopkeyCoreService }])),
     }).compileComponents();
   });
 

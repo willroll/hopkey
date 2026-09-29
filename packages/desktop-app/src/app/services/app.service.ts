@@ -5,11 +5,11 @@ import { AppProviderService } from "./app-provider.service";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { WindowService } from "./window.service";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { LogService, LoggedEntry, LogLevel, LoggedException } from "@noovolari/leapp-core/services/log-service";
-import { OperatingSystem, osMap } from "@noovolari/leapp-core/models/operating-system";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { LeappBaseError } from "@noovolari/leapp-core/errors/leapp-base-error";
-import { LeappLinkError } from "@noovolari/leapp-core/errors/leapp-link-error";
+import { LogService, LoggedEntry, LogLevel, LoggedException } from "@hopkey/core/services/log-service";
+import { OperatingSystem, osMap } from "@hopkey/core/models/operating-system";
+import { constants } from "@hopkey/core/models/constants";
+import { HopkeyBaseError } from "@hopkey/core/errors/hopkey-base-error";
+import { HopkeyLinkError } from "@hopkey/core/errors/hopkey-link-error";
 import { MessageToasterService, ToastLevel } from "./message-toaster.service";
 
 @Injectable({
@@ -43,9 +43,9 @@ export class AppService {
     // Global Configure logger
     if (this.appNativeService.log) {
       const logPaths = {
-        [OperatingSystem.mac]: `${this.appNativeService.process.env.HOME}/Library/Logs/Leapp/log.electronService.log`,
-        [OperatingSystem.linux]: `${this.appNativeService.process.env.HOME}/.config/Leapp/logs/log.electronService.log`,
-        [OperatingSystem.windows]: `${this.appNativeService.process.env.USERPROFILE}\\AppData\\Roaming\\Leapp\\log.electronService.log`,
+        [OperatingSystem.mac]: `${this.appNativeService.process.env.HOME}/Library/Logs/Hopkey/log.electronService.log`,
+        [OperatingSystem.linux]: `${this.appNativeService.process.env.HOME}/.config/Hopkey/logs/log.electronService.log`,
+        [OperatingSystem.windows]: `${this.appNativeService.process.env.USERPROFILE}\\AppData\\Roaming\\Hopkey\\log.electronService.log`,
       };
 
       this.appNativeService.log.transports.console.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{processType}] {text}";
@@ -123,7 +123,7 @@ export class AppService {
     try {
       // Clear all extra data
       const getAppPath = this.appNativeService.path.join(this.appNativeService.app.getPath("appData"), constants.appName);
-      this.appNativeService.rimraf.sync(getAppPath + "/Partitions/leapp*");
+      this.appNativeService.rimraf.sync(getAppPath + "/Partitions/hopkey*");
 
       // Cleaning Library Electron Cache
       await this.appNativeService.session.defaultSession.clearStorageData();
@@ -138,7 +138,7 @@ export class AppService {
         this.restart();
       }, 2000);
     } catch (err) {
-      this.logService.log(new LoggedEntry("Leapp has an error re-creating your configuration file and cache.", this, LogLevel.error, true));
+      this.logService.log(new LoggedEntry("Hopkey has an error re-creating your configuration file and cache.", this, LogLevel.error, true));
     }
   }
 
@@ -238,8 +238,8 @@ export class AppService {
     const coreVersion = this.appProviderService.logService.getCoreVersion();
     this.windowService.getCurrentWindow().show();
     this.getDialog().showMessageBox({
-      icon: __dirname + `/assets/images/Leapp.png`,
-      message: `Leapp\n` + `Version ${version} (Core: ${coreVersion})\n` + "© 2022 Noovolari",
+      icon: __dirname + `/assets/images/Hopkey.png`,
+      message: `Hopkey\n` + `Version ${version} (Core: ${coreVersion})\n` + "© 2022 Noovolari",
       buttons: ["Ok"],
     });
   }
@@ -258,11 +258,11 @@ export class AppService {
   getMetadata() {
     const printError = (error) => {
       this.appProviderService.logService.log(new LoggedException(error.toString(), this, LogLevel.error, false, error.stack));
-      if ((error as LeappBaseError).severity === LogLevel.error) {
-        if ((error as LeappLinkError).link === undefined || (error as LeappLinkError).link === null) {
+      if ((error as HopkeyBaseError).severity === LogLevel.error) {
+        if ((error as HopkeyLinkError).link === undefined || (error as HopkeyLinkError).link === null) {
           this.messageToasterService.toast(error.toString(), ToastLevel.error, "");
         } else {
-          this.messageToasterService.toast(error.toString(), ToastLevel.error, "", (error as LeappLinkError).link);
+          this.messageToasterService.toast(error.toString(), ToastLevel.error, "", (error as HopkeyLinkError).link);
         }
       }
     };
@@ -287,8 +287,8 @@ export class AppService {
       try {
         this.awsCliVersion = await this.appProviderService.executeService.execute("aws --version");
       } catch (_) {
-        throw new LeappLinkError(
-          "https://docs.leapp.cloud/latest/troubleshooting/faq/",
+        throw new HopkeyLinkError(
+          "https://willroll.github.io/hopkey/latest/troubleshooting/faq/",
           this,
           "An error occurred getting AWS CLI version. Please check if it is installed and <span class='link'>add a symlink</span> following the documentation."
         );
@@ -302,8 +302,8 @@ export class AppService {
         const sessionManagerPluginVersion = await this.appProviderService.executeService.execute("session-manager-plugin --version");
         this.awsSsmPluginVersion = sessionManagerPluginVersion.replace(/(\r\n|\n|\r)/gm, "");
       } catch (error) {
-        throw new LeappLinkError(
-          "https://docs.leapp.cloud/latest/built-in-features/aws-ec2-connect/",
+        throw new HopkeyLinkError(
+          "https://willroll.github.io/hopkey/latest/built-in-features/aws-ec2-connect/",
           this,
           "An error occurred getting AWS Session Manager Plugin version. <span class='link'>Click here to follow the instructions on the docs</span> and solve the issue."
         );
@@ -317,7 +317,7 @@ export class AppService {
 
 
 ### Details:
-| Leapp Version | ${this.appNativeService.app.getVersion()} |
+| Hopkey Version | ${this.appNativeService.app.getVersion()} |
 | --- | --- |
 | SsmPluginVersion | ${this.awsSsmPluginVersion} |
 | Platform | ${process.platform} |
@@ -328,7 +328,7 @@ export class AppService {
 
 
 ### Details:
-| Leapp Version | ${this.appNativeService.app.getVersion()} |
+| Hopkey Version | ${this.appNativeService.app.getVersion()} |
 | --- | --- |
 | SsmPluginVersion | ${this.awsSsmPluginVersion} |
 | Platform | ${process.platform} |

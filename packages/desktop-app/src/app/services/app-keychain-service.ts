@@ -1,5 +1,5 @@
-import { IKeychainService } from "@noovolari/leapp-core/interfaces/i-keychain-service";
-import { INativeService } from "@noovolari/leapp-core/interfaces/i-native-service";
+import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
+import { INativeService } from "@hopkey/core/interfaces/i-native-service";
 
 export class AppKeychainService implements IKeychainService {
   constructor(private nativeService: INativeService) {}

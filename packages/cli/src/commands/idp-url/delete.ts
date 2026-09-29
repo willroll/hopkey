@@ -1,13 +1,13 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { IdpUrl } from "@noovolari/leapp-core/models/idp-url";
+import { Session } from "@hopkey/core/models/session";
+import { IdpUrl } from "@hopkey/core/models/idp-url";
 import { idpUrlId, force } from "../../flags";
 
-export default class DeleteIdpUrl extends LeappCommand {
+export default class DeleteIdpUrl extends HopkeyCommand {
   static description = "Delete an identity provider URL";
 
-  static examples = [`$leapp idp-url delete`, `$leapp idp-url delete --idpUrlId ID`, `$leapp idp-url delete --idpUrlId ID [--force, -f]`];
+  static examples = [`$hopkey idp-url delete`, `$hopkey idp-url delete --idpUrlId ID`, `$hopkey idp-url delete --idpUrlId ID [--force, -f]`];
 
   static flags = {
     idpUrlId,

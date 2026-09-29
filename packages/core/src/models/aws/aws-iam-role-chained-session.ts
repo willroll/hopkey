@@ -23,7 +23,7 @@ export class AwsIamRoleChainedSession extends Session {
     this.profileId = profileId;
     this.parentSessionId = parentSessionId;
     this.type = SessionType.awsIamRoleChained;
-    this.roleSessionName = roleSessionName ? roleSessionName : `assumed-from-leapp`;
+    this.roleSessionName = roleSessionName ? roleSessionName : `assumed-from-hopkey`;
 
     this.awsAccount = awsAccount;
   }

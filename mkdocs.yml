@@ -1,7 +1,7 @@
-site_name: Leapp - Docs
-site_url: https://docs.leapp.cloud/
-repo_url: https://github.com/Noovolari/leapp
-site_description: 'Leapp is a tool for developers to manage, secure, and access the cloud. Manage AWS and Azure credentials centrally'
+site_name: Hopkey - Docs
+site_url: https://willroll.github.io/hopkey/
+repo_url: https://github.com/willroll/hopkey
+site_description: 'Hopkey is a tool for developers to manage, secure, and access the cloud. Manage AWS and Azure credentials centrally'
 copyright: '© 2022 Noovolari, All rights reserved. | Powered by beSharp'
 
 nav:
@@ -9,8 +9,8 @@ nav:
       - Overview: 'index.md'
       - Installation:
           - 'Requirements': 'installation/requirements.md'
-          - 'Install Leapp': 'installation/install-leapp.md'
-          - 'Update Leapp': 'installation/update-leapp.md'
+          - 'Install Hopkey': 'installation/install-hopkey.md'
+          - 'Update Hopkey': 'installation/update-hopkey.md'
       - 'Concepts':
           - Sessions: 'sessions.md'
           - Integrations: 'integrations.md'
@@ -57,8 +57,8 @@ nav:
       - 'Introduction to Plugins': 'plugins/plugins-introduction.md'
       - 'Developer Reference': 'plugins/plugins-development.md'
   - 'General Options': 'built-in-features/general-options.md'
-  - 'Leapp PRO':
-      - 'Export PRO Workspace': 'leapp-pro/export-pro-workspace.md'
+  - 'Hopkey PRO':
+      - 'Export PRO Workspace': 'hopkey-pro/export-pro-workspace.md'
   - Contributing:
       - 'Get involved': 'contributing/get-involved.md'
       - 'Useful Scripts': 'usefull-scripts/export-profile.md'
@@ -67,7 +67,7 @@ nav:
       - 'FAQ': 'troubleshooting/faq.md'
 
 theme:
-  logo: images/leapp.png
+  logo: images/hopkey.png
   titles_only: true
   favicon: images/icon.ico
   name: material

@@ -1,11 +1,11 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 
-export default class GetIdSession extends LeappCommand {
+export default class GetIdSession extends HopkeyCommand {
   static description = "Get session id";
 
-  static examples = [`$leapp session get-id`];
+  static examples = [`$hopkey session get-id`];
 
   constructor(argv: string[], config: Config) {
     super(argv, config);

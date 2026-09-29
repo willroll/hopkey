@@ -1,12 +1,12 @@
 import { jest, describe, test, expect } from "@jest/globals";
 import CreateSsoIntegration from "./create";
-import { AwsSsoIntegrationService } from "@noovolari/leapp-core/services/integration/aws-sso-integration-service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { AwsSsoIntegrationService } from "@hopkey/core/services/integration/aws-sso-integration-service";
+import { constants } from "@hopkey/core/models/constants";
 import { CliProviderService } from "../../service/cli-provider-service";
-import { IntegrationMethod } from "@noovolari/leapp-core/models/integration-method";
-import { IntegrationType } from "@noovolari/leapp-core/models/integration-type";
-import { AccessMethodField } from "@noovolari/leapp-core/models/access-method-field";
-import { AccessMethodFieldType } from "@noovolari/leapp-core/models/access-method-field-type";
+import { IntegrationMethod } from "@hopkey/core/models/integration-method";
+import { IntegrationType } from "@hopkey/core/models/integration-type";
+import { AccessMethodField } from "@hopkey/core/models/access-method-field";
+import { AccessMethodFieldType } from "@hopkey/core/models/access-method-field-type";
 
 describe("CreateSsoIntegration", () => {
   const getTestCommand = (cliProviderService: any = null, argv: string[] = []): CreateSsoIntegration => {

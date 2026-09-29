@@ -1,22 +1,22 @@
 import { Injectable, SecurityContext } from "@angular/core";
-import { IAwsSamlAuthenticationService } from "@noovolari/leapp-core/interfaces/i-aws-saml-authentication-service";
-import { CloudProviderType } from "@noovolari/leapp-core/models/cloud-provider-type";
+import { IAwsSamlAuthenticationService } from "@hopkey/core/interfaces/i-aws-saml-authentication-service";
+import { CloudProviderType } from "@hopkey/core/models/cloud-provider-type";
 import { AppProviderService } from "./app-provider.service";
 import { WindowService } from "./window.service";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { constants } from "@hopkey/core/models/constants";
 import { AppNativeService } from "./app-native.service";
 import { AppService } from "./app.service";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { DomSanitizer } from "@angular/platform-browser";
-import { LoggedEntry, LogLevel } from "@noovolari/leapp-core/services/log-service";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
-import { LeappBaseError } from "@noovolari/leapp-core/errors/leapp-base-error";
+import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
+import { HopkeyBaseError } from "@hopkey/core/errors/hopkey-base-error";
 
 @Injectable({ providedIn: "root" })
 export class AppAwsAuthenticationService implements IAwsSamlAuthenticationService {
   constructor(
-    private leappCoreService: AppProviderService,
+    private hopkeyCoreService: AppProviderService,
     private appService: AppService,
     private windowService: WindowService,
     private electronService: AppNativeService,
@@ -35,7 +35,7 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
 
       const timeoutInMs = 5000;
       const timeout = setTimeout(() => {
-        const error = new LeappBaseError("SAML authentication timeout error", this, LogLevel.error, "SAML authentication timeout exceeded");
+        const error = new HopkeyBaseError("SAML authentication timeout error", this, LogLevel.error, "SAML authentication timeout exceeded");
         reject(error);
       }, timeoutInMs);
 
@@ -44,12 +44,12 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
       idpWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
         console.log("Intercepted HTTP redirect call:", details.url);
 
-        if (this.leappCoreService.authenticationService.isAuthenticationUrl(CloudProviderType.aws, details.url)) {
+        if (this.hopkeyCoreService.authenticationService.isAuthenticationUrl(CloudProviderType.aws, details.url)) {
           clearTimeout(timeout);
           idpWindow = null;
           resolve(true);
         }
-        if (this.leappCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
+        if (this.hopkeyCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
           clearTimeout(timeout);
           idpWindow = null;
           resolve(false);
@@ -84,7 +84,7 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
     // to construct the ideal method to deal with the construction of the response
     return new Promise((resolve) => {
       idpWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
-        if (this.leappCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
+        if (this.hopkeyCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
           // it will throw an error as we have altered the original response
           // Setting that everything is ok if we have arrived here
           idpWindow.close();
@@ -96,7 +96,7 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
           }
 
           // Return the details
-          resolve(this.leappCoreService.authenticationService.extractAwsSamlResponse(details));
+          resolve(this.hopkeyCoreService.authenticationService.extractAwsSamlResponse(details));
         } else {
           // Callback is used by filter to keep traversing calls until one of the filters apply
           callback({
@@ -115,22 +115,22 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
   async logoutFromFederatedSession(session: Session, callback?: any): Promise<void> {
     try {
       // Clear all extra data
-      const url = this.leappCoreService.idpUrlService.getIdpUrl((session as AwsIamRoleFederatedSession).idpUrlId)?.url;
+      const url = this.hopkeyCoreService.idpUrlService.getIdpUrl((session as AwsIamRoleFederatedSession).idpUrlId)?.url;
       const sanitizedField = this.domSanitizer.sanitize(SecurityContext.URL, url ? url : "");
 
       const getAppPath = this.electronService.path.join(this.electronService.app.getPath("appData"), constants.appName);
 
-      this.electronService.rimraf(getAppPath + `/Partitions/leapp-${btoa(sanitizedField)}`, async () => {
+      this.electronService.rimraf(getAppPath + `/Partitions/hopkey-${btoa(sanitizedField)}`, async () => {
         if (session) {
-          const sessionService = this.leappCoreService.sessionFactory.getSessionService(session.type);
+          const sessionService = this.hopkeyCoreService.sessionFactory.getSessionService(session.type);
           await sessionService.stop(session.sessionId);
           if (callback) {
             callback();
           }
         }
 
-        this.leappCoreService.logService.log(
-          new LoggedEntry("Cache and configuration file cleaned. Stopping session and restarting Leapp to take effect.", this, LogLevel.info, true)
+        this.hopkeyCoreService.logService.log(
+          new LoggedEntry("Cache and configuration file cleaned. Stopping session and restarting Hopkey to take effect.", this, LogLevel.info, true)
         );
 
         // Restart
@@ -141,21 +141,21 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
       });
       this.electronService.session.defaultSession.clearStorageData([], (_data) => {});
     } catch (err) {
-      this.leappCoreService.logService.log(
-        new LoggedEntry("Leapp has an error re-creating your configuration file and cache.", this, LogLevel.error, false, err.stack)
+      this.hopkeyCoreService.logService.log(
+        new LoggedEntry("Hopkey has an error re-creating your configuration file and cache.", this, LogLevel.error, false, err.stack)
       );
       if (this.appService.detectOs() === OperatingSystem.windows) {
-        this.leappCoreService.logService.log(
+        this.hopkeyCoreService.logService.log(
           new LoggedEntry(
-            "Leapp needs Admin permissions to do this: please restart the application as an Administrator and retry.",
+            "Hopkey needs Admin permissions to do this: please restart the application as an Administrator and retry.",
             this,
             LogLevel.warn,
             true
           )
         );
       } else {
-        this.leappCoreService.logService.log(
-          new LoggedEntry("Leapp has an error re-creating your configuration file and cache.", this, LogLevel.error, true)
+        this.hopkeyCoreService.logService.log(
+          new LoggedEntry("Hopkey has an error re-creating your configuration file and cache.", this, LogLevel.error, true)
         );
       }
     }

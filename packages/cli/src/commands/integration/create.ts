@@ -1,20 +1,20 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { integrationAlias, integrationLocation, integrationPortalUrl, integrationRegion, integrationType, integrationTenantId } from "../../flags";
-import { IntegrationMethod } from "@noovolari/leapp-core/models/integration-method";
-import { IntegrationParams } from "@noovolari/leapp-core/models/integration-params";
-import { IntegrationType } from "@noovolari/leapp-core/models/integration-type";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { AzureIntegrationCreationParams } from "@noovolari/leapp-core/models/azure/azure-integration-creation-params";
-import { AwsSsoIntegrationCreationParams } from "@noovolari/leapp-core/models/aws/aws-sso-integration-creation-params";
+import { IntegrationMethod } from "@hopkey/core/models/integration-method";
+import { IntegrationParams } from "@hopkey/core/models/integration-params";
+import { IntegrationType } from "@hopkey/core/models/integration-type";
+import { constants } from "@hopkey/core/models/constants";
+import { AzureIntegrationCreationParams } from "@hopkey/core/models/azure/azure-integration-creation-params";
+import { AwsSsoIntegrationCreationParams } from "@hopkey/core/models/aws/aws-sso-integration-creation-params";
 
-export default class CreateSsoIntegration extends LeappCommand {
+export default class CreateSsoIntegration extends HopkeyCommand {
   static description = "Create a new integration";
   static examples = [
-    "$leapp integration create",
-    `$leapp integration create --integrationType ${IntegrationType.awsSso} --integrationAlias ALIAS` +
+    "$hopkey integration create",
+    `$hopkey integration create --integrationType ${IntegrationType.awsSso} --integrationAlias ALIAS` +
       ` --integrationPortalUrl URL --integrationRegion REGION`,
-    `$leapp integration create --integrationType ${IntegrationType.azure} --integrationAlias ALIAS` +
+    `$hopkey integration create --integrationType ${IntegrationType.azure} --integrationAlias ALIAS` +
       ` --integrationTenantId TENANT --integrationLocation LOCATION`,
   ];
 
@@ -36,7 +36,7 @@ export default class CreateSsoIntegration extends LeappCommand {
       let creationParams: IntegrationParams;
       let type: IntegrationType;
       const { flags } = await this.parse(CreateSsoIntegration);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const method = await this.chooseIntegrationMethod();
         type = method.integrationType;
         creationParams = await this.askConfigurationParameters(method);

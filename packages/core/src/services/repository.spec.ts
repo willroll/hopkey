@@ -8,7 +8,7 @@ import { SessionType } from "../models/session-type";
 import { SessionStatus } from "../models/session-status";
 import { AwsSsoRoleSession } from "../models/aws/aws-sso-role-session";
 import { LoggedException } from "./log-service";
-import { LeappNotification, LeappNotificationType } from "../models/notification";
+import { HopkeyNotification, HopkeyNotificationType } from "../models/notification";
 
 describe("Repository", () => {
   let mockedWorkspace;
@@ -20,7 +20,7 @@ describe("Repository", () => {
   let mockedNotifications: any;
 
   beforeEach(() => {
-    mockedNotifications = [new LeappNotification("fake-uuid", LeappNotificationType.info, "title", "button-action-name", "description", false)];
+    mockedNotifications = [new HopkeyNotification("fake-uuid", HopkeyNotificationType.info, "title", "button-action-name", "description", false)];
     mockedWorkspace = new Workspace();
     mockedWorkspace.notifications = mockedNotifications;
 

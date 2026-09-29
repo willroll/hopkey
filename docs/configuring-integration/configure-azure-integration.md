@@ -1,6 +1,6 @@
 ---
 title: "Configure an Azure integration"
-description: "Our Leapp integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD."
+description: "Our Hopkey integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD."
 pageType: "integration"
 structured_data_how_to_title: "Configure an Azure integration"
 structured_data_how_to_tip1: "Click on the _Add Integration_ button in the sidebar."
@@ -8,7 +8,7 @@ structured_data_how_to_tip2: "Select _Azure_ as the Integration type."
 structured_data_how_to_tip3: "Provide the required information (described in the next section)."
 structured_data_how_to_tip4: "Click on the _Add integration_ button."
 social_title: "Configure an Azure integration"
-social_description: "Our Leapp integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD."
+social_description: "Our Hopkey integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD."
 social_relative_image_path: "azure.png"
 sitemap_video_title: "Configure an Azure integration"
 sitemap_video_content: "newuxui/azure-integration.mp4"
@@ -16,7 +16,7 @@ sitemap_video_content: "newuxui/azure-integration.mp4"
 
 ## What is an Azure integration
 
-Our Leapp integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD.
+Our Hopkey integration refers to Azure Tenant which is a dedicated and trusted instance of Azure AD.
 
 The tenant is automatically created when your organization signs up for a Microsoft cloud service subscription.
 
@@ -28,14 +28,14 @@ Please refer to [How to find your Azure Active Directory tenant ID](https://docs
 
 !!! Warning
 
-    For azure-cli users with version < 2.30.0: Leapp no longer supports this version of the CLI. Please update to a newer version.
+    For azure-cli users with version < 2.30.0: Hopkey no longer supports this version of the CLI. Please update to a newer version.
 
-To create a new Azure Integration, go to the left sidebar of Leapp Desktop and click on the :fontawesome-solid-circle-plus: icon. 
+To create a new Azure Integration, go to the left sidebar of Hopkey Desktop and click on the :fontawesome-solid-circle-plus: icon. 
 A new modal will be presented with the following option to compile. After submitting the new Integration 
 and have logged into your *Azure Portal*, 
-*Subscriptions* will be automatically retrieved and mapped into Leapp Azure Sessions.
+*Subscriptions* will be automatically retrieved and mapped into Hopkey Azure Sessions.
 
-## How to configure an Azure integration in Leapp
+## How to configure an Azure integration in Hopkey
 
 1. Click on the _Add Integration_ button in the sidebar.
 2. Select _Azure_ as the Integration type.
@@ -47,7 +47,7 @@ and have logged into your *Azure Portal*,
 | Field              | Description                                                                                                                                                                                                                                                                                        |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `INTEGRATION TYPE` | Set as *Azure*                                                                                                                                                                                                                                                                                     |
-| `ALIAS`            | Your friendly integration name in Leapp. Give it a meaningful name so it will be easier to find inside Leapp.                                                                                                                                                                                      |
+| `ALIAS`            | Your friendly integration name in Hopkey. Give it a meaningful name so it will be easier to find inside Hopkey.                                                                                                                                                                                      |
 | `TENANT ID`        | A [**tenant ID**](https://docs.microsoft.com/en-us/azure/active-directory/fundamentals/active-directory-how-to-find-tenant){: target='_blank'} identifies a tenant. You can have multiple clients on a given tenant database.                                                                                                                                                                                                     |
 | `LOCATION`         | The Azure datacenters are located around the world in strategic places that best meet the customer demands. These areas are known as Azure locations. Specific services requires the user to select a specific location. The value is retrieved from your *default location* in *general options*. |
 

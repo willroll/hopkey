@@ -55,7 +55,7 @@
         <div class="form-group">
           <div class="form-field">
             <label>Named profile</label>
-            <app-leapp-select [controlName]="'awsProfile'"
+            <app-hopkey-select [controlName]="'awsProfile'"
                               [form]="form"
                               [placeholder]="'add a new named profile'"
                               [items]="profiles"
@@ -65,7 +65,7 @@
                               [bindLabel]="'label'"
                               [bindValue]="'value'"
                               [uppercased]="false"
-                              (selected)="profiles = $event.items; selectedProfile = $event.item;"></app-leapp-select>
+                              (selected)="profiles = $event.items; selectedProfile = $event.item;"></app-hopkey-select>
             <small class="text-error" *ngIf="(form.controls['awsProfile'].dirty || form.controls['awsProfile'].touched) && form.get('awsProfile')?.value === undefined">Insert the Named Profile</small>
           </div>
         </div>
@@ -108,7 +108,7 @@
           <!-- ================================================================== -->
           <div class="form-field">
             <label>SAML 2.0 Url</label>
-            <app-leapp-select [controlName]="'federationUrl'"
+            <app-hopkey-select [controlName]="'federationUrl'"
                               [form]="form"
                               [placeholder]="'SAML 2.0 Url*'"
                               [items]="idpUrls"
@@ -118,7 +118,7 @@
                               [bindLabel]="'label'"
                               [bindValue]="'value'"
                               [uppercased]="false"
-                              (selected)="selectedIdpUrlEvent($event);"></app-leapp-select>
+                              (selected)="selectedIdpUrlEvent($event);"></app-hopkey-select>
 
             <small class="text-error" *ngIf="(form.controls['federationUrl'].dirty || form.controls['federationUrl'].touched) && form.get('federationUrl')?.value === undefined">Insert the SAML 2.0 Url</small>
           </div>

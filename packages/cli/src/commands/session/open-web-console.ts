@@ -1,15 +1,15 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { Session } from "@hopkey/core/models/session";
+import { SessionStatus } from "@hopkey/core/models/session-status";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
+import { SessionType } from "@hopkey/core/models/session-type";
 import { sessionId, print } from "../../flags";
 
-export default class OpenWebConsole extends LeappCommand {
+export default class OpenWebConsole extends HopkeyCommand {
   static description = "Open an AWS Web Console";
 
-  static examples = [`$leapp session open-web-console`, `$leapp session open-web-console --sessionId SESSIONID [--print, -p]`];
+  static examples = [`$hopkey session open-web-console`, `$hopkey session open-web-console --sessionId SESSIONID [--print, -p]`];
 
   static flags = {
     sessionId,

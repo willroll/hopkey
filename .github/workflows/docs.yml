@@ -30,7 +30,7 @@ jobs:
           pip install mkdocs-minify-plugin
           pip install mike==1.1.2
 
-      - name: get-leapp-version
+      - name: get-hopkey-version
         run: |
           echo "PACKAGE_VERSION=$(cat packages/desktop-app/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')" >> $GITHUB_ENV
           echo "${{env.PACKAGE_VERSION}}"

@@ -4,7 +4,7 @@ import { AppSsmService } from "./app-ssm.service";
 import { mustInjected } from "../../base-injectables";
 import { AppProviderService } from "./app-provider.service";
 import SpyObj = jasmine.SpyObj;
-import { CredentialsInfo } from "@noovolari/leapp-core/models/credentials-info";
+import { CredentialsInfo } from "@hopkey/core/models/credentials-info";
 import { AppService } from "./app.service";
 
 describe("SsmService", () => {
@@ -12,7 +12,7 @@ describe("SsmService", () => {
   let appProviderService: SpyObj<AppProviderService>;
 
   beforeEach(() => {
-    appProviderService = jasmine.createSpyObj("LeappCoreService", [], {
+    appProviderService = jasmine.createSpyObj("HopkeyCoreService", [], {
       ssmService: {
         getSsmInstances: (_0: CredentialsInfo, _1: string, _2?: any) => {},
         startSession: (_0: CredentialsInfo, _1: string, _2: string) => {},

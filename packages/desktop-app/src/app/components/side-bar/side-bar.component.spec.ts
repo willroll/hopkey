@@ -16,7 +16,7 @@ describe("SideBarComponent", () => {
       getSessions: [],
       getSegments: [],
     });
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       repository: spyRepositoryService,
       segmentService: { list: () => [] },
       awsCoreService: { getRegions: () => [] },
@@ -44,7 +44,7 @@ describe("SideBarComponent", () => {
     await TestBed.configureTestingModule({
       declarations: [SideBarComponent],
       imports: [MatMenuModule, RouterTestingModule],
-      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyLeappCoreService })),
+      providers: [].concat(mustInjected().concat({ provide: AppProviderService, useValue: spyHopkeyCoreService })),
     }).compileComponents();
 
     fixture = TestBed.createComponent(SideBarComponent);

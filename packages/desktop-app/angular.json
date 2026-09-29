@@ -7,7 +7,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "leapp-client": {
+    "hopkey-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/leapp-client",
+            "outputPath": "dist/hopkey-client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -43,7 +43,7 @@
             "extractLicenses": true,
             "vendorChunk": false,
 
-            "allowedCommonJsDependencies": ["stream", "assert", "fs", "@noovolari/leapp-core", "@aws-crypto/sha256-browser", "core-team"]
+            "allowedCommonJsDependencies": ["stream", "assert", "fs", "@hopkey/core", "@aws-crypto/sha256-browser", "core-team"]
           },
           "configurations": {
             "staging": {
@@ -88,21 +88,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "leapp-client:build"
+            "browserTarget": "hopkey-client:build"
           },
           "configurations": {
             "staging": {
-              "browserTarget": "leapp-client:build:staging"
+              "browserTarget": "hopkey-client:build:staging"
             },
             "production": {
-              "browserTarget": "leapp-client:build:production"
+              "browserTarget": "hopkey-client:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "leapp-client:build"
+            "browserTarget": "hopkey-client:build"
           }
         },
         "test": {
@@ -140,19 +140,19 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "leapp-client:serve"
+            "devServerTarget": "hopkey-client:serve"
           },
           "configurations": {
             "staging": {
-              "devServerTarget": "leapp-client:serve:staging"
+              "devServerTarget": "hopkey-client:serve:staging"
             },
             "production": {
-              "devServerTarget": "leapp-client:serve:production"
+              "devServerTarget": "hopkey-client:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "leapp-client"
+  "defaultProject": "hopkey-client"
 }

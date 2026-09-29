@@ -1,5 +1,5 @@
-import { INativeService } from "@noovolari/leapp-core/interfaces/i-native-service";
-import { IMsalEncryptionService } from "@noovolari/leapp-core/interfaces/i-msal-encryption-service";
+import { INativeService } from "@hopkey/core/interfaces/i-native-service";
+import { IMsalEncryptionService } from "@hopkey/core/interfaces/i-msal-encryption-service";
 
 export class CliNativeService implements INativeService {
   url: any;

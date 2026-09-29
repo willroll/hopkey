@@ -1,15 +1,15 @@
-Leapp manages 4 types of AWS access methods:
+Hopkey manages 4 types of AWS access methods:
 
 1. IAM Federated Role
 2. IAM User
 3. IAM Single Sign-On
 4. IAM Role chained
 
-For each access method, Leapp **generates** a set of ```temporary credentials``` through [STS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html) and a **rotation** logic is triggered every **20 minutes**.
+For each access method, Hopkey **generates** a set of ```temporary credentials``` through [STS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html) and a **rotation** logic is triggered every **20 minutes**.
 
 Temporary credentials **ensures that no long-term credentials are written in the AWS credentials file** located in ```~/.aws/credentials```.
 
-Leapp manages information entered by the user using the following logic for each access method.
+Hopkey manages information entered by the user using the following logic for each access method.
 
 ## IAM Federated Role
 
@@ -20,7 +20,7 @@ However, you can use the optional *DurationSeconds* parameter to specify the dur
 
 Your role session lasts for the specified duration, or until the time specified in the SAML authentication response's *SessionNotOnOrAfter* value, whichever is shorter. You can provide a DurationSeconds value from **900 seconds** (15 minutes) up to the **maximum session duration setting for the role**. This setting can have a value **from 1 hour to 12 hours**.
 
-**Leapp sets the token duration to 1 hour.**
+**Hopkey sets the token duration to 1 hour.**
 
 !!! Info
 
@@ -35,13 +35,13 @@ An IAM Chained Role is used to access another AWS account services through a mai
 
 [How to generate temporary credentials on AWS](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html)
 
-**If you do not pass the DurationSeconds parameter (as in the case of Leapp), the temporary credentials expire in 1 hour.**
+**If you do not pass the DurationSeconds parameter (as in the case of Hopkey), the temporary credentials expire in 1 hour.**
 
 ## IAM User
 
 The *GetSessionToken* operation must be called by using the **long-term AWS security credentials** of the AWS IAM user. Credentials that are created by **IAM users are valid for the duration that you specify**. This duration can range from **900 seconds** (15 minutes) up to a **maximum of 129,600 seconds (36 hours)**, with a **default of 43,200 seconds (12 hours)**. Credentials based on **account credentials** can range **from 900 seconds (15 minutes)** up to **3,600 seconds (1 hour)**, with a default of **1 hour**.
 
-**Leapp sets the token duration to 10 hours.**
+**Hopkey sets the token duration to 10 hours.**
 
 !!! Info
 

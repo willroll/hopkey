@@ -2,7 +2,7 @@ const getNightlyVersion = require("../../../gushio/get-nightly-version");
 module.exports = {
   cli: {
     name: 'nightly',
-    description: 'Release the leapp Desktop app under the branch Nightly',
+    description: 'Release the hopkey Desktop app under the branch Nightly',
     version: '0.1',
     arguments: [
       {name: '<platform-version>', choices: ['mac', 'linux', 'win', 'all']},
@@ -14,14 +14,14 @@ module.exports = {
     const shellJs = await gushio.import('shelljs')
     const readPackageJsonFunction = require('../../../gushio/read-package-json-func')
     const writePackageJsonFunction = require('../../../gushio/write-package-json-func')
-    const leappCoreBootstrap = require('../../../gushio/leapp-core-bootstrap')
+    const hopkeyCoreBootstrap = require('../../../gushio/hopkey-core-bootstrap')
     const getNightlyVersion = require('../../../gushio/get-nightly-version')
 
     let desktopAppPackage;
     let originalPackage;
 
     try {
-      console.log('Reading leapp Desktop app package.json... ')
+      console.log('Reading hopkey Desktop app package.json... ')
       desktopAppPackage = await readPackageJsonFunction(path, "desktop-app");
       originalPackage = JSON.parse(JSON.stringify(desktopAppPackage));
 
@@ -33,7 +33,7 @@ module.exports = {
       desktopAppPackage["version"] = nightlyVersion;
 
       await writePackageJsonFunction(path, "desktop-app", desktopAppPackage);
-      await leappCoreBootstrap("desktop-app", () => `npm:@noovolari/leapp-core-nightly@latest`);
+      await hopkeyCoreBootstrap("desktop-app", () => `npm:@hopkey/core-nightly@latest`);
 
       await gushio.run(path.join(__dirname, './target-release-dev.js'), ["configuration staging", args[0]])
     } catch (e) {

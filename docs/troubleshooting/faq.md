@@ -13,13 +13,13 @@ We need to store your data online to enable some features (syncing, managing oth
 
 ## I don't feel secure using a built-in window for authentication, can't you use the default browser?
 
-In the future, Leapp will only use the default browser to authenticate. Right now, this is a compromise to deliver the authentication flow. We already ported the AWS SSO authentication flow on the default browser, and we're working on migrating the other ones as soon as possible.
+In the future, Hopkey will only use the default browser to authenticate. Right now, this is a compromise to deliver the authentication flow. We already ported the AWS SSO authentication flow on the default browser, and we're working on migrating the other ones as soon as possible.
 
-## How can I find Leapp data in the System Vault?
+## How can I find Hopkey data in the System Vault?
 
-Every key stored by Leapp in the vault is named Leapp. The account name shows the description of the element saved by our software.
+Every key stored by Hopkey in the vault is named Hopkey. The account name shows the description of the element saved by our software.
 
-## Where do I find the Leapp logs?
+## Where do I find the Hopkey logs?
 
 Head to the [Application data section](app-data.md).
 
@@ -27,9 +27,9 @@ Head to the [Application data section](app-data.md).
 
 Just close the terminal and relaunch the SSM command.
 
-## AWS CLI (or AZ CLI) is installed but Leapp can't find it, what can I do?
+## AWS CLI (or AZ CLI) is installed but Hopkey can't find it, what can I do?
 
-Leapp on macOS works in sandbox mode, so some terminal commands must be symlinked in order to work on some installations.
+Hopkey on macOS works in sandbox mode, so some terminal commands must be symlinked in order to work on some installations.
 Just make a symlink pointing from `/usr/local/bin/aws` to the actual `aws` binary or, for AZ CLI, from `/usr/local/bin/az` to the actual `az` binary. To create
 symlinks on macOS, use this command `ln -s /any/file/on/the/disk linked-file`. The command is called **ln**. If used with the 
 option **-s** it will create a symbolic link in the current directory.
@@ -39,28 +39,28 @@ Examples:
 ln -s /path/to/my/aws /usr/local/bin/aws
 ln -s /path/to/my/az /usr/local/bin/az
 ```
-## I use leapp session current but want to see the alias and not the id. 
-### Setting up leappalias command
+## I use hopkey session current but want to see the alias and not the id. 
+### Setting up hopkeyalias command
 
-Follow these steps to set up the `leappalias` command in your Zsh shell:
+Follow these steps to set up the `hopkeyalias` command in your Zsh shell:
 
-- Create a script file named `leappalias.sh` using a text editor:
+- Create a script file named `hopkeyalias.sh` using a text editor:
 
    ```bash
    #!/bin/bash
-   leapp session current | grep -o "\"alias\":\"[^\"]*" | cut -d '"' -f 4
+   hopkey session current | grep -o "\"alias\":\"[^\"]*" | cut -d '"' -f 4
    ```
 
 - Save the file and make it executable by running the following command in the terminal:
 
    ```bash
-   chmod +x leappalias.sh
+   chmod +x hopkeyalias.sh
    ```
 
 - Move the script to a directory in your system's PATH. For example, `/usr/local/bin/`:
 
    ```bash
-   sudo mv leappalias.sh /usr/local/bin/leappalias
+   sudo mv hopkeyalias.sh /usr/local/bin/hopkeyalias
    ```
 
 - Open your `zshrc` file using a text editor:
@@ -72,7 +72,7 @@ Follow these steps to set up the `leappalias` command in your Zsh shell:
 - Define an alias for executing the script by adding the following line to the `zshrc` file:
 
    ```bash
-   alias leappalias='/usr/local/bin/leappalias'
+   alias hopkeyalias='/usr/local/bin/hopkeyalias'
    ```
 
 - Save the changes and close the `zshrc` file.
@@ -83,17 +83,17 @@ Follow these steps to set up the `leappalias` command in your Zsh shell:
    source ~/.zshrc
    ```
 
-Once you have completed these steps, you can use the `leappalias` command in your terminal to extract and display the alias from the output of `leapp session current`.
+Once you have completed these steps, you can use the `hopkeyalias` command in your terminal to extract and display the alias from the output of `hopkey session current`.
 Credit goes to [bspansinQdo](https://github.com/bspansinQdo).
 
 ## How can I add support to a new SAML 2.0 Identity Provider?
 
 To add support to a new SAML 2.0 Identity Provider, you have to perform the following steps:
 
-* create a [Fork](https://github.com/Noovolari/leapp/fork) of the Noovolari/leapp GitHub repository;
-* create a Pull Request and set up your local environment following _[Install dependencies and build packages](https://github.com/Noovolari/leapp/blob/master/DEVELOPMENT.md#development-environment-setup)_ section of the DEVELOPMENT.md;
-* add the Identity Provider-specific authentication URL RegEx filter to the Leapp Core [authenticationUrlRegexes](https://github.com/Noovolari/leapp/blob/beadb073ea99eb71cdf56982851604172bfdba0a/packages/core/src/services/aws-saml-assertion-extraction-service.ts) Map;
-* follow the last part of the _[Install dependencies and build packages](https://github.com/Noovolari/leapp/blob/master/DEVELOPMENT.md#development-environment-setup)_ section of the DEVELOPMENT.md to build the solution for both the CLI and the Desktop App;
+* create a [Fork](https://github.com/willroll/hopkey/fork) of the willroll/hopkey GitHub repository;
+* create a Pull Request and set up your local environment following _[Install dependencies and build packages](https://github.com/willroll/hopkey/blob/master/DEVELOPMENT.md#development-environment-setup)_ section of the DEVELOPMENT.md;
+* add the Identity Provider-specific authentication URL RegEx filter to the Hopkey Core [authenticationUrlRegexes](https://github.com/Noovolari/leapp/blob/beadb073ea99eb71cdf56982851604172bfdba0a/packages/core/src/services/aws-saml-assertion-extraction-service.ts) Map;
+* follow the last part of the _[Install dependencies and build packages](https://github.com/willroll/hopkey/blob/master/DEVELOPMENT.md#development-environment-setup)_ section of the DEVELOPMENT.md to build the solution for both the CLI and the Desktop App;
 * push your changes to your forked repository and propose to merge them to the main repository. 
 
-If you need more details about the implementation, please check the _How to add a new SAML IdP preset authentication URL_ section of the [DEVELOPMENT.md](https://github.com/Noovolari/leapp/blob/master/DEVELOPMENT.md).
+If you need more details about the implementation, please check the _How to add a new SAML IdP preset authentication URL_ section of the [DEVELOPMENT.md](https://github.com/willroll/hopkey/blob/master/DEVELOPMENT.md).
