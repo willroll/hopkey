@@ -102,11 +102,11 @@ export class ExtensionWebsocketService {
           sessionType: session.type.toString().startsWith("aws") ? "aws" : session.type.toString(),
           createdAt: new Date().getTime(),
         },
-        hopkeySessionId: session.sessionId,
+        leappSessionId: session.sessionId,
       })
     );
     this.fetching$.next(FetchingState.fetching);
-    this.toastService.toast("Opening Web Console with the Hopkey Extension...", ToastLevel.info);
+    this.toastService.toast("Opening Web Console with the Multi-Console Extension...", ToastLevel.info);
   }
 
   private pause(): Promise<void> {

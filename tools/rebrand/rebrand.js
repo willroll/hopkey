@@ -54,6 +54,7 @@ const BINARY_EXTENSIONS = new Set([
 const URL_PATTERN = String.raw`\b(?:git\+)?(?:https?|s3):\/\/[^\s"'<>\x60)\]}|\\^]+`;
 const PROTECTED_PATTERNS = [
   String.raw`@noovolari\/dpapi-addon`, // third-party npm dependency
+  String.raw`\bleappSessionId\b`, // message field of the upstream multi-console browser extension
   String.raw`\b[Nn]oovolari\/brew\/[\w-]+`, // upstream Homebrew tap
   String.raw`\bnoovolari-leapp[\w-]*`, // upstream S3 buckets
   String.raw`\b[\w.-]*leapp\.cloud\b`, // upstream website, docs, blog and e-mail addresses
