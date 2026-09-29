@@ -4,9 +4,9 @@ export const constants = {
   rsaBinFileDestination: ".hopkey/rsa.bin",
   lockFileDestination: ".hopkey/hopkey-lock.json",
   lockFileBackupPath: ".hopkey/hopkey-lock.backup.bin",
-  latestUrl: "https://leapp.cloud/releases.html",
+  latestUrl: "https://github.com/willroll/hopkey/releases/latest",
   workspaceLastVersion: 7,
-  slackUrl: "https://join.slack.com/t/noovolari/shared_invite/zt-opn8q98k-HDZfpJ2_2U3RdTnN~u_B~Q",
+  communityUrl: "https://github.com/willroll/hopkey/discussions",
   localWorkspaceName: "Local workspace",
   localWorkspaceDescription: "Community Edition",
   currentWorkspaceKeychainKey: "current-workspace",
@@ -66,9 +66,9 @@ export const constants = {
   npmRequiredPluginKeyword: "hopkey-plugin",
   skipPluginValidation: true,
   disablePluginSystem: false,
+  // Noovolari's plugin signature service and public key, only used when skipPluginValidation is false.
+  // Hopkey has no plugin signing service yet: replace both before enabling plugin validation.
   pluginPortalUrl: "https://vv0r45fadf.execute-api.eu-west-1.amazonaws.com/api/api/v1/plugins",
-  // Public Key for signature
-  // TODO: move it to the hopkey site in future
   publicKey:
     "-----BEGIN PUBLIC KEY-----\n" +
     "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqti1Z2PXLzKgkAgm9sMH\n" +

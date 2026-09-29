@@ -1,7 +1,7 @@
 module.exports = (version, tarballUrl, tarballSha256) =>
   `class HopkeyCliDarwinArm64 < Formula
   desc "Install Hopkey CLI"
-  homepage "https://leapp.cloud"
+  homepage "https://github.com/willroll/hopkey"
   version "${version}"
   url "${tarballUrl}"
   sha256 "${tarballSha256}"

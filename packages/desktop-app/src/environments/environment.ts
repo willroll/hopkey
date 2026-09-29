@@ -16,7 +16,7 @@ const environment = {
   defaultLocation: "eastus",
   defaultAwsProfileName: "default",
   defaultAzureProfileName: "default-azure",
-  latestUrl: "https://leapp.cloud/releases.html",
+  latestUrl: "https://github.com/willroll/hopkey/releases/latest",
 };
 
 export { environment };

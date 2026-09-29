@@ -17,12 +17,18 @@ module.exports = {
     const getFormula = require('./homebrew/get-formula')
     const getInstallerFormula = require('./homebrew/get-installer-formula')
 
-    const gitHubOrganization = "Noovolari"
-    const gitHubRepo = "homebrew-brew"
+    const requiredEnv = (name) => {
+      if (!process.env[name]) {
+        throw new Error(`${name} must be set`)
+      }
+      return process.env[name]
+    }
+    // Homebrew tap (e.g. willroll/homebrew-tap) and S3 bucket that host the formulas and the OCLIF installer
+    const [gitHubOrganization, gitHubRepo] = requiredEnv('HOMEBREW_TAP_REPOSITORY').split('/')
     const npmPath = "@hopkey/cli"
     const tarballTargets = "darwin-x64"
-    const s3Bucket = "noovolari-leapp-website-distribution-cli"
-    const bucketRegion = "eu-west-1"
+    const s3Bucket = requiredEnv('CLI_INSTALLER_BUCKET')
+    const bucketRegion = process.env['CLI_INSTALLER_BUCKET_REGION'] || "eu-west-1"
 
     const gitPushToken = process.env['GIT_PUSH_TOKEN']
     const credentials = gitPushToken ? `${gitPushToken}:x-oauth-basic@` : ''

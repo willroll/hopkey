@@ -76,10 +76,12 @@ const buildAutoUpdater = (win: any): void => {
 
   const minutes = 10;
 
+  // New versions are announced by the latest*.yml files attached to the GitHub releases
   const data = {
-    provider: "generic",
-    url: "https://asset.noovolari.com/latest",
-    channel: "latest",
+    provider: "github",
+    owner: "willroll",
+    repo: "hopkey",
+    releaseType: "release",
   };
   autoUpdater.setFeedURL(data);
 

@@ -21,10 +21,10 @@ import { OptionsService } from "../../services/options.service";
 import { AzureSession } from "@hopkey/core/models/azure/azure-session";
 import { OperatingSystem } from "@hopkey/core/models/operating-system";
 import { UpdaterService } from "../../services/updater.service";
-import { HopkeyNotification, HopkeyNotificationType } from "@hopkey/core/models/notification";
+import { HopkeyNotification } from "@hopkey/core/models/notification";
 import { InfoDialogComponent } from "../dialogs/info-dialog/info-dialog.component";
 import { NotificationService } from "@hopkey/core/services/notification-service";
-import { NoovolariDialogComponent } from "../dialogs/noovolari-dialog/noovolari-dialog.component";
+import { legacyApp } from "@hopkey/core/services/legacy-import-service";
 
 export const compactMode = new BehaviorSubject<boolean>(false);
 export const globalFilteredSessions = new BehaviorSubject<Session[]>([]);
@@ -113,31 +113,10 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
     this.notificationService = this.appProviderService.notificationService;
 
-    let notifications = this.notificationService.getNotifications().filter((n) => n.uuid === "noovolari-1000");
-    if (!notifications.find((n) => n.uuid === "noovolari-1000")) {
-      notifications = [
-        new HopkeyNotification(
-          "noovolari-1000",
-          HopkeyNotificationType.info,
-          "Noovolari important communication",
-          "Read more",
-          "",
-          false,
-          "https://blog.leapp.cloud/noovolari-has-officially-come-to-an-end",
-          "medal",
-          true
-        ),
-      ];
-    }
-    this.notificationService.setNotifications(notifications);
-
-    const firstNotReadPopupNotification = notifications.find((n) => n.popup && !n.read);
-    if (firstNotReadPopupNotification) {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout);
-        this.openNoovolariModal(firstNotReadPopupNotification);
-      }, 5000);
-    }
+    // Workspaces imported from the app Hopkey was forked from carry its end-of-life announcement, which doesn't apply here
+    this.notificationService.setNotifications(
+      this.notificationService.getNotifications().filter((notification) => notification.uuid !== legacyApp.shutdownNotificationUuid)
+    );
   }
 
   private static changeSessionsTableHeight() {
@@ -333,7 +312,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
   }
 
   goToJoinTheCommunity(): void {
-    this.windowService.openExternalUrl(constants.slackUrl);
+    this.windowService.openExternalUrl(constants.communityUrl);
   }
 
   openAnIssue(): void {
@@ -353,20 +332,6 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     this.bsModalService.show(InfoDialogComponent, {
       animated: false,
       class: "hopkey-team-early-access-modal",
-      initialState: {
-        title: notification.title,
-        description: notification.description,
-        link: notification?.link,
-        buttonName: notification.buttonActionName,
-      },
-    });
-  }
-
-  openNoovolariModal(notification: HopkeyNotification): void {
-    this.notificationService.setNotificationAsRead(notification.uuid);
-    this.bsModalService.show(NoovolariDialogComponent, {
-      animated: false,
-      class: "noovolari-modal",
       initialState: {
         title: notification.title,
         description: notification.description,

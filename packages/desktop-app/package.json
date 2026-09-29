@@ -3,8 +3,8 @@
   "version": "0.26.1",
   "private": true,
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
   "description": "Hopkey is a Cross-Platform Cloud access App, built on top of Electron.",
   "main": "electron/dist/electron/main.js",
@@ -44,7 +44,7 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "Noovolari",
+        "owner": "willroll",
         "repo": "hopkey",
         "releaseType": "release"
       }
@@ -131,7 +131,6 @@
     },
     "win": {
       "icon": "src/assets/images/Hopkey.ico",
-      "legalTrademarks": "beSharp",
       "requestedExecutionLevel": "asInvoker",
       "verifyUpdateCodeSignature": false,
       "target": [
@@ -208,7 +207,6 @@
     "node-ipc": "9.2.1",
     "node-log-rotate": "~0.1.5",
     "node-machine-id": "~1.1.12",
-    "posthog-js": "1.99.0",
     "reflect-metadata": "^0.1.13",
     "require-module": "^0.1.0",
     "rimraf": "~3.0.2",

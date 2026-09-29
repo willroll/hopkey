@@ -2,8 +2,8 @@
   "name": "@hopkey/core",
   "version": "0.1.165",
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
   "description": "Hopkey's core module",
   "dependencies": {

@@ -1,10 +1,10 @@
 {
   "name": "@hopkey/cli",
-  "description": "Hopkey's Command Line Interface\n\nIt relies on Hopkey Core, which encapsulates the domain logic.\n\nFor more information about the project visit the [site](www.leapp.cloud).",
+  "description": "Hopkey's Command Line Interface\n\nIt relies on Hopkey Core, which encapsulates the domain logic.\n\nFor more information about the project visit the [repository](https://github.com/willroll/hopkey).",
   "version": "0.1.65",
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
   "bin": {
     "hopkey": "./bin/run"
