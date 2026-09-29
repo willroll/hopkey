@@ -1,4 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
+import { legacyApp } from "../services/legacy-import-service";
 import { PluginContainer, PluginManagerService } from "./plugin-manager-service";
 import { constants } from "../models/constants";
 import { OperatingSystem } from "../models/operating-system";
@@ -548,6 +549,50 @@ describe("PluginManagerService", () => {
     await expect(pluginManager.installPlugin(`hopkey://${packageName}`)).rejects.toEqual(
       new LoggedException(`${npmMetadata["name"]} is not a Hopkey plugin`, this, LogLevel.error, true)
     );
+  });
+
+  test("installPlugin, legacy app keyword", async () => {
+    const packageName = "legacy-fake-plugin";
+    const nativeService = {
+      requireModule: null,
+      hashElement: { hashElement: null },
+      os: { homedir: () => "homedir" },
+      path: { join: jest.fn(() => "path") },
+      fs: { writeFileSync: jest.fn(), remove: jest.fn(), ensureDir: jest.fn() },
+      tar: { x: jest.fn() },
+    } as any;
+    const npmMetadata = {
+      ["dist-tags"]: { latest: "1.0.0" },
+      versions: { ["1.0.0"]: { dist: { tarball: `https://fake-url/${packageName}.tgz` } } },
+      keywords: [legacyApp.pluginKeyword],
+    };
+    const pluginManager = new PluginManagerService(null, nativeService, { log: jest.fn() } as any, null, null, null);
+    (pluginManager as any).http = {
+      get: jest.fn((_, param2: any) => ({
+        toPromise: async () => (param2.responseType === "json" ? npmMetadata : new ArrayBuffer(10)),
+      })),
+    };
+    await pluginManager.installPlugin(`hopkey://${packageName}`);
+    expect(nativeService.tar.x).toHaveBeenCalled();
+  });
+
+  test("extractMetadata, legacy app keyword and package.json key", () => {
+    const sessionFactory = { getCompatibleTypes: jest.fn(() => ["any"]) } as any;
+    const nativeService = { requireModule: null, hashElement: { hashElement: null } } as any;
+    const repository = { getPluginStatus: jest.fn(() => undefined) } as any;
+    const packageJson = {
+      version: "0.1.0",
+      author: "author",
+      name: "legacy-plugin",
+      description: "test description",
+      keywords: [legacyApp.pluginKeyword],
+      [legacyApp.pluginConfigKey]: { supportedSessions: [SessionType.awsIamUser], icon: "fas fa-key" },
+    };
+    const service = new PluginManagerService(null, nativeService, null, repository, sessionFactory, null) as any;
+    const result = service.extractMetadata(packageJson);
+    expect(result.supportedSessions).toStrictEqual([SessionType.awsIamUser]);
+    expect(result.icon).toBe("fas fa-key");
+    expect(result.active).toBe(true);
   });
 
   test("extractMetadata, success", () => {

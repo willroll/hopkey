@@ -9,6 +9,7 @@ import { Session } from "../models/session";
 import { SessionFactory } from "../services/session-factory";
 import { PluginEnvironment } from "./plugin-environment";
 import { AwsCredentialsPlugin } from "./aws-credentials-plugin";
+import { legacyApp } from "../services/legacy-import-service";
 
 export class PluginContainer {
   public pluginInstances: IPlugin[];
@@ -39,6 +40,11 @@ export class PluginManagerService {
 
   private static base64Decoding(input): Buffer {
     return Buffer.from(input, "base64");
+  }
+
+  // Plugins published for the app Hopkey was forked from declare themselves with its keyword and package.json key
+  private static hasPluginKeyword(keywords: string[] | undefined): boolean {
+    return !!keywords && (keywords.includes(constants.npmRequiredPluginKeyword) || keywords.includes(legacyApp.pluginKeyword));
   }
 
   get pluginContainers(): PluginContainer[] {
@@ -161,7 +167,7 @@ export class PluginManagerService {
     this.logService.log(new LoggedEntry(`We are ready to install Plugin ${packageName}, please wait...`, this, LogLevel.info, true));
 
     const npmMetadata = await this.http.get(`https://registry.npmjs.org/${packageName}`, { responseType: "json" }).toPromise();
-    if (!npmMetadata["keywords"] || !npmMetadata["keywords"].includes("hopkey-plugin")) {
+    if (!PluginManagerService.hasPluginKeyword(npmMetadata["keywords"])) {
       throw new LoggedException(`${npmMetadata["name"]} is not a Hopkey plugin`, this, LogLevel.error, true);
     }
     const version = npmMetadata["dist-tags"].latest;
@@ -208,11 +214,11 @@ export class PluginManagerService {
     const keywords = packageJson.keywords as string[];
     if (!keywords || keywords.length === 0) {
       errors.push("keywords");
-    } else if (!keywords.includes(constants.npmRequiredPluginKeyword)) {
+    } else if (!PluginManagerService.hasPluginKeyword(keywords)) {
       errors.push(`${constants.npmRequiredPluginKeyword} keyword`);
     }
 
-    const hopkeyPluginConfig = packageJson.hopkeyPlugin;
+    const hopkeyPluginConfig = packageJson.hopkeyPlugin ?? packageJson[legacyApp.pluginConfigKey];
     if (!hopkeyPluginConfig) {
       errors.push("hopkeyPlugin");
     }
