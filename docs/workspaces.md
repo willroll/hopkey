@@ -16,7 +16,10 @@ Alternatively, you can use **Remote workspaces**.
 
 ## Remote
 
-A **Remote workspace** is a **[Hopkey Team](https://www.leapp.cloud/team)** configuration set **created remotely by a Hopkey Team manager**. 
+!!! warning
+    Remote workspaces relied on the Team service run by Noovolari, which closed in 2024: they are not available in Hopkey.
+
+A **Remote workspace** is a Team configuration set **created remotely by a Team manager**. 
 
 When you **sync** a remote workspace, you will receive sessions and integrations **automatically**, without having to configure them yourself. 
 

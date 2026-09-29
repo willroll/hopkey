@@ -4,8 +4,8 @@ To persist your configuration online, we implemented **Zero-Knowledge encryption
 
 !!! Warning
 
-    This is implemented to save your configuration online in the PRO and TEAM versions of Hopkey.</br>
-    Don't know yet about the PRO and TEAM versions? Check our [roadmap](https://roadmap.leapp.cloud/tabs/4-in-progress){: target='_blank'}.
+    This protected the configurations saved online by the PRO and TEAM service, which Noovolari ran until it closed in 2024:
+    that service is not available in Hopkey.
 
 !!! Info
 

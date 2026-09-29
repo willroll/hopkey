@@ -25,7 +25,7 @@ In order to better understanding the Hopkey App, firstly check out the [Concept 
 
 Follow [this](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) official guide to install both Node.js and NPM.
 
-The latest build was released using Node.js version 16.14.0 - as specified in the .nvmrc - and NPM version 8.5.5.
+Hopkey builds with Node.js 18 (18.20.8, as specified in the .nvmrc) and npm 10.
 
 ## NVM
 
@@ -97,6 +97,12 @@ At this point, run the following command to setup the entire project:
 ```bash
 npm run clean-and-bootstrap
 ```
+
+> [!NOTE]
+> **Checkouts from before the rename.** The build copies `team-service-stub.ts` to the git-ignored `team-service.ts`
+> files of the CLI and Desktop App only when they are missing, so a checkout built before the project was renamed keeps
+> copies that import packages that no longer exist. Delete `packages/cli/src/service/team-service.ts` and
+> `packages/desktop-app/src/app/services/team-service.ts` before bootstrapping.
 
 This _clean-and-bootstrap_ script takes as input one or more of the following packages: _core_, _cli_, or _desktop-app_.
 

@@ -10,7 +10,7 @@ Contributions and questions are not just welcome, **they’re essential!**
 
 Please open issues with ideas on how to improve Hopkey, including feedback, critiques, and information about how you’re using it. Discussion is at the heart of the project and your thoughts and ideas will help make it better for everyone, thank you. 💙
 
-You can chat with us inside our community so [join us](https://join.slack.com/t/noovolari/shared_invite/zt-noc0ju05-18_GRX~Zi6Jz8~95j5CySA), or feel free to contact us via the email at info@noovolari.com.
+Questions and ideas are welcome in [GitHub Discussions](https://github.com/willroll/hopkey/discussions).
 
 # Code of Conduct
 
@@ -26,7 +26,7 @@ You can start contributing to Hopkey by
 
 Any other idea to contribute that we missed? Submit a Pull Request to share it with us!
 
-[GitHub Issues](https://github.com/willroll/hopkey/issues) is the preferred contribution channel, but not the only one! You can suggest enhancements or new features in Hopkey’s [public roadmap](https://roadmap.leapp.cloud/tabs/4-in-progress).
+[GitHub Issues](https://github.com/willroll/hopkey/issues) is the preferred contribution channel, but not the only one! You can also discuss enhancements or new features in [GitHub Discussions](https://github.com/willroll/hopkey/discussions).
 
 When creating a new issue through the [GitHub Issues](https://github.com/willroll/hopkey/issues) channel, it’s really important to understand if it is a “beginner-friendly” one. Beginner-friendly issues can be a good starting point for new contributors; that’s the reason why you can label them as “good first issue”. Visit [here](https://github.com/willroll/hopkey/contribute) and make your first contribution to this repository by tackling one of the listed good first issues.
 
@@ -34,7 +34,7 @@ Contributors can start contributing even in “help wanted” issues. These are 
 
 Please respect the following restrictions:
 
-- Please **do not** use the issue tracker for personal support requests email info@noovolari.com.
+- Please **do not** use the issue tracker for personal support requests: ask in [GitHub Discussions](https://github.com/willroll/hopkey/discussions) instead.
 - Please **do not** derail or troll issues. Keep the discussion on topic and respect the opinions of others.
 
 ## Reporting bugs
@@ -72,9 +72,7 @@ As for bug reporting, there is a template for new feature requests too. You can 
 - additional context;
 - how it is important to you (nice to have, important, critical).
 
-You can even submit your feature request idea from our [public roadmap board](https://roadmap.leapp.cloud/tabs/4-in-progress).
-
-Please consult the [public roadmap](https://roadmap.leapp.cloud/tabs/4-in-progress) to get an overview of new ideas that were accepted by Hopkey maintainers.
+You can also float an idea in [GitHub Discussions](https://github.com/willroll/hopkey/discussions) before opening a feature request.
 
 ## ****Your First Code Contribution****
 
@@ -167,7 +165,7 @@ involved.
 The DCO requires a sign-off message in the following format appear on each commit in the pull request:
 
 ```
-Signed-off-by: John Doe <johndoe@leapp.cloud>
+Signed-off-by: John Doe <johndoe@example.com>
 
 ```
 

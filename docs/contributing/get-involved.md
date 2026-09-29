@@ -4,6 +4,6 @@ Contributions and questions are not just welcome, they’re essential! Please op
 
 Read our [contribution guide](https://github.com/willroll/hopkey/blob/master/CONTRIBUTING.md){: target='_blank'} to learn more.
 
-You can chat with us in our community, so join us, or feel free to contact us via the [website](https://www.leapp.cloud/contacts){: target='_blank'}!
+Questions, ideas and show-and-tell are welcome in GitHub Discussions!
 
-[Join our Community :fontawesome-brands-slack:](https://join.slack.com/t/noovolari/shared_invite/zt-opn8q98k-HDZfpJ2_2U3RdTnN~u_B~Q){ .md-button .md-button--primary .centered-button }
+[Join the Discussions :fontawesome-brands-github:](https://github.com/willroll/hopkey/discussions){ .md-button .md-button--primary .centered-button }

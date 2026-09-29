@@ -124,7 +124,7 @@ const response = await res.json();
 ###Example: open a URL in the browser
 
 ```typescript
-this.pluginEnvironment.openExternalUrl("https://leapp.cloud");
+this.pluginEnvironment.openExternalUrl("https://github.com/willroll/hopkey");
 ```
 
 ###Example: create a session

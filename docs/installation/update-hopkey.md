@@ -29,23 +29,10 @@ In this modal, a user can do the following:
     
     Hopkey will close the modal and another one will appear in **10 minutes**.
 
-### macOS (Homebrew), Linux (Linuxbrew) and Windows (via WSL)
-
-Hopkey can also be updated via [Homebrew Cask](https://brew.sh/){: target='_blank'} with:
-`brew upgrade hopkey`
-
 ## CLI
 
-Depending on which method you used to install the CLI ([npm](https://www.npmjs.com/package/@hopkey/cli){: target='_blank'} or Homebrew on macOS), you can update it with the following commands:
+If you installed the CLI from [npm](https://www.npmjs.com/package/@hopkey/cli){: target='_blank'}, update it with:
 
-=== "npm"
-
-    ```console
-    npm update -g @hopkey/cli
-    ```
-
-=== "Homebrew (macOS)"
-
-    ```console
-    brew upgrade Noovolari/brew/leapp-cli
-    ```
+```console
+npm update -g @hopkey/cli
+```

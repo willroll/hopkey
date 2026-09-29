@@ -70,6 +70,9 @@ From there, you can see a list of currently installed plugins, check whether a p
 
 You can start creating a plugin [from the template](https://github.com/Noovolari/leapp-plugin-template).
 
+!!! info
+    The template was written for Leapp: Hopkey loads the plugins built from it, with their `leapp-plugin` keyword and `leappPlugin` configuration, as they are. <!-- rebrand:keep -->
+
 Hopkey plugins are written in TypeScript. They must contain at least a class that extends a base class provided by the Plugin SDK.
 
 There's currently only one of these classes, `AwsCredentialsPlugin` , that can be used to create a plugin that generates temporary credentials.

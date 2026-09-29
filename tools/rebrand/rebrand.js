@@ -14,7 +14,8 @@
  * Homebrew tap, ...) are never rewritten: pointing them at a made-up domain would hand the app's
  * traffic to whoever registers it. They are kept verbatim and listed by --report for manual review.
  *
- * The rewrite is idempotent, so it can be re-run after merging upstream changes.
+ * The rewrite is idempotent, so it can be re-run after merging upstream changes. Lines that must keep an
+ * upstream name on purpose (e.g. to credit Leapp) carry a "rebrand:keep" comment and are left untouched.
  *
  * Usage:
  *   node tools/rebrand/rebrand.js            apply the changes (uses `git mv` for renames)
@@ -37,10 +38,11 @@ const APP_ID = "io.github.willroll.hopkey";
 const EXCLUDED = [
   /^LICENSE$/,
   /^CHANGELOG\.md$/, // upstream release history is kept verbatim
-  /^(README|NOTICE)\.md$/, // hand-maintained, credits upstream Leapp on purpose
+  /^(README|NOTICE|PORTING)\.md$/, // hand-maintained, credit upstream Leapp on purpose
   /^dpapi-addon\//, // source of the upstream-published @noovolari/dpapi-addon package
   /^packages\/desktop-app\/electron\/build\//, // committed node-gyp output
   /^packages\/core\/src\/services\/legacy-import-service(\.spec)?\.ts$/, // imports Leapp data, names it on purpose
+  /^docs\/installation\/migrating-from-leapp\.md$/, // explains the Leapp import
   /^tools\/rebrand\//,
 ];
 
@@ -76,7 +78,16 @@ const TEXT_RULES = [
   [/leapp/g, "hopkey"],
 ];
 
+const KEEP_LINE_MARKER = "rebrand:keep";
+
 function transformText(text) {
+  return text
+    .split("\n")
+    .map((line) => (line.includes(KEEP_LINE_MARKER) ? line : transformLine(line)))
+    .join("\n");
+}
+
+function transformLine(text) {
   let out = "";
   let last = 0;
   for (const match of text.matchAll(TOKEN_REGEX)) {
