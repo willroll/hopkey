@@ -26,7 +26,7 @@ export abstract class HopkeyCommand extends Command {
     this.cliProviderService.awsSsoRoleService.setAwsIntegrationDelegate(this.cliProviderService.awsSsoIntegrationService);
     const isDesktopAppRunning = await this.cliProviderService.remoteProceduresClient.isDesktopAppRunning();
     if (!isDesktopAppRunning) {
-      this.error("Hopkey app must be running to use this CLI. You can download it here: https://www.leapp.cloud/releases");
+      this.error("Hopkey app must be running to use this CLI. You can download it here: https://github.com/willroll/hopkey/releases");
       return;
     }
     await this.cliProviderService.teamService.setCurrentWorkspace(true);

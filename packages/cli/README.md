@@ -5,7 +5,7 @@ Hopkey's Command Line Interface.
 
 It relies on Hopkey Core, which encapsulates the domain logic.
 
-For more information about the project visit the [site](www.leapp.cloud).
+For more information about the project visit the [repository](https://github.com/willroll/hopkey).
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/@hopkey/core.svg)](https://npmjs.org/package/@hopkey/cli)

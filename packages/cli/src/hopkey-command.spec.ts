@@ -48,7 +48,7 @@ describe("HopkeyCommand", () => {
     expect(cliProviderService.awsSsoRoleService.setAwsIntegrationDelegate).toHaveBeenCalledWith(cliProviderService.awsSsoIntegrationService);
     expect(cliProviderService.remoteProceduresClient.isDesktopAppRunning).toHaveBeenCalled();
     expect(hopkeyCommand.error).toHaveBeenCalledWith(
-      "Hopkey app must be running to use this CLI. You can download it here: https://www.leapp.cloud/releases"
+      "Hopkey app must be running to use this CLI. You can download it here: https://github.com/willroll/hopkey/releases"
     );
     expect(cliProviderService.teamService.setCurrentWorkspace).not.toHaveBeenCalled();
   });

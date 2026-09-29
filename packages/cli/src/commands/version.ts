@@ -13,6 +13,6 @@ export default class Version extends HopkeyCommand {
   async run(): Promise<void> {
     const cliVersion = require("../../package.json").version;
     const coreVersion = this.cliProviderService.logService.getCoreVersion();
-    this.log(`Hopkey Cli\n` + `Version ${cliVersion} (Core: ${coreVersion})\n` + "© 2022 Noovolari");
+    this.log(`Hopkey Cli\n` + `Version ${cliVersion} (Core: ${coreVersion})\n` + "© 2022 Noovolari, © 2026 Hopkey contributors");
   }
 }

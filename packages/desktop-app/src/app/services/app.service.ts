@@ -239,7 +239,7 @@ export class AppService {
     this.windowService.getCurrentWindow().show();
     this.getDialog().showMessageBox({
       icon: __dirname + `/assets/images/Hopkey.png`,
-      message: `Hopkey\n` + `Version ${version} (Core: ${coreVersion})\n` + "© 2022 Noovolari",
+      message: `Hopkey\n` + `Version ${version} (Core: ${coreVersion})\n` + "© 2022 Noovolari, © 2026 Hopkey contributors",
       buttons: ["Ok"],
     });
   }
