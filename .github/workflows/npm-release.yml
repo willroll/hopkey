@@ -1,0 +1,57 @@
+name: Release npm packages
+
+# Pushing a core-vX.Y.Z or cli-vX.Y.Z tag (see `npm run hopkey-release`) publishes @hopkey/core or @hopkey/cli.
+# Requires an NPM_TOKEN secret allowed to publish to the @hopkey npm scope.
+on:
+  push:
+    tags:
+      - "core-v[0-9]+.[0-9]+.[0-9]+"
+      - "cli-v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: "0"
+
+jobs:
+  core:
+    if: startsWith(github.ref_name, 'core-v')
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  cli:
+    if: startsWith(github.ref_name, 'cli-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+      - name: Build core
+        working-directory: packages/core
+        run: npm ci && npm run build
+      - name: Depend on the published core instead of the local one
+        working-directory: packages/cli
+        run: |
+          npm pkg set "dependencies.@hopkey/core=$(node -p "require('../core/package.json').version")"
+          npm install --no-audit --no-fund
+      # release-npm checks that the core version is on npm, then runs `npm publish`, which builds through prepack
+      - run: npm run release-npm
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
