@@ -50,6 +50,8 @@ import * as crypto from "crypto";
 import { TeamService } from "./team-service";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
+import { AgentActivityService } from "@hopkey/core/services/agent-activity-service";
+import { AgentService } from "@hopkey/core/services/agent-service";
 
 /* eslint-disable */
 export class CliProviderService {
@@ -97,6 +99,23 @@ export class CliProviderService {
   private azureIntegrationServiceInstance: AzureIntegrationService;
   private teamServiceInstance: TeamService;
   private localstackSessionServiceInstance: LocalstackSessionService;
+  private agentActivityServiceInstance: AgentActivityService;
+  private agentServiceInstance: AgentService;
+
+  public get agentActivityService(): AgentActivityService {
+    if (!this.agentActivityServiceInstance) {
+      this.agentActivityServiceInstance = new AgentActivityService(this.cliNativeService);
+    }
+    return this.agentActivityServiceInstance;
+  }
+
+  public get agentService(): AgentService {
+    if (!this.agentServiceInstance) {
+      this.agentServiceInstance = new AgentService(this.repository, this.namedProfilesService, this.awsIamRoleChainedService,
+        this.agentActivityService);
+    }
+    return this.agentServiceInstance;
+  }
 
   public get azureIntegrationService(): AzureIntegrationService {
     if (!this.azureIntegrationServiceInstance) {
@@ -235,7 +254,7 @@ export class CliProviderService {
   get awsIamRoleChainedService(): AwsIamRoleChainedService {
     if (!this.awsIamRoleChainedServiceInstance) {
       this.awsIamRoleChainedServiceInstance = new AwsIamRoleChainedService(this.behaviouralSubjectService, this.repository,
-        this.awsCoreService, this.fileService, this.awsIamUserService, this.awsParentSessionFactory);
+        this.awsCoreService, this.fileService, this.awsIamUserService, this.awsParentSessionFactory, this.agentActivityService);
     }
     return this.awsIamRoleChainedServiceInstance;
   }

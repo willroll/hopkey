@@ -32,9 +32,14 @@ export abstract class AwsSessionService extends SessionService {
       if (this.isThereAnotherPendingSessionWithSameNamedProfile(sessionId)) {
         throw new HopkeyBaseError("Pending session with same named profile", this, LogLevel.info, "Pending session with same named profile");
       }
+      const agentSession = this.agentSessionWithSameNamedProfile(sessionId);
+      if (agentSession) {
+        const message = `The named profile of this session belongs to the agent ${agentSession.agent.name}`;
+        throw new HopkeyBaseError(message, this, LogLevel.warn, message);
+      }
       await this.stopAllWithSameNameProfile(sessionId);
       this.sessionLoading(sessionId);
-      if (this.repository.getWorkspace().credentialMethod === constants.credentialFile) {
+      if (!this.usesCredentialProcess(sessionId)) {
         const credentialsInfo = await this.generateCredentials(sessionId);
         await this.applyCredentials(sessionId, credentialsInfo);
       } else {
@@ -49,7 +54,7 @@ export abstract class AwsSessionService extends SessionService {
   async rotate(sessionId: string): Promise<void> {
     try {
       // We don't need to rotate credentials when in  credential process mode
-      if (this.repository.getWorkspace().credentialMethod === constants.credentialFile) {
+      if (!this.usesCredentialProcess(sessionId)) {
         this.sessionLoading(sessionId);
         const credentialsInfo = await this.generateCredentials(sessionId);
         await this.applyCredentials(sessionId, credentialsInfo);
@@ -65,7 +70,7 @@ export abstract class AwsSessionService extends SessionService {
       return;
     }
     try {
-      if (this.repository.getWorkspace().credentialMethod === constants.credentialFile) {
+      if (!this.usesCredentialProcess(sessionId)) {
         await this.deApplyCredentials(sessionId);
       } else {
         await this.deApplyConfigProfileCommand(sessionId);
@@ -124,7 +129,12 @@ export abstract class AwsSessionService extends SessionService {
         region: session.region,
       };
 
-      await this.fileService.iniWriteSync(this.awsCoreService.awsConfigPath(), credentialProcess);
+      // A new machine has an AWS credentials file, created by Hopkey, but may have no config file yet
+      const configPath = this.awsCoreService.awsConfigPath();
+      if (!this.fileService.existsSync(configPath)) {
+        this.fileService.writeFileSyncWithOptions(configPath, "", { mode: "600" });
+      }
+      await this.fileService.iniWriteSync(configPath, credentialProcess);
     } catch (error) {
       this.sessionError(sessionId, error);
     }
@@ -134,9 +144,26 @@ export abstract class AwsSessionService extends SessionService {
     const session = this.repository.getSessionById(sessionId);
     const profileName = this.repository.getProfileName((session as any).profileId);
     const profile = `profile ${profileName}`;
-    const credentialProcess = await this.fileService.iniParseSync(this.awsCoreService.awsConfigPath());
+    const configPath = this.awsCoreService.awsConfigPath();
+    if (!this.fileService.existsSync(configPath)) {
+      return;
+    }
+    const credentialProcess = await this.fileService.iniParseSync(configPath);
     delete credentialProcess[profile];
-    await this.fileService.replaceWriteSync(this.awsCoreService.awsConfigPath(), credentialProcess);
+    await this.fileService.replaceWriteSync(configPath, credentialProcess);
+  }
+
+  /**
+   * Whether the session hands out its credentials through credential_process instead of the credentials file.
+   */
+  protected usesCredentialProcess(_sessionId: string): boolean {
+    return this.repository.getWorkspace().credentialMethod !== constants.credentialFile;
+  }
+
+  // An agent's named profile is its own: another session writing credentials there would hand them to the agent
+  private agentSessionWithSameNamedProfile(sessionId: string): any {
+    const profileId = (this.repository.getSessionById(sessionId) as any).profileId;
+    return this.repository.getSessions().find((session: any) => session.sessionId !== sessionId && session.agent && session.profileId === profileId);
   }
 
   private isThereAnotherPendingSessionWithSameNamedProfile(sessionId: string) {

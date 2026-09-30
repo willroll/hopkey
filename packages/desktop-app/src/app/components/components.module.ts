@@ -64,6 +64,8 @@ import { OverlayModule } from "@angular/cdk/overlay";
 import { LockPageComponent } from "./lock-page/lock-page.component";
 import { CheckIconSvgComponent } from "./check-icon-svg/check-icon-svg.component";
 import { AuthorizationDialogComponent } from "./dialogs/authorization-dialog/authorization-dialog.component";
+import { AgentsDialogComponent } from "./dialogs/agents-dialog/agents-dialog.component";
+import { AgentSettingsComponent } from "./agent-settings/agent-settings.component";
 
 @NgModule({
   declarations: [
@@ -81,6 +83,8 @@ import { AuthorizationDialogComponent } from "./dialogs/authorization-dialog/aut
     CommandBarComponent,
     SideBarComponent,
     OptionsDialogComponent,
+    AgentsDialogComponent,
+    AgentSettingsComponent,
     CreateDialogComponent,
     EditDialogComponent,
     FilterMenuComponent,

@@ -21,6 +21,8 @@ import { AppMfaCodePromptService } from "../../../services/app-mfa-code-prompt.s
 import { SessionStatus } from "@hopkey/core/models/session-status";
 import { OptionsService } from "../../../services/options.service";
 import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
+import { AwsAgentSettings, agentRoleSessionName, normalizeAgentSettings } from "@hopkey/core/models/aws/aws-agent";
+import { agentFormControls, agentSettingsFromForm, isAgentFormValid, setAgentForm } from "../../agent-settings/agent-form";
 
 @Component({
   selector: "app-edit-dialog",
@@ -71,6 +73,7 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
     awsProfile: new FormControl("", [Validators.required]),
     azureLocation: new FormControl("", [Validators.required]),
     assumerSession: new FormControl("", [Validators.required]),
+    ...agentFormControls(),
   });
 
   public idpUrls: { value: string; label: string }[] = [];
@@ -174,6 +177,7 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
         value: this.selectedSession.profileId,
         label: this.hopkeyCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
       });
+      setAgentForm(this.form, (this.selectedSession as AwsIamRoleChainedSession).agent);
     }
 
     if (this.accountType === SessionType.awsIamUser) {
@@ -226,7 +230,6 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
       if (this.formValid()) {
         this.addProfileToWorkspace();
         this.addIpdUrlToWorkspace();
-        this.updateProperties();
 
         if (this.selectedSession.type !== SessionType.azure) {
           try {
@@ -236,10 +239,20 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
           }
         }
 
+        // Check the agent settings before changing anything
+        const agent = this.validatedAgent();
+        const previousAgent = (this.selectedSession as AwsIamRoleChainedSession).agent;
+
+        // Stop the session with its old settings: an agent session hands out its credentials differently
         let wasActive = false;
         if (this.selectedSession.status === SessionStatus.active) {
           await this.sessionService.stop(this.selectedSession.sessionId);
           wasActive = true;
+        }
+
+        this.updateProperties(agent);
+        if (agent || previousAgent) {
+          this.recordAgentUpdate(previousAgent);
         }
 
         if (this.selectedSession.type !== SessionType.azure) {
@@ -279,9 +292,12 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
   }
 
   async tryProperties(): Promise<void> {
+    // Trying agent settings must not change how the session hands out its credentials until it is saved
+    const chainedSession = this.selectedSession as AwsIamRoleChainedSession;
+    const { agent, roleSessionName } = chainedSession;
     try {
       if (this.formValid()) {
-        this.updateProperties();
+        this.updateProperties(this.agentFromForm());
 
         this.mfaPrompter.keepUnderlyingModal = true;
         const check = await this.sessionService.validateCredentials(this.selectedSession.sessionId);
@@ -297,10 +313,15 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
       }
     } catch (err) {
       this.messageToasterService.toast(`One or more parameters are invalid: ${err.toString()}.`, ToastLevel.warn, "");
+    } finally {
+      if (this.accountType === SessionType.awsIamRoleChained) {
+        chainedSession.roleSessionName = roleSessionName;
+        this.setAgent(chainedSession, agent);
+      }
     }
   }
 
-  updateProperties(): void {
+  updateProperties(agent?: AwsAgentSettings): void {
     switch (this.accountType) {
       case SessionType.awsIamRoleFederated:
         (this.selectedSession as AwsIamRoleFederatedSession).sessionName = this.form.controls["name"].value;
@@ -333,9 +354,12 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
       case SessionType.awsIamRoleChained:
         (this.selectedSession as AwsIamRoleChainedSession).sessionName = this.form.controls["name"].value;
         (this.selectedSession as AwsIamRoleChainedSession).region = this.selectedRegion;
-        (this.selectedSession as AwsIamRoleChainedSession).roleSessionName = this.form.value.roleSessionName.trim();
+        (this.selectedSession as AwsIamRoleChainedSession).roleSessionName = agent
+          ? agentRoleSessionName(agent.name)
+          : this.form.value.roleSessionName.trim();
         (this.selectedSession as AwsIamRoleChainedSession).parentSessionId = this.selectedParentSession.sessionId;
         (this.selectedSession as AwsIamRoleChainedSession).roleArn = this.form.value.roleArn.trim();
+        this.setAgent(this.selectedSession as AwsIamRoleChainedSession, agent);
         break;
       /*case SessionType.azure:
         (this.selectedSession as AzureSession).region = this.selectedLocation;
@@ -370,7 +394,8 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
           this.form.get("awsRegion").value !== null &&
           this.form.get("roleArn").valid &&
           this.form.get("roleSessionName").valid &&
-          this.selectedSession?.sessionId;
+          this.selectedSession?.sessionId &&
+          isAgentFormValid(this.form);
         break;
       case SessionType.awsIamUser:
         result =
@@ -417,6 +442,35 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
 
   closeModal(): void {
     this.appService.closeModal();
+  }
+
+  private agentFromForm(): AwsAgentSettings | undefined {
+    const agent = agentSettingsFromForm(this.form);
+    return agent ? normalizeAgentSettings(agent) : undefined;
+  }
+
+  // Agent settings, checked against the other sessions: unique name, named profile of its own
+  private validatedAgent(): AwsAgentSettings | undefined {
+    const agent = this.accountType === SessionType.awsIamRoleChained ? agentSettingsFromForm(this.form) : undefined;
+    return agent
+      ? this.hopkeyCoreService.awsIamRoleChainedService.validateAgent(agent, this.selectedSession.sessionId, this.selectedProfile.value)
+      : undefined;
+  }
+
+  private setAgent(session: AwsIamRoleChainedSession, agent?: AwsAgentSettings): void {
+    if (agent) {
+      session.agent = agent;
+    } else {
+      delete session.agent;
+    }
+  }
+
+  private recordAgentUpdate(previousAgent?: AwsAgentSettings): void {
+    try {
+      this.hopkeyCoreService.agentService.recordUpdate(this.selectedSession, previousAgent);
+    } catch (error) {
+      this.messageToasterService.toast(`Hopkey could not record the change in the agent's activity: ${error.message}`, ToastLevel.warn);
+    }
   }
 
   /**

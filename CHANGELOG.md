@@ -16,6 +16,8 @@ Leapp's.
 
 ### Features
 
+* AI agents: give an agent short-lived AWS credentials of its own, narrowed by a session policy, named after it in
+  CloudTrail and recorded in an activity history (the Agents screen and `hopkey agent`)
 * import an existing Leapp workspace, its plugins and its system vault secrets on first launch
 * load plugins published for Leapp
 * bundle the icons instead of loading them from a remote Font Awesome kit

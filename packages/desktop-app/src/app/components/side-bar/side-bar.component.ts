@@ -18,6 +18,7 @@ import { integrationHighlight } from "../integration-bar/integration-bar.compone
 import { MatMenuTrigger } from "@angular/material/menu";
 import { AppService } from "../../services/app.service";
 import { OptionsDialogComponent } from "../dialogs/options-dialog/options-dialog.component";
+import { AgentsDialogComponent } from "../dialogs/agents-dialog/agents-dialog.component";
 import { LoginWorkspaceDialogComponent } from "../dialogs/login-team-dialog/login-workspace-dialog.component";
 import { ManageTeamWorkspacesDialogComponent } from "../dialogs/manage-team-workspaces-dialog/manage-team-workspaces-dialog.component";
 import { WorkspaceState } from "../../services/team-service";
@@ -196,6 +197,10 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
   showOptionDialog(): void {
     this.bsModalService.show(OptionsDialogComponent, { animated: false, class: "option-modal" });
+  }
+
+  showAgentsDialog(): void {
+    this.bsModalService.show(AgentsDialogComponent, { animated: false, class: "agents-modal" });
   }
 
   async loginToRemoteWorkspace(): Promise<void> {

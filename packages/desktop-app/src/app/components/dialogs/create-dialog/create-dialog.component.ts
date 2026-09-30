@@ -23,6 +23,7 @@ import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-s
 import { OptionsService } from "../../../services/options.service";
 import { LocalstackSessionRequest } from "@hopkey/core/services/session/localstack/localstack-session-request";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
+import { agentFormControls, agentSettingsFromForm, isAgentFormValid } from "../../agent-settings/agent-form";
 
 @Component({
   selector: "app-create-dialog",
@@ -92,6 +93,7 @@ export class CreateDialogComponent implements OnInit {
     azureLocation: new FormControl("", [Validators.required]),
     assumerSession: new FormControl("", [Validators.required]),
     selectAccessStrategy: new FormControl(SessionType.awsIamRoleFederated, [Validators.required]),
+    ...agentFormControls(),
   });
 
   private behaviouralSubjectService: BehaviouralSubjectService;
@@ -235,7 +237,8 @@ export class CreateDialogComponent implements OnInit {
           this.form.get("awsRegion").value !== null &&
           this.form.get("roleArn").valid &&
           this.form.get("roleSessionName").valid &&
-          this.selectedSession?.sessionId;
+          this.selectedSession?.sessionId &&
+          isAgentFormValid(this.form);
         break;
       case SessionType.awsIamUser:
         result =
@@ -405,6 +408,7 @@ export class CreateDialogComponent implements OnInit {
             roleSessionName: this.form.value.roleSessionName.trim(),
             parentSessionId: this.selectedSession.sessionId,
             profileId: this.selectedProfile.value,
+            agent: agentSettingsFromForm(this.form),
           };
           await this.awsIamRoleChainedService.create(awsIamRoleChainedAccountRequest);
           break;

@@ -14,6 +14,13 @@ import { AwsParentSessionFactory } from "./aws-parent-session.factory";
 import { AwsSessionService } from "./aws-session-service";
 import { SessionType } from "../../../models/session-type";
 import { constants } from "../../../models/constants";
+import { AwsAgentSettings, agentAssumeRoleParameters, agentRoleSessionName, normalizeAgentSettings } from "../../../models/aws/aws-agent";
+import { AgentActivityDetails, AgentActivityEvent, AgentActivityService } from "../../agent-activity-service";
+import { AwsProcessCredentials } from "../../../models/aws/aws-process-credential";
+import { SessionStatus } from "../../../models/session-status";
+import { HopkeyBaseError } from "../../../errors/hopkey-base-error";
+import { HopkeyParseError } from "../../../errors/hopkey-parse-error";
+import { LogLevel } from "../../log-service";
 
 export class AwsIamRoleChainedService extends AwsSessionService {
   constructor(
@@ -22,7 +29,8 @@ export class AwsIamRoleChainedService extends AwsSessionService {
     awsCoreService: AwsCoreService,
     fileService: FileService,
     private awsIamUserService: AwsIamUserService,
-    private parentSessionServiceFactory: AwsParentSessionFactory
+    private parentSessionServiceFactory: AwsParentSessionFactory,
+    private agentActivityService?: AgentActivityService
   ) {
     super(iSessionNotifier, repository, awsCoreService, fileService);
   }
@@ -57,22 +65,135 @@ export class AwsIamRoleChainedService extends AwsSessionService {
       session.awsAccount = request.awsAccount;
     }
 
+    if (request.agent) {
+      session.agent = this.validateAgent(request.agent, session.sessionId, session.profileId);
+      session.roleSessionName = agentRoleSessionName(session.agent.name);
+    }
+
     this.repository.addSession(session);
     this.sessionNotifier?.setSessions(this.repository.getSessions());
+    if (session.agent) {
+      this.recordAgentActivity(session, session.agent, AgentActivityEvent.created);
+    }
   }
 
   async update(sessionId: string, updateRequest: AwsIamRoleChainedSessionRequest): Promise<void> {
     const session = this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession;
     if (session) {
+      const agent = updateRequest.agent ? this.validateAgent(updateRequest.agent, sessionId, updateRequest.profileId) : undefined;
+      const previousAgent = session.agent;
+      // Agent sessions and regular ones hand out credentials differently: restart an active session that switches
+      const restart = session.status === SessionStatus.active && !!agent !== !!previousAgent;
+      if (restart) {
+        await this.stop(sessionId);
+      }
       session.sessionName = updateRequest.sessionName;
       session.region = updateRequest.region;
       session.roleArn = updateRequest.roleArn;
-      session.roleSessionName = updateRequest.roleSessionName;
+      session.roleSessionName = agent ? agentRoleSessionName(agent.name) : updateRequest.roleSessionName;
       session.parentSessionId = updateRequest.parentSessionId;
       session.profileId = updateRequest.profileId;
+      if (agent) {
+        session.agent = agent;
+      } else {
+        delete session.agent;
+      }
       this.repository.updateSession(sessionId, session);
       this.sessionNotifier?.setSessions(this.repository.getSessions());
+      if (agent || previousAgent) {
+        this.recordAgentActivity(session, agent ?? previousAgent, AgentActivityEvent.updated);
+      }
+      if (restart) {
+        await this.start(sessionId);
+      }
     }
+  }
+
+  /**
+   * Checks the agent settings of a session and returns them as they are stored. An agent needs a unique name and a
+   * named profile of its own: another session using the profile could write its credentials where the agent reads.
+   */
+  validateAgent(agent: AwsAgentSettings, sessionId: string, profileId: string): AwsAgentSettings {
+    let normalized: AwsAgentSettings;
+    try {
+      normalized = normalizeAgentSettings(agent);
+    } catch (error) {
+      throw new HopkeyParseError(this, error.message);
+    }
+    const otherSessions = this.repository.getSessions().filter((session) => session.sessionId !== sessionId);
+    if (otherSessions.find((session) => (session as AwsIamRoleChainedSession).agent?.name === normalized.name)) {
+      throw new HopkeyParseError(this, `An agent named ${normalized.name} already exists`);
+    }
+    if (profileId === this.repository.getDefaultProfileId()) {
+      throw new HopkeyParseError(this, "An agent needs a named profile of its own, not the default one");
+    }
+    const profileSession = otherSessions.find((session) => (session as any).profileId === profileId);
+    if (profileSession) {
+      throw new HopkeyParseError(this, `An agent needs a named profile of its own: ${profileSession.sessionName} uses this one`);
+    }
+    return normalized;
+  }
+
+  async start(sessionId: string): Promise<void> {
+    const session = this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession;
+    if (session.agent) {
+      // The profile may have changed since the agent was set up
+      this.validateAgent(session.agent, sessionId, session.profileId);
+    }
+    await super.start(sessionId);
+    if (session.agent && session.status === SessionStatus.active) {
+      this.recordAgentActivity(session, session.agent, AgentActivityEvent.enabled);
+    }
+  }
+
+  async stop(sessionId: string): Promise<void> {
+    const session = this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession;
+    const wasActive = session.status !== SessionStatus.inactive;
+    await super.stop(sessionId);
+    if (session.agent && wasActive && session.status === SessionStatus.inactive) {
+      this.recordAgentActivity(session, session.agent, AgentActivityEvent.disabled);
+    }
+  }
+
+  async delete(sessionId: string): Promise<void> {
+    const session = this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession;
+    const agentSession = { sessionId, roleArn: session.roleArn };
+    const agent = session.agent;
+    await super.delete(sessionId);
+    if (agent && !this.repository.getSessions().find((s) => s.sessionId === sessionId)) {
+      this.recordAgentActivity(agentSession, agent, AgentActivityEvent.removed);
+    }
+  }
+
+  /**
+   * Agents only get credentials while their session is active, and every credential set they get is recorded.
+   */
+  async generateProcessCredentials(sessionId: string): Promise<AwsProcessCredentials> {
+    const session = this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession;
+    if (!session.agent) {
+      return super.generateProcessCredentials(sessionId);
+    }
+    const agent = session.agent;
+    const requestedBy = this.agentActivityService ? await this.agentActivityService.requestingProcesses() : [];
+    if (session.status !== SessionStatus.active) {
+      this.recordAgentActivity(session, agent, AgentActivityEvent.refused, { requestedBy });
+      const message = `The agent ${agent.name} is disabled: enable it in Hopkey or with "hopkey agent enable ${agent.name}"`;
+      throw new HopkeyBaseError(message, this, LogLevel.warn, message);
+    }
+    let credentials: AwsProcessCredentials;
+    try {
+      credentials = await super.generateProcessCredentials(sessionId);
+    } catch (error) {
+      this.recordAgentActivity(session, agent, AgentActivityEvent.failed, { requestedBy, message: error.message });
+      throw error;
+    }
+    // Throws when the activity file can't be written, so that no credentials go out unrecorded
+    this.recordAgentActivity(session, agent, AgentActivityEvent.credentials, {
+      requestedBy,
+      durationSeconds: agent.durationSeconds,
+      expiration: (credentials as any).Expiration,
+    });
+    return credentials;
   }
 
   async applyCredentials(sessionId: string, credentialsInfo: CredentialsInfo): Promise<void> {
@@ -131,6 +252,7 @@ export class AwsIamRoleChainedService extends AwsSessionService {
 
     // Configure IamRoleChained Account session parameters
     const roleSessionName = (session as AwsIamRoleChainedSession).roleSessionName;
+    const agent = (session as AwsIamRoleChainedSession).agent;
     const params = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       RoleSessionName: roleSessionName ? roleSessionName : constants.roleSessionName,
@@ -138,6 +260,8 @@ export class AwsIamRoleChainedService extends AwsSessionService {
       RoleArn: (session as AwsIamRoleChainedSession).roleArn,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       DurationSeconds: constants.samlRoleSessionDuration,
+      // An agent session is named after the agent, lasts less and is narrowed by its session policy
+      ...(agent ? agentAssumeRoleParameters(agent, (session as AwsIamRoleChainedSession).roleArn) : {}),
     };
 
     // Generate Session token
@@ -174,6 +298,32 @@ export class AwsIamRoleChainedService extends AwsSessionService {
       return `${session.roleArn.split("/")[0].substring(13, 25)}`;
     } else {
       throw new Error("AWS IAM Role Chained Session required");
+    }
+  }
+
+  // Agents never get their credentials written to the credentials file
+  protected usesCredentialProcess(sessionId: string): boolean {
+    return !!(this.repository.getSessionById(sessionId) as AwsIamRoleChainedSession).agent || super.usesCredentialProcess(sessionId);
+  }
+
+  private recordAgentActivity(
+    agentSession: { sessionId: string; roleArn: string },
+    agent: AwsAgentSettings,
+    event: AgentActivityEvent,
+    details: AgentActivityDetails = {}
+  ): void {
+    try {
+      if (!this.agentActivityService) {
+        throw new Error("no activity history is set up");
+      }
+      this.agentActivityService.record(agentSession, agent, event, details);
+    } catch (error) {
+      const message = `Hopkey could not record the activity of the agent ${agent.name}: ${error.message}`;
+      // Credentials don't go out unrecorded; other events are only reported
+      if (event === AgentActivityEvent.credentials) {
+        throw new HopkeyBaseError(message, this, LogLevel.error, message);
+      }
+      console.warn(message);
     }
   }
 

@@ -25,6 +25,7 @@ USAGE
 <!-- commands -->
 ## Command Topics
 
+* [`hopkey agent`](scopes/agent.md) - AI agent credentials, sandboxing and activity history
 * [`hopkey help`](scopes/help.md) - Display help for hopkey.
 * [`hopkey idp-url`](scopes/idp-url.md) - SAML 2.0 Identity providers URL management
 * [`hopkey integration`](scopes/integration.md) - Hopkey Integrations management

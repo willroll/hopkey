@@ -120,7 +120,8 @@
     <!-- ================================================================== -->
     <ng-container *ngIf="accountType === eSessionType.awsIamRoleChained">
     <div class="form-group">
-      <div class="form-field">
+      <!-- An agent's role session is named after the agent -->
+      <div class="form-field" *ngIf="!form.get('agentEnabled').value">
         <label>Role Session Name</label>
         <input spellcheck="false" formControlName="roleSessionName" type="text" class="form-control" placeholder="Role Session Name" />
         <small class="text-error" *ngIf="(form.controls['roleSessionName'].dirty || form.controls['roleSessionName'].touched) && form.controls['roleSessionName'].errors">Invalid Role Session Name</small>
@@ -129,6 +130,7 @@
         <label>Assumer Session</label>
         <ng-select formControlName="assumerSession" bindLabel="sessionName" bindValue="session" dropdownPosition="top" [items]="assumerAwsSessions" [(ngModel)]="selectedParentSession" [disabled]="true" [compareWith]="compareAssumerSessions"></ng-select>
       </div>
+      <app-agent-settings [form]="form"></app-agent-settings>
     </div>
     </ng-container>
   </ng-container>

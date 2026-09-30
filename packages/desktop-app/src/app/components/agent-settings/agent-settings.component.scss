@@ -1,0 +1,17 @@
+@import "../../../assets/scss/mixins/palette";
+
+.agent-toggle span {
+  font-weight: 600;
+}
+
+.agent-hint {
+  display: block;
+  margin-top: 4px;
+  color: $silver-dark;
+}
+
+.agent-policy {
+  height: auto;
+  font-family: monospace;
+  font-size: 12px;
+}

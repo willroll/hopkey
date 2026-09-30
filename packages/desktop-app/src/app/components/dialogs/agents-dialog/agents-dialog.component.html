@@ -1,0 +1,89 @@
+<a class="close-modal" (click)="close()"><i class="moon-Close"></i></a>
+<div class="modal-content-agents">
+  <mat-tab-group [animationDuration]="'0ms'">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="mat-tab-icon fa-solid fa-robot"></i>
+        <span class="mat-tab-label-text">Agents</span>
+      </ng-template>
+      <div class="no-padding no-margin panel">
+        <p class="agents-intro">
+          Each AI agent gets its own named profile, handing out short-lived credentials narrowed by its permissions,
+          through credential process only. Add one as an <b>AWS IAM Role Chained</b> session with <b>Use for an AI agent</b>,
+          or with <code>hopkey agent add</code>. <a (click)="openDocumentation()">Read the docs.</a>
+        </p>
+
+        <div *ngIf="agents.length === 0" class="agents-empty">No agents yet.</div>
+
+        <div *ngIf="agents.length > 0" class="form-group scrollable max-height-320 tableFixHead">
+          <table class="table agents-table agents-list">
+            <thead>
+            <th><span>Agent</span></th>
+            <th><span>Named profile</span></th>
+            <th><span>Role</span></th>
+            <th><span>Permissions</span></th>
+            <th><span>Last activity</span></th>
+            <th><span>Enabled</span></th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let agent of agents">
+              <td><a (click)="selectAgent(agent.name)" matTooltip="Show the activity of this agent">{{agent.name}}</a></td>
+              <td><code>{{agent.profileName}}</code></td>
+              <td [matTooltip]="agent.roleArn + (agent.parentSessionName ? ', assumed from ' + agent.parentSessionName : '')">{{roleName(agent.roleArn)}}</td>
+              <td>{{permissionsLabel(agent.permissions)}}, {{agent.durationSeconds / 60}} min</td>
+              <td>
+                <ng-container *ngIf="agent.lastActivity">{{agent.lastActivity.time | date: 'short'}} {{agent.lastActivity.event}}</ng-container>
+                <ng-container *ngIf="!agent.lastActivity">-</ng-container>
+              </td>
+              <td>
+                <mat-slide-toggle class="inline toggleColoredCorrectly" [checked]="agent.enabled" [disabled]="toggling.has(agent.name)"
+                                  (toggleChange)="toggleAgent(agent)"></mat-slide-toggle>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <i class="mat-tab-icon fa-solid fa-clock-rotate-left"></i>
+        <span class="mat-tab-label-text">Activity</span>
+      </ng-template>
+      <div class="no-padding no-margin panel">
+        <h4>
+          <span *ngIf="!selectedAgent">Every agent</span>
+          <span *ngIf="selectedAgent">{{selectedAgent}} <a class="agents-filter-reset" (click)="selectAgent(null)">show every agent</a></span>
+          <button class="agents-refresh" (click)="refresh()"><i class="fa fa-refresh blackery" matTooltip="Refresh"></i></button>
+        </h4>
+
+        <div *ngIf="activities.length === 0" class="agents-empty">No activity yet.</div>
+
+        <div *ngIf="activities.length > 0" class="form-group scrollable max-height-320 tableFixHead">
+          <table class="table agents-table agents-activity">
+            <thead>
+            <th><span>Time</span></th>
+            <th><span>Agent</span></th>
+            <th><span>Event</span></th>
+            <th><span>Requested by</span></th>
+            <th><span>Details</span></th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let activity of activities" [class.agents-event-problem]="activity.event === 'refused' || activity.event === 'failed'">
+              <td>{{activity.time | date: 'medium'}}</td>
+              <td>{{activity.agent}}</td>
+              <td>{{activity.event}}</td>
+              <td [matTooltip]="requestedBy(activity)">{{requestedBy(activity)}}</td>
+              <td [matTooltip]="activity.roleArn">
+                <ng-container *ngIf="activity.message">{{activity.message}}</ng-container>
+                <ng-container *ngIf="!activity.message && activity.expiration">{{permissionsLabel(activity.permissions)}}, until {{activity.expiration | date: 'shortTime'}}</ng-container>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -28,6 +28,8 @@ name. See [PORTING.md](PORTING.md) for where the port stands.
 - AWS console for several accounts side by side with the multi-console browser extension
 - EC2 connections through AWS Systems Manager
 - A CLI for scripts and terminals, and a plugin system to extend the app
+- [AI agent credentials](docs/configuring-session/ai-agents.md): narrowed, short-lived and recorded, so you see which
+  agent used which role
 
 ## Coming from Leapp
 
