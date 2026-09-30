@@ -1,21 +1,21 @@
 This document is a Plugin SDK reference.
-The Plugin SDK is part of Leapp Core and contains Base Classes that describe different types of plugins.
+The Plugin SDK is part of Hopkey Core and contains Base Classes that describe different types of plugins.
 
 ##PluginEnvironment
 
-A [wrapper class](https://github.com/Noovolari/leapp/blob/master/packages/core/src/plugin-sdk/plugin-environment.ts) used to expose a minumum set of methods from Leapp Core.
+A [wrapper class](https://github.com/willroll/hopkey/blob/master/packages/core/src/plugin-sdk/plugin-environment.ts) used to expose a minumum set of methods from Hopkey Core.
 
 Currently available methods:
 
 ###log
 - **`log`**`(message: string, level: PluginLogLevel, display: boolean): void`
 
-  Log a custom message in Leapp or in the log file
+  Log a custom message in Hopkey or in the log file
 
   | argument          | type |  description |
   | -------------------------- | --------- | --------|
   | message   | string     | the message to show  |
-  | level    | [LogLevel](https://github.com/Noovolari/leapp/blob/master/packages/core/src/plugin-sdk/plugin-log-level.ts)   | severity of the message   |
+  | level    | [LogLevel](https://github.com/willroll/hopkey/blob/master/packages/core/src/plugin-sdk/plugin-log-level.ts)   | severity of the message   |
   | display    | boolean     | shows the message in a toast in the desktop app when true. Otherwise, log it in the log files   |
 
 ###fetch
@@ -39,16 +39,16 @@ Currently available methods:
 ###createSession
 - **`createSession`**`(createSessionData: SessionData): Promise<string>`
 
-  Creates a new Leapp Session based on given SessionData
+  Creates a new Hopkey Session based on given SessionData
 
   | argument | type | description |
   | --- | --- | --- |
-  | createSessionData | [SessionData](https://github.com/Noovolari/leapp/blob/master/packages/core/src/plugin-sdk/interfaces/session-data.ts) | the metadata used to create the Leapp Session
+  | createSessionData | [SessionData](https://github.com/willroll/hopkey/blob/master/packages/core/src/plugin-sdk/interfaces/session-data.ts) | the metadata used to create the Hopkey Session
 
 ###cloneSession
 - **`cloneSession`**`(session: Session): Promise<string>`
 
-  This method allows you to clone the given Leapp Session. This operation is allowed for the following Leapp Session types:
+  This method allows you to clone the given Hopkey Session. This operation is allowed for the following Hopkey Session types:
 
   - AwsIamUserSession
   - AwsIamRoleFederatedSession
@@ -56,12 +56,12 @@ Currently available methods:
 
   | argument | type | description |
   | --- | --- | --- |
-  | session | [Session](https://github.com/Noovolari/leapp/blob/master/packages/core/src/models/session.ts) | the Leapp Session that I want to clone
+  | session | [Session](https://github.com/willroll/hopkey/blob/master/packages/core/src/models/session.ts) | the Hopkey Session that I want to clone
 
 ###updateSession
 - **`updateSession`**`(updateSessionData: SessionData, session: Session): Promise<void>`
 
-  This method allows you to update the given session with the given updateSessionData. This operation is allowed for the following Leapp Session types:
+  This method allows you to update the given session with the given updateSessionData. This operation is allowed for the following Hopkey Session types:
 
   - AwsIamUserSession
   - AwsIamRoleFederatedSession
@@ -69,8 +69,8 @@ Currently available methods:
 
   | argument | type | description |
   | --- | --- | --- |
-  | updateSessionData | [SessionData](https://github.com/Noovolari/leapp/blob/master/packages/core/src/plugin-sdk/interfaces/session-data.ts) | the metadata used to update the given Leapp Session
-  | session | [Session](https://github.com/Noovolari/leapp/blob/master/packages/core/src/models/session.ts) | the Leapp Session that I want to update
+  | updateSessionData | [SessionData](https://github.com/willroll/hopkey/blob/master/packages/core/src/plugin-sdk/interfaces/session-data.ts) | the metadata used to update the given Hopkey Session
+  | session | [Session](https://github.com/willroll/hopkey/blob/master/packages/core/src/models/session.ts) | the Hopkey Session that I want to update
 
 ###openTerminal
 - **`openTerminal`**`(command: string, env?: any): Promise<void>`
@@ -108,7 +108,7 @@ Currently available methods:
 
 ---
 
-###Example: display a toast message in Leapp
+###Example: display a toast message in Hopkey
 
 ```typescript
 this.pluginEnvironment.log("Hello World", LogLevel.info, true);
@@ -124,7 +124,7 @@ const response = await res.json();
 ###Example: open a URL in the browser
 
 ```typescript
-this.pluginEnvironment.openExternalUrl("https://leapp.cloud");
+this.pluginEnvironment.openExternalUrl("https://github.com/willroll/hopkey");
 ```
 
 ###Example: create a session
@@ -173,7 +173,7 @@ async applySessionAction(session: Session, credentials: any): Promise<void> {
 
 ##AwsCredentialsPlugin
 
-A [base class](https://github.com/Noovolari/leapp/blob/master/packages/core/src/plugin-sdk/aws-credentials-plugin.ts) that needs to be extended by a plugin and serves as the action class.
+A [base class](https://github.com/willroll/hopkey/blob/master/packages/core/src/plugin-sdk/aws-credentials-plugin.ts) that needs to be extended by a plugin and serves as the action class.
 
 After extending this class, you need to implement these methods:
 
@@ -184,8 +184,8 @@ After extending this class, you need to implement these methods:
 
   | argument          | type |  description |
     | -------------------------- | --------- | --------|
-  | session   | [Session](https://github.com/Noovolari/leapp/blob/master/packages/core/src/models/session.ts)     | the Leapp session you run the action from |
-  | credentials    | any | Leapp temporary-generated credentials  |
+  | session   | [Session](https://github.com/willroll/hopkey/blob/master/packages/core/src/models/session.ts)     | the Hopkey session you run the action from |
+  | credentials    | any | Hopkey temporary-generated credentials  |
 
   The `credentials` object has the following structure:
 
@@ -203,14 +203,14 @@ export interface CredentialsInfo {
 ###get actioName
 - **`get actionName`**`(): string>`
 
-  Return a name for the action that will be display in Leapp (e.g. "My Awesome Plugin")
+  Return a name for the action that will be display in Hopkey (e.g. "My Awesome Plugin")
 
 ###get actionIcon
 - **`get actionIcon`**`(): string`
 
   Return a valid FontAwesome 5 code. Override default value in `package.json`
 
-###Example: display a session-based message in Leapp
+###Example: display a session-based message in Hopkey
 
 ```typescript
 async applySessionAction(session: Session, credentials: any): Promise<void> {
@@ -233,19 +233,19 @@ async applySessionAction(session: Session, credentials: any): Promise<void> {
 | author   | a custom string     | the name of the author | none |
 | version   | a custom string     | the version of the plugin | must be a semver string |
 | description   | a custom string     | the description of the plugin | none |
-| keywords   | a string array     | the name of the plugin | must contain at least "leapp-plugin" |
-| leappPlugin   | an object     | the plugin custom configuration | must contain at least "supportedOS" and "supportedSessions" |
-| leappPlugin.supportedOS   | a string array     | ["mac", "windows", "linux"] | if not specified, all OSs will be considered compatible |
-| leappPlugin.supportedSessions   | a string array         | ["anyType, "aws", "azure", "awsIamRoleFederated", "awsIamRoleChained", "awsSsoRole", "awsIamUser"] | at least one of these values must be specified |
-| leappPlugin.icon | a custom string | fontAwesome code for an icon (e.g. "fa fa-globe") | must be a valid [FontAwesome 5 code](https://fontawesome.com/v5/search)
+| keywords   | a string array     | the name of the plugin | must contain at least "hopkey-plugin" |
+| hopkeyPlugin   | an object     | the plugin custom configuration | must contain at least "supportedOS" and "supportedSessions" |
+| hopkeyPlugin.supportedOS   | a string array     | ["mac", "windows", "linux"] | if not specified, all OSs will be considered compatible |
+| hopkeyPlugin.supportedSessions   | a string array         | ["anyType, "aws", "azure", "awsIamRoleFederated", "awsIamRoleChained", "awsSsoRole", "awsIamUser"] | at least one of these values must be specified |
+| hopkeyPlugin.icon | a custom string | fontAwesome code for an icon (e.g. "fa fa-globe") | must be a valid [FontAwesome 5 code](https://fontawesome.com/v5/search)
 
 ##Plugin Examples
 
 ###Open Web Console
 ```typescript
-import { Session } from "@noovolari/leapp-core/models/session";
-import { AwsCredentialsPlugin } from "@noovolari/leapp-core/plugin-sdk/aws-credentials-plugin";
-import { PluginLogLevel } from "@noovolari/leapp-core/plugin-sdk/plugin-log-level";
+import { Session } from "@hopkey/core/models/session";
+import { AwsCredentialsPlugin } from "@hopkey/core/plugin-sdk/aws-credentials-plugin";
+import { PluginLogLevel } from "@hopkey/core/plugin-sdk/plugin-log-level";
 
 export class WebConsolePlugin extends AwsCredentialsPlugin {
   get actionName(): string {
@@ -292,7 +292,7 @@ export class WebConsolePlugin extends AwsCredentialsPlugin {
     const res = await this.pluginEnvironment.fetch(`${federationUrl}${queryParametersSigninToken}`);
     const response = await res.json();
 
-    const loginURL = `${federationUrl}?Action=login&Issuer=Leapp&Destination=${consoleHomeURL}&SigninToken=${(response as any).SigninToken}`;
+    const loginURL = `${federationUrl}?Action=login&Issuer=Hopkey&Destination=${consoleHomeURL}&SigninToken=${(response as any).SigninToken}`;
     this.pluginEnvironment.openExternalUrl(loginURL);
   }
 }

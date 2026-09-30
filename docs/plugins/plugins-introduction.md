@@ -1,6 +1,6 @@
-This section provides an overview of Leapp’s plugins, which can be used to extend the functionality of Leapp.
+This section provides an overview of Hopkey’s plugins, which can be used to extend the functionality of Hopkey.
 
-Plugins are commonly used when more advanced and custom behavior is needed, for example using Leapp-generated temporary credentials to run custom actions.
+Plugins are commonly used when more advanced and custom behavior is needed, for example using Hopkey-generated temporary credentials to run custom actions.
 
 You can create your own plugins or import custom ones created by the community. You can also publish your plugins on npm to make them available to everyone easily.
 
@@ -10,19 +10,19 @@ To add a plugin you can use one of the following methods:
 
 ###Add from npm
 
-From the Leapp option menu, go to the Plugins tab. Insert the name of the npm package for the plugin and click on the plus icon to add it to your plugins
+From the Hopkey option menu, go to the Plugins tab. Insert the name of the npm package for the plugin and click on the plus icon to add it to your plugins
 
 ![](../../images/plugin-system/screen2.png?style=smaller-img)
 
 ###Add manually
 
-Go to Options by clicking the top right gear icon then click the Plugins tab. Click the Folder Icon. This will open the plugin folder inside .Leapp. 
+Go to Options by clicking the top right gear icon then click the Plugins tab. Click the Folder Icon. This will open the plugin folder inside .hopkey. 
 
 Here, manually create a folder with the same name as your plugin package.json name property and move your `package.json` and bundled `plugin.js` files inside this folder.
 
 Alternatively, you can simply move your entire plugin folder cloned from the [example template](https://github.com/Noovolari/leapp-plugin-template).
 
-Lastly, from the Leapp Plugins tab in the Option menu, click on the refresh icon to reload all plugins.
+Lastly, from the Hopkey Plugins tab in the Option menu, click on the refresh icon to reload all plugins.
 
 ![](../../images/plugin-system/screen3.png?style=even-smaller-img)
 
@@ -33,22 +33,22 @@ Lastly, from the Leapp Plugins tab in the Option menu, click on the refresh icon
 
 ##Disable a Plugin
 
-To disable a Leapp plugin, go to Options by clicking the top right gear icon then click the Plugins tab. 
+To disable a Hopkey plugin, go to Options by clicking the top right gear icon then click the Plugins tab. 
 
 Toggle Enabled for the plugin you want to disable.
 
 ##Remove a Plugin
 
-To remove a Leapp plugin, go to Options by clicking the top right gear icon then click the Plugins tab. 
+To remove a Hopkey plugin, go to Options by clicking the top right gear icon then click the Plugins tab. 
 
-Click the Folder Icon. This will open the plugin folder inside .Leapp. 
+Click the Folder Icon. This will open the plugin folder inside .hopkey. 
 From here, locate the folder containing the plugin you want to remove and simply delete the folder.
 
 ##Run a Plugin
 
-You can run a plugin both from Leapp Desktop App and Leapp CLI.
+You can run a plugin both from Hopkey Desktop App and Hopkey CLI.
 
-From Leapp Desktop App, right click on a session to open the contextual menu, click on Plugins, and select the plugin you want to run
+From Hopkey Desktop App, right click on a session to open the contextual menu, click on Plugins, and select the plugin you want to run
 
 ![](../../images/plugin-system/screen4.png?style=smaller-img)
 
@@ -56,11 +56,11 @@ From Leapp Desktop App, right click on a session to open the contextual menu, cl
 
     This contextual menu option is not available if you have no plugins that you can run on the selected session and/or your operating system.
 
-From Leapp CLI, you can use the command `leapp session run-plugin`. For more information on how to use this CLI command, see the [documentation](https://docs.leapp.cloud/latest/cli/scopes/session/#leapp-session-run-aws-credential-plugin).
+From Hopkey CLI, you can use the command `hopkey session run-plugin`. For more information on how to use this CLI command, see the [documentation](https://willroll.github.io/hopkey/latest/cli/scopes/session/#hopkey-session-run-aws-credential-plugin).
 
 ##Plugin Menu
 
-Click on the top right gear icon to go to the Leapp option menu and then select the tab Plugin.
+Click on the top right gear icon to go to the Hopkey option menu and then select the tab Plugin.
 
 From there, you can see a list of currently installed plugins, check whether a plugin is compatible with your system or not, which session types it supports and disable/enable it if you need.
 
@@ -70,14 +70,17 @@ From there, you can see a list of currently installed plugins, check whether a p
 
 You can start creating a plugin [from the template](https://github.com/Noovolari/leapp-plugin-template).
 
-Leapp plugins are written in TypeScript. They must contain at least a class that extends a base class provided by the Plugin SDK.
+!!! info
+    The template was written for Leapp: Hopkey loads the plugins built from it, with their `leapp-plugin` keyword and `leappPlugin` configuration, as they are. <!-- rebrand:keep -->
+
+Hopkey plugins are written in TypeScript. They must contain at least a class that extends a base class provided by the Plugin SDK.
 
 There's currently only one of these classes, `AwsCredentialsPlugin` , that can be used to create a plugin that generates temporary credentials.
 
-Every Leapp plugin must at least have a `package.json` file and a `plugin.js` file.
+Every Hopkey plugin must at least have a `package.json` file and a `plugin.js` file.
 
 ```
-leapp-plugin/             
+hopkey-plugin/             
  ├── package.json      # Plugin metadata
  └── plugin.js         # A webpack bundle for the main logic
 ```

@@ -1,20 +1,20 @@
-import { LeappCommand } from "../leapp-command";
+import { HopkeyCommand } from "../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { Args } from "@oclif/core";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 interface WorkspaceInfo {
   workspaceId: string;
   workspaceName: string;
 }
 
-export default class SetWorkspace extends LeappCommand {
-  static description = "Set the current Leapp workspace";
+export default class SetWorkspace extends HopkeyCommand {
+  static description = "Set the current Hopkey workspace";
 
-  static examples = ["$leapp team set-workspace", "$leapp team set-workspace local", "$leapp team set-workspace WORKSPACE-NAME"];
+  static examples = ["$hopkey team set-workspace", "$hopkey team set-workspace local", "$hopkey team set-workspace WORKSPACE-NAME"];
 
   static args = {
-    workspaceName: Args.string({ description: "name of the Leapp Team remote workspace or local", required: false }),
+    workspaceName: Args.string({ description: "name of the Hopkey Team remote workspace or local", required: false }),
   };
 
   static flags = {};

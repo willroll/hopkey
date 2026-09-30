@@ -1,11 +1,11 @@
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { Injectable } from "@angular/core";
 import {
   RegisterClientResponse,
   StartDeviceAuthorizationResponse,
   VerificationResponse,
-} from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
-import { IAwsSsoOidcVerificationWindowService } from "@noovolari/leapp-core/interfaces/i-aws-sso-oidc-verification-window-service";
+} from "@hopkey/core/services/session/aws/aws-sso-role-service";
+import { IAwsSsoOidcVerificationWindowService } from "@hopkey/core/interfaces/i-aws-sso-oidc-verification-window-service";
 import { WindowService } from "./window.service";
 import { MessageToasterService, ToastLevel } from "./message-toaster.service";
 import { AppProviderService } from "./app-provider.service";

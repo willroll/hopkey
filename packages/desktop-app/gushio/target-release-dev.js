@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'build',
-    description: 'Build distributable leapp desktop app package',
+    description: 'Build distributable hopkey desktop app package',
     version: '0.1',
     arguments: [
       {name: '<target>', choices: ['aot', 'configuration staging']},
@@ -21,7 +21,7 @@ module.exports = {
       originalPackage = JSON.parse(JSON.stringify(packageJson));
       await gushio.run(path.join(__dirname, './target-build.js'), args)
 
-      console.log('Packaging leapp... ')
+      console.log('Packaging hopkey... ')
       const platformVersion = args[1] === 'mac'
         ? ''
         : args[1] === 'win'

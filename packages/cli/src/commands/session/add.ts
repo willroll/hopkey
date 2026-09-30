@@ -1,8 +1,8 @@
-import { AccessMethod } from "@noovolari/leapp-core/models/access-method";
-import { CloudProviderType } from "@noovolari/leapp-core/models/cloud-provider-type";
-import { LeappCommand } from "../../leapp-command";
+import { AccessMethod } from "@hopkey/core/models/access-method";
+import { CloudProviderType } from "@hopkey/core/models/cloud-provider-type";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { IdpUrlAccessMethodField } from "@noovolari/leapp-core/models/idp-url-access-method-field";
+import { IdpUrlAccessMethodField } from "@hopkey/core/models/idp-url-access-method-field";
 import CreateIdpUrl from "../idp-url/create";
 import {
   providerType,
@@ -19,19 +19,19 @@ import {
   secretKey,
   sessionType,
 } from "../../flags";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { IdpUrl } from "@noovolari/leapp-core/models/idp-url";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { constants } from "@hopkey/core/models/constants";
+import { IdpUrl } from "@hopkey/core/models/idp-url";
 
-export default class AddSession extends LeappCommand {
+export default class AddSession extends HopkeyCommand {
   static description = "Add a new session";
 
   static examples = [
-    "$leapp session add",
-    "$leapp session add --providerType [aws] --sessionType [awsIamRoleFederated, awsIamRoleChained, awsIamUser] --region [AWSREGION] --sessionName NAME ...[combination of flags relative to the session]",
-    "$leapp session add --providerType aws --sessionType awsIamRoleFederated --sessionName NAME --region AWSREGION --idpArn IDPARN --idpUrl IDPURL --profileId PROFILEID --roleArn ROLEARN",
-    "$leapp session add --providerType aws --sessionType awsIamRoleChained --sessionName NAME --region AWSREGION --profileId PROFILEID --roleArn ROLEARN --parentSessionId ID (--roleSessionName ROLESESSIONNAME)",
-    "$leapp session add --providerType aws --sessionType awsIamUser --sessionName NAME --region AWSREGION --profileId PROFILEID --accessKey ACCESSKEY --secretKey SECRETKEY (--mfaDevice MFADEVICEARN)",
+    "$hopkey session add",
+    "$hopkey session add --providerType [aws] --sessionType [awsIamRoleFederated, awsIamRoleChained, awsIamUser] --region [AWSREGION] --sessionName NAME ...[combination of flags relative to the session]",
+    "$hopkey session add --providerType aws --sessionType awsIamRoleFederated --sessionName NAME --region AWSREGION --idpArn IDPARN --idpUrl IDPURL --profileId PROFILEID --roleArn ROLEARN",
+    "$hopkey session add --providerType aws --sessionType awsIamRoleChained --sessionName NAME --region AWSREGION --profileId PROFILEID --roleArn ROLEARN --parentSessionId ID (--roleSessionName ROLESESSIONNAME)",
+    "$hopkey session add --providerType aws --sessionType awsIamUser --sessionName NAME --region AWSREGION --profileId PROFILEID --accessKey ACCESSKEY --secretKey SECRETKEY (--mfaDevice MFADEVICEARN)",
   ];
 
   static flags = {
@@ -59,7 +59,7 @@ export default class AddSession extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(AddSession);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         // const selectedCloudProvider = await this.chooseCloudProvider();
         const selectedCloudProvider = CloudProviderType.aws;
         const selectedAccessMethod = await this.chooseAccessMethod(selectedCloudProvider);

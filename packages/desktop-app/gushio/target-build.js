@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'build',
-    description: 'Build leapp desktop app',
+    description: 'Build hopkey desktop app',
     version: '0.1',
     arguments: [
       {name: '<target>', choices: ['aot', 'configuration production', 'configuration staging']},
@@ -16,7 +16,7 @@ module.exports = {
     const compileFunction = require('./compile-func')
     try {
       await gushio.run(path.join(__dirname, './target-clean.js'))
-      console.log('Building leapp... ')
+      console.log('Building hopkey... ')
 
       const teamServiceStubFile = path.join(__dirname, '../src/app/services/team-service-stub.ts')
       const teamServiceTargetFile = path.join(__dirname, '../src/app/services/team-service.ts')
@@ -24,8 +24,8 @@ module.exports = {
         fs.copyFileSync(teamServiceStubFile, teamServiceTargetFile)
       }
 
-      await makeDirFunction(path, '../dist/leapp-client')
-      await copyFunction(path, '../src/assets/icons', '../dist/leapp-client')
+      await makeDirFunction(path, '../dist/hopkey-client')
+      await copyFunction(path, '../src/assets/icons', '../dist/hopkey-client')
 
       let result = shellJs.exec('npx electron-rebuild -f -w @noovolari/dpapi-addon')
       if (result.code !== 0) {

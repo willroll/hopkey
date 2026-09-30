@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## Hopkey (unreleased)
+
+Hopkey continues [Leapp](https://github.com/Noovolari/leapp) under a new name: the releases below this section are
+Leapp's.
+
+### ⚠ BREAKING CHANGES
+
+* renamed to Hopkey: the `hopkey` CLI command, the `@hopkey/core` and `@hopkey/cli` packages, `hopkey://` links, the
+  `~/.hopkey` data directory and the "Hopkey" keychain service. Leapp data is imported on first launch.
+* no usage analytics are collected, and update notifications come from the
+  [Hopkey releases](https://github.com/willroll/hopkey/releases).
+
+### Features
+
+* import an existing Leapp workspace, its plugins and its system vault secrets on first launch
+* load plugins published for Leapp
+* bundle the icons instead of loading them from a remote Font Awesome kit
+
+### Bug Fixes
+
+* CLI: every command failed to load (ERR_REQUIRE_ESM) since the upgrade to inquirer 9
+* desktop app: the unit tests could not start since the upgrade to Angular 15
+* removed the "Noovolari has officially come to an end" popup shown at every launch
+
 ### [0.26.1](https://github.com/Noovolari/leapp/compare/v0.26.0...v0.26.1) (2024-06-05)
 
 ### Bug Fixes

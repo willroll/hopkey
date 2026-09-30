@@ -2,25 +2,25 @@ import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from "
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AppService } from "../../../services/app.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { Workspace } from "@noovolari/leapp-core/models/workspace";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { Workspace } from "@hopkey/core/models/workspace";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { constants } from "@hopkey/core/models/constants";
 import { AppProviderService } from "../../../services/app-provider.service";
 import { MessageToasterService, ToastLevel } from "../../../services/message-toaster.service";
 import { WindowService } from "../../../services/window.service";
-import { SessionService } from "@noovolari/leapp-core/services/session/session-service";
+import { SessionService } from "@hopkey/core/services/session/session-service";
 import * as uuid from "uuid";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { AzureLocation } from "@noovolari/leapp-core/services/azure-location";
-import { AwsIamRoleChainedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-chained-session";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { LeappSelectComponent } from "../../leapp-select/leapp-select.component";
-import { LeappParseError } from "@noovolari/leapp-core/errors/leapp-parse-error";
+import { Session } from "@hopkey/core/models/session";
+import { AzureLocation } from "@hopkey/core/services/azure-location";
+import { AwsIamRoleChainedSession } from "@hopkey/core/models/aws/aws-iam-role-chained-session";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { HopkeySelectComponent } from "../../hopkey-select/hopkey-select.component";
+import { HopkeyParseError } from "@hopkey/core/errors/hopkey-parse-error";
 import { AppMfaCodePromptService } from "../../../services/app-mfa-code-prompt.service";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
+import { SessionStatus } from "@hopkey/core/models/session-status";
 import { OptionsService } from "../../../services/options.service";
-import { IKeychainService } from "@noovolari/leapp-core/interfaces/i-keychain-service";
+import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
 
 @Component({
   selector: "app-edit-dialog",
@@ -32,10 +32,10 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
   public roleInput: ElementRef;
 
   @ViewChild("namedProfileSelect", { static: false })
-  public namedProfileSelect: LeappSelectComponent;
+  public namedProfileSelect: HopkeySelectComponent;
 
   @ViewChild("idpUrlSelect", { static: false })
-  public idpUrlSelect: LeappSelectComponent;
+  public idpUrlSelect: HopkeySelectComponent;
 
   @Input()
   public selectedSessionId: string;
@@ -97,21 +97,21 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
     private messageToasterService: MessageToasterService,
     private router: Router,
     private windowService: WindowService,
-    private leappCoreService: AppProviderService,
+    private hopkeyCoreService: AppProviderService,
     private mfaPrompter: AppMfaCodePromptService
   ) {
-    this.behaviouralSubjectService = leappCoreService.behaviouralSubjectService;
-    this.keychainService = this.leappCoreService.keychainService;
+    this.behaviouralSubjectService = hopkeyCoreService.behaviouralSubjectService;
+    this.keychainService = this.hopkeyCoreService.keychainService;
   }
 
   ngOnInit(): void {
     // Get the workspace and the account you need
-    this.selectedSession = this.leappCoreService.sessionManagementService.getSessionById(this.selectedSessionId) as any;
-    this.sessionService = this.leappCoreService.sessionFactory.getSessionService(this.selectedSession.type);
+    this.selectedSession = this.hopkeyCoreService.sessionManagementService.getSessionById(this.selectedSessionId) as any;
+    this.sessionService = this.hopkeyCoreService.sessionFactory.getSessionService(this.selectedSession.type);
     this.accountType = this.selectedSession.type;
 
     // Get the workspace and the accounts you need
-    const workspace = this.leappCoreService.workspaceService.getWorkspace();
+    const workspace = this.hopkeyCoreService.workspaceService.getWorkspace();
 
     // We get all the applicable idp urls
     if (workspace.idpUrls && workspace.idpUrls.length > 0) {
@@ -131,14 +131,14 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
     });
 
     // Show the assumable accounts
-    this.assumerAwsSessions = this.leappCoreService.sessionManagementService.getAssumableSessions().map((session) => ({
+    this.assumerAwsSessions = this.hopkeyCoreService.sessionManagementService.getAssumableSessions().map((session) => ({
       sessionName: session.sessionName,
       session,
     }));
 
     // Get the region
-    this.regions = this.leappCoreService.awsCoreService.getRegions();
-    this.locations = this.leappCoreService.azureCoreService.getLocations();
+    this.regions = this.hopkeyCoreService.awsCoreService.getRegions();
+    this.locations = this.hopkeyCoreService.azureCoreService.getLocations();
 
     this.selectedRegion = this.regions.find((r) => r.region === this.selectedSession?.region)?.region;
     this.form.controls["awsRegion"].setValue(this.selectedRegion);
@@ -155,11 +155,11 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
 
       this.idpUrlSelect.selectValue({
         value: this.selectedSession.idpUrlId,
-        label: this.leappCoreService.idpUrlService.getIdpUrl(this.selectedSession.idpUrlId).url,
+        label: this.hopkeyCoreService.idpUrlService.getIdpUrl(this.selectedSession.idpUrlId).url,
       });
       this.namedProfileSelect.selectValue({
         value: this.selectedSession.profileId,
-        label: this.leappCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
+        label: this.hopkeyCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
       });
     }
 
@@ -172,7 +172,7 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
       )?.session;
       this.namedProfileSelect.selectValue({
         value: this.selectedSession.profileId,
-        label: this.leappCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
+        label: this.hopkeyCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
       });
     }
 
@@ -190,7 +190,7 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
       });
       this.namedProfileSelect.selectValue({
         value: this.selectedSession.profileId,
-        label: this.leappCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
+        label: this.hopkeyCoreService.namedProfileService.getProfileName(this.selectedSession.profileId),
       });
     }
 
@@ -230,9 +230,9 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
 
         if (this.selectedSession.type !== SessionType.azure) {
           try {
-            this.leappCoreService.namedProfileService.getProfileName(this.selectedProfile.value);
+            this.hopkeyCoreService.namedProfileService.getProfileName(this.selectedProfile.value);
           } catch (e) {
-            this.selectedProfile.value = this.leappCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label).id;
+            this.selectedProfile.value = this.hopkeyCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label).id;
           }
         }
 
@@ -243,26 +243,26 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
         }
 
         if (this.selectedSession.type !== SessionType.azure) {
-          await this.leappCoreService.namedProfileService.changeNamedProfile(this.selectedSession, this.selectedProfile.value);
+          await this.hopkeyCoreService.namedProfileService.changeNamedProfile(this.selectedSession, this.selectedProfile.value);
           this.selectedSession.region = this.form.get("awsRegion").value;
         } else {
           this.selectedSession.region = this.form.get("azureLocation").value;
         }
 
-        const sessions = this.leappCoreService.sessionManagementService.getSessions();
+        const sessions = this.hopkeyCoreService.sessionManagementService.getSessions();
         const index = sessions.findIndex((s) => s.sessionId === this.selectedSession.sessionId);
         sessions[index] = this.selectedSession;
-        this.leappCoreService.sessionManagementService.updateSessions(sessions);
-        this.behaviouralSubjectService.setSessions(this.leappCoreService.sessionManagementService.getSessions());
+        this.hopkeyCoreService.sessionManagementService.updateSessions(sessions);
+        this.behaviouralSubjectService.setSessions(this.hopkeyCoreService.sessionManagementService.getSessions());
 
         if (wasActive) {
           await this.sessionService.start(this.selectedSession.sessionId);
         }
 
         try {
-          await this.leappCoreService.teamService.pushToRemote();
+          await this.hopkeyCoreService.teamService.pushToRemote();
         } catch (error) {
-          this.leappCoreService.teamService.setSyncState("failed");
+          this.hopkeyCoreService.teamService.setSyncState("failed");
           throw error;
         }
 
@@ -426,13 +426,13 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
    */
   private addIpdUrlToWorkspace() {
     if (this.accountType === SessionType.awsIamRoleFederated) {
-      const validate = this.leappCoreService.idpUrlService.validateIdpUrl(this.selectedIdpUrl.label);
+      const validate = this.hopkeyCoreService.idpUrlService.validateIdpUrl(this.selectedIdpUrl.label);
       if (validate === true) {
-        const idpUrl = this.leappCoreService.idpUrlService.createIdpUrl(this.selectedIdpUrl.label);
+        const idpUrl = this.hopkeyCoreService.idpUrlService.createIdpUrl(this.selectedIdpUrl.label);
         this.selectedIdpUrl.value = idpUrl.id;
       } else {
         if (validate.toString() !== "IdP URL already exists") {
-          throw new LeappParseError(this, validate.toString());
+          throw new HopkeyParseError(this, validate.toString());
         }
       }
     }
@@ -445,16 +445,16 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
    */
   private addProfileToWorkspace() {
     if (this.selectedSession.type !== SessionType.azure) {
-      const validate = this.leappCoreService.namedProfileService.validateNewProfileName(this.selectedProfile.label);
+      const validate = this.hopkeyCoreService.namedProfileService.validateNewProfileName(this.selectedProfile.label);
       if (validate === true) {
-        const profile = this.leappCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label);
+        const profile = this.hopkeyCoreService.namedProfileService.createNamedProfile(this.selectedProfile.label);
         this.selectedProfile.value = profile.id;
       } else {
         if (
           validate.toString() !== "Profile already exists" &&
-          this.leappCoreService.workspaceService.getDefaultProfileId() !== this.selectedProfile.value
+          this.hopkeyCoreService.workspaceService.getDefaultProfileId() !== this.selectedProfile.value
         ) {
-          throw new LeappParseError(this, validate.toString());
+          throw new HopkeyParseError(this, validate.toString());
         }
       }
     }

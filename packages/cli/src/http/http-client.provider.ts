@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { IHttpClient } from "@noovolari/leapp-core/interfaces/i-http-client";
+import { IHttpClient } from "@hopkey/core/interfaces/i-http-client";
 
 export class HttpClientProvider implements IHttpClient {
   private _accessToken: string;

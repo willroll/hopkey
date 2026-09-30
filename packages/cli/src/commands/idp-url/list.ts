@@ -1,10 +1,10 @@
 import { ux } from "@oclif/core";
 import { Config } from "@oclif/core/lib/config/config";
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 
-export default class ListIdpUrls extends LeappCommand {
+export default class ListIdpUrls extends HopkeyCommand {
   static description = "Show identity providers list";
-  static examples = ["$leapp idp-url list"];
+  static examples = ["$hopkey idp-url list"];
 
   static flags = {
     ...ux.table.flags(),

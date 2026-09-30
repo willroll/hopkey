@@ -1,15 +1,15 @@
 # What should I know before I get started?
-If you want to start a code contribution to Leapp, whether it is a bug fix or a new feature, it is important for you to understand Leapp concepts and way to work.
+If you want to start a code contribution to Hopkey, whether it is a bug fix or a new feature, it is important for you to understand Hopkey concepts and way to work.
 
 # Project Structure
 
-Leapp project is structured as a monorepo architecture.
+Hopkey project is structured as a monorepo architecture.
 
 | package       | folder         |
 |---------------|----------------|
-| [Leapp Core](#core)    | /packages/core |
-| [Leapp CLI](#cli)     | /packages/cli           |
-| [Leapp Desktop App](#desktop-app) | /packages/desktop-app   |
+| [Hopkey Core](#core)    | /packages/core |
+| [Hopkey CLI](#cli)     | /packages/cli           |
+| [Hopkey Desktop App](#desktop-app) | /packages/desktop-app   |
 
 
 The Core contains the application logic.
@@ -17,7 +17,7 @@ The Core contains the application logic.
 It acts as a library on top of which clients will run. 
 In the monorepo scenario, Desktop Application, CLI, and Core are three different projects under the same repository.
 
-In order to better understanding the Leapp App, firstly check out the [Concept page](https://docs.leapp.cloud/latest/sessions/) in our documentation.
+In order to better understanding the Hopkey App, firstly check out the [Concept page](https://willroll.github.io/hopkey/latest/sessions/) in our documentation.
 
 # Development environment setup
 
@@ -25,7 +25,7 @@ In order to better understanding the Leapp App, firstly check out the [Concept p
 
 Follow [this](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) official guide to install both Node.js and NPM.
 
-The latest build was released using Node.js version 16.14.0 - as specified in the .nvmrc - and NPM version 8.5.5.
+Hopkey builds with Node.js 18 (18.20.8, as specified in the .nvmrc) and npm 10.
 
 ## NVM
 
@@ -48,7 +48,7 @@ gh auth login
 Once logged in, you can fork and clone the repository with the following command:
 
 ```bash
-gh repo fork noovolari/leapp
+gh repo fork willroll/hopkey
 ```
 
 ## Fork and clone manually
@@ -61,8 +61,8 @@ If it is the first time you fork a repository from the GitHub console, please re
 
 ## Install dependencies and build packages
 
-At a first glance, you can see that Leapp consists of a monorepo structure that contains **Leapp Core**, **Leapp Desktop App**,
-and **Leapp CLI**.
+At a first glance, you can see that Hopkey consists of a monorepo structure that contains **Hopkey Core**, **Hopkey Desktop App**,
+and **Hopkey CLI**.
 Each of these packages contain its _package.json_ and _tsconfig.json_ file. We will deepen how the project is structured in the
 _Project Structure_ section.
 
@@ -98,6 +98,12 @@ At this point, run the following command to setup the entire project:
 npm run clean-and-bootstrap
 ```
 
+> [!NOTE]
+> **Checkouts from before the rename.** The build copies `team-service-stub.ts` to the git-ignored `team-service.ts`
+> files of the CLI and Desktop App only when they are missing, so a checkout built before the project was renamed keeps
+> copies that import packages that no longer exist. Delete `packages/cli/src/service/team-service.ts` and
+> `packages/desktop-app/src/app/services/team-service.ts` before bootstrapping.
+
 This _clean-and-bootstrap_ script takes as input one or more of the following packages: _core_, _cli_, or _desktop-app_.
 
 For each of the packages, it:
@@ -117,7 +123,7 @@ _clean-and-bootstrap_ script, _bootstrap_ script, and other ones are powered by 
 Once the entire solution is set up and the Core is built, you can focus on building the clients,
 i.e. the CLI and the Desktop App.
 
-To build Leapp CLI a script called _prepack_ in _packages/cli/package.json_ can be called.
+To build Hopkey CLI a script called _prepack_ in _packages/cli/package.json_ can be called.
 
 ```bash
 npm run prepack
@@ -125,8 +131,8 @@ npm run prepack
 
 To test the CLI locally, execute the _packages/cli/bin/run_ script.
 
-To build and run Leapp Desktop App in the development environment, there is a specific script - called _build-and-run-dev_ -
-available in Leapp Desktop App's _package.json_.
+To build and run Hopkey Desktop App in the development environment, there is a specific script - called _build-and-run-dev_ -
+available in Hopkey Desktop App's _package.json_.
  
 To run the _build-and-run-dev_ script, use the following command:
 
@@ -138,7 +144,7 @@ npm run build-and-run-dev
 
 Skip this section if you are not using a Linux system.
 
-Leapp relies on the System Vault to save sensitive information. In Linux systems it relies on libsecret and gnome-keyring dependencies. To install them, follow [this](https://docs.leapp.cloud/latest/installation/requirements/) documentation page.
+Hopkey relies on the System Vault to save sensitive information. In Linux systems it relies on libsecret and gnome-keyring dependencies. To install them, follow [this](https://willroll.github.io/hopkey/latest/installation/requirements/) documentation page.
 
 ## AWS CLI
 
@@ -146,7 +152,7 @@ Leapp relies on the System Vault to save sensitive information. In Linux systems
 
 ## AWS SSM
 
-To install the AWS SSM agent locally, follow [this](https://docs.leapp.cloud/latest/installation/requirements/) documentation page.
+To install the AWS SSM agent locally, follow [this](https://willroll.github.io/hopkey/latest/installation/requirements/) documentation page.
 
 ## Azure CLI
 
@@ -154,7 +160,7 @@ To install the AWS SSM agent locally, follow [this](https://docs.leapp.cloud/lat
 
 ## Core
 
-As described in the introduction of this document, Leapp Core is a library that decouples Leapp's domain logic from the Client that is going to use it.
+As described in the introduction of this document, Hopkey Core is a library that decouples Hopkey's domain logic from the Client that is going to use it.
 
 The core package consists of four main folders: _errors_, _interfaces_, _models_, _services_.
 
@@ -208,8 +214,8 @@ _LoggedEntry_ and _log()_ can be used wherever you want to log without causing t
 
 ### Models
 
-The Models folder contains TypeScript interfaces that represents the state of Leapp, that is persisted in Leapp’s configuration file, 
-and other interfaces that needs to be centralized and used across different logic inside the Leapp Core package.
+The Models folder contains TypeScript interfaces that represents the state of Hopkey, that is persisted in Hopkey’s configuration file, 
+and other interfaces that needs to be centralized and used across different logic inside the Hopkey Core package.
 
 For what concerns the state of the application, you’ll find a definition of all the supported Sessions and a Workspace object 
 which represents the template of the configuration file.
@@ -252,7 +258,7 @@ export class Session {
 
 ### Services
 
-Leapp's project is built on a set of **services** that realize the **core functionalities**.
+Hopkey's project is built on a set of **services** that realize the **core functionalities**.
 
 The actual project's structure is structured to allow developers to contribute to source code in the easier and atomic way possible.
 
@@ -278,7 +284,7 @@ There is a **three-level abstraction** implementation for this kind of service:
 
 To understand this concept, let’s dive into what the AWS SSO feature does.
 
-In Leapp you can work with Sessions that corresponds to AWS accounts that belong to one or more AWS Organizations. By configuring AWS SSO in the root account (or another dedicated account), you're able to manage access to all of the AWS Organization’s accounts.
+In Hopkey you can work with Sessions that corresponds to AWS accounts that belong to one or more AWS Organizations. By configuring AWS SSO in the root account (or another dedicated account), you're able to manage access to all of the AWS Organization’s accounts.
 
 AWS SSO configuration is bound to a specific region (e.g. eu-west-1, etc.) and portal URL. The last one corresponds to the endpoint used to log into AWS SSO. By logging into AWS SSO through the AWS SDK, you have access to a token that can be used to list all the accounts and roles that can be accessed by the user. AWS SSO API allows you to automatically generate temporary credentials to access accounts with a specific role. Once you’re done, you can log out from AWS SSO.
 
@@ -296,7 +302,7 @@ The concept of Integration encapsulates the behaviours described below.
 
 **SAML authentication**
 
-For AWS IAM Role Federated Session, Leapp prompts the user with a login page that is specific to the Identity Provider.
+For AWS IAM Role Federated Session, Hopkey prompts the user with a login page that is specific to the Identity Provider.
 If the Identity token generated is not expired the login page will not be shown.
 
 This behaviour is implemented in the [AwsIamRoleFederatedService.generateCredentials](https://github.com/Noovolari/leapp/blob/9889c32e5a8a91760789455a1faa8c82355d69e1/packages/core/src/services/session/aws/aws-iam-role-federated-service.ts#L91) method.
@@ -333,12 +339,12 @@ idpWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => 
 
   console.log("Intercepted HTTP redirect call:", details.url);
   
-  if (this.leappCoreService.authenticationService.isAuthenticationUrl(CloudProviderType.aws, details.url)) {
+  if (this.hopkeyCoreService.authenticationService.isAuthenticationUrl(CloudProviderType.aws, details.url)) {
     clearTimeout(timeout);
     idpWindow = null;
     resolve(true);
   }
-  if (this.leappCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
+  if (this.hopkeyCoreService.authenticationService.isSamlAssertionUrl(CloudProviderType.aws, details.url)) {
     clearTimeout(timeout);
     idpWindow = null;
     resolve(false);
@@ -356,7 +362,7 @@ idpWindow.loadURL(sanitizedField);
 
 Execute `npm run rebuild-core-and-run-dev` to rebuild the entire solution and run the Desktop App in dev mode.
 
-As the IdP is new to Leapp, if you start the AWS IAM Role Federated Session, it hangs; this happens because the new IdP authentication URL is not
+As the IdP is new to Hopkey, if you start the AWS IAM Role Federated Session, it hangs; this happens because the new IdP authentication URL is not
 provided in the present authentication URLs list.
 
 To inspect the list of intercepted HTTP redirect calls, open the developer console using _Option + ⌘ + I_ (on macOS) or _Shift + CTRL + I_ 
@@ -368,7 +374,7 @@ We encourage you to open a Pull Request, so that we can collaborate in the imple
 
 ## Desktop App
 
-Leapp Desktop App is an application built using Electron and Angular. The first is used in order to generate executables for different OSs: macOS, Windows, and Linux distros. 
+Hopkey Desktop App is an application built using Electron and Angular. The first is used in order to generate executables for different OSs: macOS, Windows, and Linux distros. 
 It serves as a wrapper for the Angular site which hosts the application logic, by serving it through a combination of [Chromium](https://www.chromium.org/Home/) and Node.js.
 
 If you are new to Electron, please refer to the official [documentation](https://www.electronjs.org/docs/latest).
@@ -385,11 +391,11 @@ There is an **electron** folder generated by Electron at the root of the reposit
 
 ### Angular project elements
 
-The Angular project is wrapped in the Electron one and implements the logic behind each Leapp concept. Let’s dive into the Angular project, from the UX/UI elements to the low level ones, i.e. Models and Services. 
+The Angular project is wrapped in the Electron one and implements the logic behind each Hopkey concept. Let’s dive into the Angular project, from the UX/UI elements to the low level ones, i.e. Models and Services. 
 
 ### Angular project elements: Modules
 
-Modules are elements in an Angular project that allows using different components that are defined in the same functional scope. In Leapp we have **3 modules**.
+Modules are elements in an Angular project that allows using different components that are defined in the same functional scope. In Hopkey we have **3 modules**.
 
 - **app.module.ts**: contains all the **global libraries ad components.** Here you can put all the external libraries that you need.
 - **layout.module.ts**: is specific for the layout component, and contains only information that is used in the layout.component.ts file. It is called inside the app module.
@@ -403,7 +409,7 @@ Inside the Component folder, there are all the different components of the appli
 
 Components represent core UI/UX functionalities. If you intend to define a new functionality that must have its UI counterpart, please insert the new component here. 
 
-There is also a dialogs folder that contains, for easiness, all the dialog components of Leapp. 
+There is also a dialogs folder that contains, for easiness, all the dialog components of Hopkey. 
 
 For us, it is best to create a new component every time we need a new dialog in the interface, just to keep things well separated and DRY.
 
@@ -416,7 +422,7 @@ We organized the CLI's _/src_ folder in **/commands** and **/services** sub-fold
 
 ### Commands folder
 
-Commands folder contains Leapp CLI's commands implementation. Each command takes part of a **scope**. As far as now, there are
+Commands folder contains Hopkey CLI's commands implementation. Each command takes part of a **scope**. As far as now, there are
 five scopes available:
 
 - ipd-url;
@@ -425,19 +431,19 @@ five scopes available:
 - region;
 - session.
 
-Each command extends the **LeappCommand** class, that is an implementation of @oclif/core's **Command** class.
+Each command extends the **HopkeyCommand** class, that is an implementation of @oclif/core's **Command** class.
 
-We built the LeappCommand class to introduce some logic before the actual command is executed.
+We built the HopkeyCommand class to introduce some logic before the actual command is executed.
 For example, we added a logic that block the command execution if the Desktop App is not installed and running.
 
 To write a new command, from scratch, use the following command template and position it in the proper scope folder (or create a new one).
 
 ```typescript
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 
-export default class HelloWorld extends LeappCommand {
+export default class HelloWorld extends HopkeyCommand {
   static description = "hello world";
-  static examples = ["$leapp scope hello-world"];
+  static examples = ["$hopkey scope hello-world"];
 
   constructor(argv: string[], config: Config) {
     super(argv, config);
@@ -451,7 +457,7 @@ export default class HelloWorld extends LeappCommand {
 
 ### Services folder
 
-This folder contains an implementation for each of the following Leapp Core interfaces:
+This folder contains an implementation for each of the following Hopkey Core interfaces:
 
 - INativeService;
 - IMfaCodePrompter;
@@ -460,20 +466,20 @@ This folder contains an implementation for each of the following Leapp Core inte
 - IOpenExternalUrlService.
 
 Moreover, you can find the CliProviderService, i.e. a class that is responsible for caching and providing instances used
-by Leapp CLI's commands. For example, it caches and provides all the Leapp Core's services instances that are needed by
-Leapp CLI's commands.
+by Hopkey CLI's commands. For example, it caches and provides all the Hopkey Core's services instances that are needed by
+Hopkey CLI's commands.
 
 # Build
 
 This section addresses local development, not releases.
 
 Remember that the root folder's package.json contains the _setup_ script, that can be used to setup all the packages,
-i.e. Leapp Core, Leapp CLI and Leapp Desktop App. This script does not build the packages, you've to do it using 
+i.e. Hopkey Core, Hopkey CLI and Hopkey Desktop App. This script does not build the packages, you've to do it using 
 the scripts described below.
 
 ## /packages/core
 
-In _/packages/core/package.json_ you can find the _build_ script that you can use to build Leapp Core. The output folder is
+In _/packages/core/package.json_ you can find the _build_ script that you can use to build Hopkey Core. The output folder is
 placed under /packages/core/dist.
 
 You can run it using the following command from the _/packages/core_ folder:
@@ -484,7 +490,7 @@ npm run build
 
 ## /packages/cli
 
-In _/packages/core/package.json_ you can find the _prepack_ script that you can use to build Leapp CLI and generate the
+In _/packages/core/package.json_ you can find the _prepack_ script that you can use to build Hopkey CLI and generate the
 oclif.manifest.json file, which is needed to make Oclif aware of the commands available.
 
 You can run it using the following command from the _/packages/cli_ folder:
@@ -507,7 +513,7 @@ npm run rebuild-keytar
 
 # Troubleshooting
 
-To troubleshoot the electron application in the development environment, please refer to [this](https://docs.leapp.cloud/latest/troubleshooting/app-data/) documentation page. Moreover, you may find it useful to open the Developer Tools from the Electron’s BrowserWindow that hosts the Angular application.
+To troubleshoot the electron application in the development environment, please refer to [this](https://willroll.github.io/hopkey/latest/troubleshooting/app-data/) documentation page. Moreover, you may find it useful to open the Developer Tools from the Electron’s BrowserWindow that hosts the Angular application.
 
 # Editor preferences
 

@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'prepare docs',
-      description: 'Prepare docs for MKDOCS for the leapp CLI',
+      description: 'Prepare docs for MKDOCS for the hopkey CLI',
       version: '0.1',
   },
   run: async () => {
@@ -11,13 +11,13 @@ module.exports = {
     const position = text.indexOf("# Usage");
     text = text.slice(position + 7);
     console.log("...modifying file README.md");
-    const header = "Leapp's Command Line Interface.\n" +
+    const header = "Hopkey's Command Line Interface.\n" +
       "\n" +
       "!!! warning\n" +
       "\n" +
-      "    Leapp CLI works only if the Desktop App is installed and running.\n" +
+      "    Hopkey CLI works only if the Desktop App is installed and running.\n" +
       "    Note that version >= v0.11.0 of the Desktop App is required.\n" +
-      "    Check the [installation guide](../installation/install-leapp/){: target='_blank'} to install the Desktop App.\n" +
+      "    Check the [installation guide](../installation/install-hopkey/){: target='_blank'} to install the Desktop App.\n" +
       "\n" +
       "\n"
     text = header + text.toString().replace("# Commands", "").replace("# Command Topics", "## Command Topics");

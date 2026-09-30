@@ -1,14 +1,14 @@
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
-import { LeappCommand } from "../../leapp-command";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionService } from "@noovolari/leapp-core/services/session/session-service";
+import { Session } from "@hopkey/core/models/session";
+import { SessionService } from "@hopkey/core/services/session/session-service";
 import { Args } from "@oclif/core";
-import { LocalstackSessionService } from "@noovolari/leapp-core/services/session/localstack/localstack-session-service";
+import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 
-export default class GenerateSession extends LeappCommand {
+export default class GenerateSession extends HopkeyCommand {
   static description = "Generate STS temporary credentials for the given AWS session id";
-  static examples = [`$leapp session generate 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d`];
+  static examples = [`$hopkey session generate 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d`];
   static args = {
     sessionId: Args.string({
       description: "id of the session",

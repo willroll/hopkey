@@ -1,8 +1,8 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
+import { Session } from "@hopkey/core/models/session";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
 import GenerateSession from "./generate";
-import { LocalstackSessionService } from "@noovolari/leapp-core/services/session/localstack/localstack-session-service";
+import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 
 describe("GenerateSession", () => {
   const getTestCommand = (cliProviderService: any = null, argv: string[] = []): GenerateSession => {

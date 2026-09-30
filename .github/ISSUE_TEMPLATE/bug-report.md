@@ -10,8 +10,8 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Leapp Version**
-Add the version of your Leapp (you can find it under taskbar -> about or Leapp -> about on MacOS X)
+**Hopkey Version**
+Add the version of your Hopkey (you can find it under taskbar -> about or Hopkey -> about on MacOS X)
 
 **To Reproduce**
 Steps to reproduce the behavior:
@@ -29,7 +29,7 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - OS Version [e.g. 22]
- - Leapp Version [e.g. 0.2.5]
+ - Hopkey Version [e.g. 0.2.5]
 
 **Additional context**
 Add any other context about the problem here.

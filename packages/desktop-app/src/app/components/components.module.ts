@@ -37,7 +37,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { FilterMenuComponent } from "./filter-menu/filter-menu.component";
 import { SegmentDialogComponent } from "./dialogs/segment-dialog/segment-dialog.component";
 import { ColumnDialogComponent } from "./dialogs/column-dialog/column-dialog.component";
-import { LeappSelectComponent } from "./leapp-select/leapp-select.component";
+import { HopkeySelectComponent } from "./hopkey-select/hopkey-select.component";
 import { IntegrationBarComponent } from "./integration-bar/integration-bar.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { CredentialProcessDialogComponent } from "./dialogs/credential-process-dialog/credential-process-dialog.component";
@@ -58,13 +58,12 @@ import { MatInputModule } from "@angular/material/input";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ManageTeamWorkspacesDialogComponent } from "./dialogs/manage-team-workspaces-dialog/manage-team-workspaces-dialog.component";
 import { InfoDialogComponent } from "./dialogs/info-dialog/info-dialog.component";
-import { LeappProPreCheckoutDialogComponent } from "./dialogs/leapp-pro-pre-checkout-dialog/leapp-pro-pre-checkout-dialog.component";
+import { HopkeyProPreCheckoutDialogComponent } from "./dialogs/hopkey-pro-pre-checkout-dialog/hopkey-pro-pre-checkout-dialog.component";
 import { SyncProWidgetComponent } from "./sync-pro-widget/sync-pro-widget.component";
 import { OverlayModule } from "@angular/cdk/overlay";
 import { LockPageComponent } from "./lock-page/lock-page.component";
 import { CheckIconSvgComponent } from "./check-icon-svg/check-icon-svg.component";
 import { AuthorizationDialogComponent } from "./dialogs/authorization-dialog/authorization-dialog.component";
-import { NoovolariDialogComponent } from "./dialogs/noovolari-dialog/noovolari-dialog.component";
 
 @NgModule({
   declarations: [
@@ -87,7 +86,7 @@ import { NoovolariDialogComponent } from "./dialogs/noovolari-dialog/noovolari-d
     FilterMenuComponent,
     SegmentDialogComponent,
     ColumnDialogComponent,
-    LeappSelectComponent,
+    HopkeySelectComponent,
     IntegrationBarComponent,
     CredentialProcessDialogComponent,
     ChangeRegionDialogComponent,
@@ -98,11 +97,10 @@ import { NoovolariDialogComponent } from "./dialogs/noovolari-dialog/noovolari-d
     InfoDialogComponent,
     LoginWorkspaceDialogComponent,
     ManageTeamWorkspacesDialogComponent,
-    LeappProPreCheckoutDialogComponent,
+    HopkeyProPreCheckoutDialogComponent,
     SyncProWidgetComponent,
     LockPageComponent,
     CheckIconSvgComponent,
-    NoovolariDialogComponent,
   ],
   imports: [
     CommonModule,

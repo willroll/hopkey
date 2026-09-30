@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { CommandBarComponent } from "./command-bar.component";
 import { mustInjected } from "../../../base-injectables";
 import { AppProviderService } from "../../services/app-provider.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { Workspace } from "@noovolari/leapp-core/models/workspace";
+import { constants } from "@hopkey/core/models/constants";
+import { Workspace } from "@hopkey/core/models/workspace";
 import { OptionsService } from "../../services/options.service";
 
 describe("CommandBarComponent", () => {
@@ -26,7 +26,7 @@ describe("CommandBarComponent", () => {
       getNotifications: () => [],
       getNotificationByUuid: () => {},
     });
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       behaviouralSubjectService: spyBehaviouralSubjectService,
       repository: spyRepositoryService,
       awsCoreService: { getRegions: () => [] },
@@ -45,7 +45,7 @@ describe("CommandBarComponent", () => {
       declarations: [CommandBarComponent],
       providers: [].concat(
         mustInjected().concat([
-          { provide: AppProviderService, useValue: spyLeappCoreService },
+          { provide: AppProviderService, useValue: spyHopkeyCoreService },
           { provide: OptionsService, useValue: optionsService },
         ])
       ),

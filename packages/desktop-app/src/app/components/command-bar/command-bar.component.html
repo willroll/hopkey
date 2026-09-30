@@ -20,7 +20,7 @@
       <button class="icon-button show-in-taskbar-only" (click)="false;" matTooltip="Sync all Integrations"><i class="moon-Refresh"></i></button>
 
       <button class="icon-button line-start hide-in-taskbar" (click)="showCreateDialog();" matTooltip="Add a new Session"
-              [disabled]="isLeappTeamWorkspace" [ngClass]="isLeappTeamWorkspace ? 'disabled-add-session':'' "><i class="moon-Add"></i></button>
+              [disabled]="isHopkeyTeamWorkspace" [ngClass]="isHopkeyTeamWorkspace ? 'disabled-add-session':'' "><i class="moon-Add"></i></button>
 
       <button class="icon-button hide-in-taskbar filtering {{filterExtended ? 'toggled-filter' : ''}}" (click)="toggleFilters();"
               matTooltip="Filter the Session list"><i class="moon-Filter"></i></button>
@@ -33,10 +33,10 @@
       <button class="icon-button hide-in-taskbar" (click)="syncAll();" matTooltip="Sync all Integrations"><i class="moon-Refresh"></i></button>
 
       <div class="line-end">
-        <!--        <button class="icon-button top-right-option-button" (click)="showOptionDialog();" matTooltip="Show Leapp Options"><i-->
+        <!--        <button class="icon-button top-right-option-button" (click)="showOptionDialog();" matTooltip="Show Hopkey Options"><i-->
         <!--          class="moon-Settings"></i></button>-->
         <button class="icon-button top-right-option-button margin-right-fix notification" [matMenuTriggerFor]="notification_menu"
-                matTooltip="Show Leapp Notifications">
+                matTooltip="Show Hopkey Notifications">
           <img
             class="{{optionsService.colorTheme === eConstants.darkTheme || (optionsService.colorTheme === eConstants.systemDefaultTheme && appService.isDarkMode()) ? 'invert' : ''}}"
             src="assets/images/notifications.svg" alt="notifications button" title=""/>
@@ -57,7 +57,7 @@
           <button class="notification-menu-item" mat-menu-item (click)="goToJoinTheCommunity();">
             <img
               class="icon-not-menu {{optionsService.colorTheme === eConstants.darkTheme || (optionsService.colorTheme === eConstants.systemDefaultTheme && appService.isDarkMode()) ? 'invert' : ''}}"
-              src="assets/images/slack.svg"/>
+              src="assets/images/question-fill.svg"/>
             &nbsp;<span>Join the community</span>
           </button>
 
@@ -78,7 +78,7 @@
           <div *ngIf="notifications.length > 0" class="divider"></div>
 
           <ng-container *ngFor="let notification of notifications">
-            <button class="notification-menu-item" mat-menu-item (click)="notification.uuid === 'noovolari-1000' ? openNoovolariModal(notification) : openInfoModal(notification);" [disabled]="!isIssueButtonEnabled">
+            <button class="notification-menu-item" mat-menu-item (click)="openInfoModal(notification);" [disabled]="!isIssueButtonEnabled">
               <img
                 class="icon-not-menu {{optionsService.colorTheme === eConstants.darkTheme || (optionsService.colorTheme === eConstants.systemDefaultTheme && appService.isDarkMode()) ? 'invert' : ''}}"
                 src="assets/images/{{notification.read ? 'read-notification' : notification.icon ?? 'unread-notification'}}.svg"
@@ -92,7 +92,7 @@
 
 
         <button class="icon-button top-right-option-button" (click)="showOptionDialog();"
-                matTooltip="Show Leapp Options"><i class="moon-Settings"></i></button>
+                matTooltip="Show Hopkey Options"><i class="moon-Settings"></i></button>
       </div>
 
       <div class="window-buttons">

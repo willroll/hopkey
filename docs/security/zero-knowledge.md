@@ -4,8 +4,8 @@ To persist your configuration online, we implemented **Zero-Knowledge encryption
 
 !!! Warning
 
-    This is implemented to save your configuration online in the PRO and TEAM versions of Leapp.</br>
-    Don't know yet about the PRO and TEAM versions? Check our [roadmap](https://roadmap.leapp.cloud/tabs/4-in-progress){: target='_blank'}.
+    This protected the configurations saved online by the PRO and TEAM service, which Noovolari ran until it closed in 2024:
+    that service is not available in Hopkey.
 
 !!! Info
 
@@ -13,7 +13,7 @@ To persist your configuration online, we implemented **Zero-Knowledge encryption
 
 ## Users have key control
 
-When users have complete control of the encryption key, they control access to the data, providing encrypted information to Leapp without Leapp having access to or knowledge of that data.
+When users have complete control of the encryption key, they control access to the data, providing encrypted information to Hopkey without Hopkey having access to or knowledge of that data.
 
 !!! Info
 

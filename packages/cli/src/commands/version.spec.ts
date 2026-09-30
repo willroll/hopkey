@@ -12,6 +12,8 @@ describe("Version", () => {
 
     await command.run();
 
-    expect(command.log).toHaveBeenCalledWith(`Leapp Cli\n` + `Version ${cliVersion} (Core: test-core)\n` + "© 2022 Noovolari");
+    expect(command.log).toHaveBeenCalledWith(
+      `Hopkey Cli\n` + `Version ${cliVersion} (Core: test-core)\n` + "© 2022 Noovolari, © 2026 Hopkey contributors"
+    );
   });
 });

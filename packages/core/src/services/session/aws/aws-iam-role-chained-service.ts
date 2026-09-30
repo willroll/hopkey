@@ -1,6 +1,6 @@
 import { STSClient, AssumeRoleResponse, Credentials, AssumeRoleCommand } from "@aws-sdk/client-sts";
-import { LeappAwsStsError } from "../../../errors/leapp-aws-sts-error";
-import { LeappNotFoundError } from "../../../errors/leapp-not-found-error";
+import { HopkeyAwsStsError } from "../../../errors/hopkey-aws-sts-error";
+import { HopkeyNotFoundError } from "../../../errors/hopkey-not-found-error";
 import { IBehaviouralNotifier } from "../../../interfaces/i-behavioural-notifier";
 import { AwsIamRoleChainedSession } from "../../../models/aws/aws-iam-role-chained-session";
 import { CredentialsInfo } from "../../../models/credentials-info";
@@ -112,7 +112,7 @@ export class AwsIamRoleChainedService extends AwsSessionService {
     try {
       parentSession = this.repository.getSessionById((session as AwsIamRoleChainedSession).parentSessionId);
     } catch (err) {
-      throw new LeappNotFoundError(this, `Parent Account Session  not found for Chained Account ${session.sessionName}`);
+      throw new HopkeyNotFoundError(this, `Parent Account Session  not found for Chained Account ${session.sessionName}`);
     }
 
     // Generate a credential set from Parent Session
@@ -189,7 +189,7 @@ export class AwsIamRoleChainedService extends AwsSessionService {
       // Generate correct object from session token response and return
       return AwsIamRoleChainedService.sessionTokenFromAssumeRoleResponse(assumeRoleResponse);
     } catch (err) {
-      throw new LeappAwsStsError(this, err.message);
+      throw new HopkeyAwsStsError(this, err.message);
     }
   }
 

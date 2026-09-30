@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { AwsNamedProfile } from "@noovolari/leapp-core/models/aws/aws-named-profile";
+import { AwsNamedProfile } from "@hopkey/core/models/aws/aws-named-profile";
 import { profileId, profileName } from "../../flags";
 
-export default class EditNamedProfile extends LeappCommand {
+export default class EditNamedProfile extends HopkeyCommand {
   static description = "Rename an AWS named profile";
 
-  static examples = [`$leapp profile edit`, `$leapp profile edit --profileId ID --profileName PROFILENAME`];
+  static examples = [`$hopkey profile edit`, `$hopkey profile edit --profileId ID --profileName PROFILENAME`];
 
   static flags = {
     profileId,
@@ -20,7 +20,7 @@ export default class EditNamedProfile extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(EditNamedProfile);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const selectedNamedProfile = await this.selectNamedProfile();
         const newProfileName = await this.getProfileName();
         await this.editNamedProfile(selectedNamedProfile.id, newProfileName);

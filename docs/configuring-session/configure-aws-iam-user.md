@@ -18,13 +18,13 @@ sitemap_video_content: "newuxui/aws-iam-user.mp4"
 
 An AWS Identity and Access Management (IAM) user is an entity that you create in AWS to represent the person or application that uses it to interact with AWS.
 
-An IAM User in AWS consists of a name and a set of long-term credentials. Leapp never sets these values in the configuration files, and automatically generates and refreshes a set of short-term credentials.
+An IAM User in AWS consists of a name and a set of long-term credentials. Hopkey never sets these values in the configuration files, and automatically generates and refreshes a set of short-term credentials.
 
 !!! Info
   
-    If you want to know how Leapp generates and refresh short-term credentials refer to the [credentials generation](../../security/credentials-generation/aws/){: target='_blank'} section in the documentation.
+    If you want to know how Hopkey generates and refresh short-term credentials refer to the [credentials generation](../../security/credentials-generation/aws/){: target='_blank'} section in the documentation.
 
-## How to configure an AWS IAM User in Leapp
+## How to configure an AWS IAM User in Hopkey
 
 1. From the top bar, click on the plus icon to add a new session.
 2. Select _Amazon AWS_ as the Cloud Provider.
@@ -36,7 +36,7 @@ An IAM User in AWS consists of a name and a set of long-term credentials. Leapp 
 
 | Field           | Description                          |
 |-----------------| ------------------------------------ |
-| `SESSION ALIAS` | Your friendly session name in Leapp. Give it a meaningful name so it will be easier to find inside Leapp. |
+| `SESSION ALIAS` | Your friendly session name in Hopkey. Give it a meaningful name so it will be easier to find inside Hopkey. |
 | `NAMED PROFILE` | Your friendly session name in the AWS credential file. You will be able to reference it from the AWS CLI with `--name`. |
 | `REGION`        | Your default region of choice. Select the one which you use the most for this Session. |
 | `MFA DEVICE`    | Your MFA device ID to set up multi-factor authentication. |

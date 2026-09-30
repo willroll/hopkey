@@ -1,6 +1,6 @@
 import PluginStatus from "../models/plugin-status";
 import Segment from "../models/segment";
-import { LeappNotification } from "../models/notification";
+import { HopkeyNotification } from "../models/notification";
 import { RemoteWorkspacesSettingsMap } from "../models/remote-workspace-settings-map";
 
 export interface GlobalSettings {
@@ -15,7 +15,7 @@ export interface GlobalSettings {
   credentialMethod: string;
   samlRoleSessionDuration: number;
   ssmRegionBehaviour: string;
-  notifications: LeappNotification[];
+  notifications: HopkeyNotification[];
   requirePassword: number;
   touchIdEnabled: boolean;
   remoteWorkspacesSettingsMap: RemoteWorkspacesSettingsMap;

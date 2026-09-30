@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { SessionType } from "@hopkey/core/models/session-type";
 import { AppService } from "../../../services/app.service";
 import { AppProviderService } from "../../../services/app-provider.service";
-import { AwsCoreService } from "@noovolari/leapp-core/services/aws-core-service";
-import { AzureCoreService } from "@noovolari/leapp-core/services/azure-core-service";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { RegionsService } from "@noovolari/leapp-core/services/regions-service";
+import { AwsCoreService } from "@hopkey/core/services/aws-core-service";
+import { AzureCoreService } from "@hopkey/core/services/azure-core-service";
+import { Session } from "@hopkey/core/models/session";
+import { RegionsService } from "@hopkey/core/services/regions-service";
 import { MessageToasterService, ToastLevel } from "../../../services/message-toaster.service";
 
 @Component({

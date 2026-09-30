@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as Keytar from "keytar";
-import { INativeService } from "@noovolari/leapp-core/interfaces/i-native-service";
-import { IMsalEncryptionService } from "@noovolari/leapp-core/interfaces/i-msal-encryption-service";
+import { INativeService } from "@hopkey/core/interfaces/i-native-service";
+import { IMsalEncryptionService } from "@hopkey/core/interfaces/i-msal-encryption-service";
 import { MsalEncryptionService } from "./msal-encryption.service";
 
 @Injectable({ providedIn: "root" })

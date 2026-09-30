@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AppService } from "../../../services/app.service";
 import { AppProviderService } from "../../../services/app-provider.service";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { LoggedEntry, LogLevel } from "@noovolari/leapp-core/services/log-service";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
 import { LoginWorkspaceDialogComponent } from "../login-team-dialog/login-workspace-dialog.component";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { globalFilteredSessions, globalHasFilter, globalResetFilter } from "../../command-bar/command-bar.component";
 import { sidebarHighlight } from "../../side-bar/side-bar.component";
 import { WorkspaceState } from "../../../services/team-service";
-import { globalLeappProPlanStatus, LeappPlanStatus } from "../options-dialog/options-dialog.component";
+import { globalHopkeyProPlanStatus, HopkeyPlanStatus } from "../options-dialog/options-dialog.component";
 import { AnalyticsService } from "../../../services/analytics.service";
 
 @Component({
@@ -66,8 +66,8 @@ export class ManageTeamWorkspacesDialogComponent implements OnInit, OnDestroy {
       await this.analyticsService.captureEvent("Sign Out", undefined, false, true);
       await this.appProviderService.teamService.signOut();
       this.appService.closeAllMenuTriggers();
-      globalLeappProPlanStatus.next(LeappPlanStatus.free);
-      await this.appProviderService.keychainService.saveSecret("Leapp", "leapp-enabled-plan", LeappPlanStatus.free);
+      globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
+      await this.appProviderService.keychainService.saveSecret("Hopkey", "hopkey-enabled-plan", HopkeyPlanStatus.free);
     } catch (error) {
       this.appProviderService.logService.log(new LoggedEntry(error.message, this, LogLevel.error, true));
     }

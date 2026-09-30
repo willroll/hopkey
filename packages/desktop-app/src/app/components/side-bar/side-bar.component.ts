@@ -9,11 +9,11 @@ import {
 import { BehaviorSubject } from "rxjs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { ConfirmationDialogComponent } from "../dialogs/confirmation-dialog/confirmation-dialog.component";
-import Segment from "@noovolari/leapp-core/models/segment";
-import Folder from "@noovolari/leapp-core/models/folder";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
+import Segment from "@hopkey/core/models/segment";
+import Folder from "@hopkey/core/models/folder";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
 import { AppProviderService } from "../../services/app-provider.service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import { integrationHighlight } from "../integration-bar/integration-bar.component";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { AppService } from "../../services/app.service";
@@ -54,7 +54,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
   showPinned: boolean;
   modalRef: BsModalRef;
   workspacesState: WorkspaceState[];
-  isLeappTeamStubbed: boolean;
+  isHopkeyTeamStubbed: boolean;
   exporting = false;
 
   private unsubscribe: () => void;
@@ -103,7 +103,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
     const workspaceStateSubscription = this.appProviderService.teamService.workspacesState.subscribe((workspacesState: WorkspaceState[]) => {
       this.workspacesState = workspacesState;
     });
-    this.isLeappTeamStubbed = this.appProviderService.teamService.isLeappTeamStubbed;
+    this.isHopkeyTeamStubbed = this.appProviderService.teamService.isHopkeyTeamStubbed;
     this.unsubscribe = () => {
       segmentFilterSubscription.unsubscribe();
       sidebarHighlightSubscription.unsubscribe();
@@ -199,7 +199,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
   }
 
   async loginToRemoteWorkspace(): Promise<void> {
-    if (this.isLeappTeamStubbed) return;
+    if (this.isHopkeyTeamStubbed) return;
     this.bsModalService.show(LoginWorkspaceDialogComponent, {
       animated: false,
       class: "create-modal",
@@ -209,7 +209,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
   }
 
   async logoutFromRemoteWorkspace(lock: boolean = false): Promise<void> {
-    if (!this.canLockWorkspace || this.isLeappTeamStubbed) return;
+    if (!this.canLockWorkspace || this.isHopkeyTeamStubbed) return;
     await this.analyticsService.captureEvent("Sign Out", undefined, false, true);
     await this.appProviderService.teamService.signOut(lock);
     this.appService.closeAllMenuTriggers();
@@ -232,7 +232,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
   }
 
   showManageWorkspacesDialog(): void {
-    if (this.isLeappTeamStubbed) return;
+    if (this.isHopkeyTeamStubbed) return;
     this.bsModalService.show(ManageTeamWorkspacesDialogComponent, {
       animated: false,
       class: "create-modal",
@@ -242,7 +242,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
   }
 
   openWorkspaceDocumentation(): void {
-    this.appProviderService.windowService.openExternalUrl("https://docs.leapp.cloud/latest/workspaces/");
+    this.appProviderService.windowService.openExternalUrl("https://willroll.github.io/hopkey/latest/workspaces/");
   }
 
   async exportProWorkspace(): Promise<void> {

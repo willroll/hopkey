@@ -3,20 +3,20 @@ import { AppService } from "../../services/app.service";
 import { environment } from "../../../environments/environment";
 import { UpdaterService } from "../../services/updater.service";
 import { AppProviderService } from "../../services/app-provider.service";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { SessionFactory } from "@noovolari/leapp-core/services/session-factory";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { AwsIamRoleChainedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-chained-session";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { SessionFactory } from "@hopkey/core/services/session-factory";
+import { Session } from "@hopkey/core/models/session";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { SessionStatus } from "@hopkey/core/models/session-status";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { AwsIamRoleChainedSession } from "@hopkey/core/models/aws/aws-iam-role-chained-session";
 import { WindowService } from "../../services/window.service";
-import { AwsCoreService } from "@noovolari/leapp-core/services/aws-core-service";
+import { AwsCoreService } from "@hopkey/core/services/aws-core-service";
 import { AppNativeService } from "../../services/app-native.service";
 import { MessageToasterService } from "../../services/message-toaster.service";
-import { LoggedEntry, LogLevel, LogService } from "@noovolari/leapp-core/services/log-service";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { LoggedEntry, LogLevel, LogService } from "@hopkey/core/services/log-service";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
+import { constants } from "@hopkey/core/models/constants";
 
 @Component({
   selector: "app-tray-menu",
@@ -102,14 +102,14 @@ export class TrayMenuComponent implements OnInit, OnDestroy {
         label: "Open Documentation",
         type: "normal",
         click: () => {
-          this.windowService.openExternalUrl("https://docs.leapp.cloud/");
+          this.windowService.openExternalUrl("https://willroll.github.io/hopkey/");
         },
       },
       {
-        label: "Join Slack Community",
+        label: "Join the Community",
         type: "normal",
         click: () => {
-          this.windowService.openExternalUrl(constants.slackUrl);
+          this.windowService.openExternalUrl(constants.communityUrl);
         },
       },
       {
@@ -118,7 +118,7 @@ export class TrayMenuComponent implements OnInit, OnDestroy {
         enabled: this.appService.awsSsmPluginVersion && this.appService.awsCliVersion && this.appService.issueBody,
         click: () => {
           this.windowService.openExternalUrl(
-            `https://github.com/noovolari/leapp/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
+            `https://github.com/willroll/hopkey/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
           );
         },
       },
@@ -134,11 +134,11 @@ export class TrayMenuComponent implements OnInit, OnDestroy {
     // Remove unused voices from contextual menu
     const template = [
       {
-        label: "Leapp",
+        label: "Hopkey",
         submenu: [
           { label: "About", role: "about" },
           { type: "separator" },
-          { label: "Hide Leapp", accelerator: "CmdOrCtrl+H", role: "hide" },
+          { label: "Hide Hopkey", accelerator: "CmdOrCtrl+H", role: "hide" },
           { label: "Hide Others", accelerator: "Alt+CmdOrCtrl+H", role: "hideOthers" },
           { label: "Close Window", accelerator: "CmdOrCtrl+W", role: "close" },
           { type: "separator" },
@@ -158,9 +158,9 @@ export class TrayMenuComponent implements OnInit, OnDestroy {
     }
     this.appService.getMenu().setApplicationMenu(this.appService.getMenu().buildFromTemplate(template));
     // check for dark mode
-    let normalIcon = "LeappTemplate";
+    let normalIcon = "HopkeyTemplate";
     if (this.appService.detectOs() === OperatingSystem.linux) {
-      normalIcon = "LeappMini";
+      normalIcon = "HopkeyMini";
     }
     if (!this.currentTray) {
       this.currentTray = new this.electronService.tray(__dirname + `/assets/images/${normalIcon}.png`);
@@ -184,7 +184,7 @@ export class TrayMenuComponent implements OnInit, OnDestroy {
 
     const contextMenu = this.appService.getMenu().buildFromTemplate(this.voices);
     if (this.appService.detectOs() !== OperatingSystem.windows && this.appService.detectOs() !== OperatingSystem.linux) {
-      this.currentTray.setToolTip("Leapp");
+      this.currentTray.setToolTip("Hopkey");
     }
     this.currentTray.setContextMenu(contextMenu);
   }

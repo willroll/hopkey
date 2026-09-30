@@ -1,27 +1,27 @@
 import { Injectable } from "@angular/core";
 import { AppProviderService } from "./app-provider.service";
-import { SessionFactory } from "@noovolari/leapp-core/services/session-factory";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { LoggedEntry, LoggedException, LogLevel, LogService } from "@noovolari/leapp-core/services/log-service";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
+import { SessionFactory } from "@hopkey/core/services/session-factory";
+import { Session } from "@hopkey/core/models/session";
+import { LoggedEntry, LoggedException, LogLevel, LogService } from "@hopkey/core/services/log-service";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
 import { ChangeRegionDialogComponent } from "../components/dialogs/change-region-dialog/change-region-dialog.component";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { ChangeNamedProfileDialogComponent } from "../components/dialogs/change-named-profile-dialog/change-named-profile-dialog.component";
 import { SsmModalDialogComponent } from "../components/dialogs/ssm-modal-dialog/ssm-modal-dialog.component";
 import { EditDialogComponent } from "../components/dialogs/edit-dialog/edit-dialog.component";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { constants } from "@hopkey/core/models/constants";
+import { SessionType } from "@hopkey/core/models/session-type";
 import { WindowService } from "./window.service";
 import { OptionsService } from "./options.service";
 import { AppService } from "./app.service";
 import { MessageToasterService, ToastLevel } from "./message-toaster.service";
 import { CreateDialogComponent } from "../components/dialogs/create-dialog/create-dialog.component";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { AwsIamUserService } from "@noovolari/leapp-core/services/session/aws/aws-iam-user-service";
-import { AwsCredentialsPlugin } from "@noovolari/leapp-core/plugin-sdk/aws-credentials-plugin";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { AwsIamUserService } from "@hopkey/core/services/session/aws/aws-iam-user-service";
+import { AwsCredentialsPlugin } from "@hopkey/core/plugin-sdk/aws-credentials-plugin";
 import { AnalyticsService } from "./analytics.service";
-import { SessionService } from "@noovolari/leapp-core/services/session/session-service";
+import { SessionService } from "@hopkey/core/services/session/session-service";
 
 @Injectable({
   providedIn: "root",

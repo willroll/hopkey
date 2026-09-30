@@ -28,7 +28,7 @@ Role chaining occurs when you use a role to assume a second role through the AWS
 !!! Info
     Refer to [this guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_saml.html){: target='_blank'} to delegate access across AWS accounts using IAM Roles chaining.
 
-## How to configure an AWS IAM Role Chained in Leapp
+## How to configure an AWS IAM Role Chained in Hopkey
 
 1. From the top bar, click on the plus icon to add a new session.
 2. Select _Amazon AWS_ as the Cloud Provider.
@@ -40,12 +40,12 @@ Role chaining occurs when you use a role to assume a second role through the AWS
 
 | Field               | Description                          |
 |---------------------| ------------------------------------ |
-| `SESSION ALIAS`     | Your friendly session name in Leapp. Give it a meaningful name so it will be easier to find inside Leapp. |
+| `SESSION ALIAS`     | Your friendly session name in Hopkey. Give it a meaningful name so it will be easier to find inside Hopkey. |
 | `NAMED PROFILE`     | Your friendly session name in the AWS credential file. You will be able to reference it from the AWS CLI with `--name`. |
 | `REGION`            | Your default region of choice. Select the one which you use the most for this Session. |
 | `ROLE ARN`          | Your IAM Role unique ID. The active Session will refer to this Role. |
 | `ROLE SESSION NAME` | Your session name. You can query and search this on AWS Cloudtrail or any other linked audit service to find out what action were performed by the linked Identity. |
-| `ASSUMER SESSION`   | Your session from which this Role will be assumed. The `assume-role` call will be automatically made by Leapp. |
+| `ASSUMER SESSION`   | Your session from which this Role will be assumed. The `assume-role` call will be automatically made by Hopkey. |
 
 ![](../../images/screens/newuxui/aws-iam-role-chained.png?style=center-img "Add AWS IAM Role Chained Screen")
 

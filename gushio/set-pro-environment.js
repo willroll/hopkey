@@ -6,12 +6,12 @@ module.exports = {
     arguments: [],
   },
   run: async () => {
-    const leappCoreBootstrap = require('./leapp-core-bootstrap')
+    const hopkeyCoreBootstrap = require('./hopkey-core-bootstrap')
     const packageNames = ['desktop-app', 'cli']
     try {
       for (const packageName of packageNames) {
         console.log(`disabling monorepo dependencies symlinks for ${packageName}...`)
-        await leappCoreBootstrap(packageName, (corePackage) => corePackage['version']);
+        await hopkeyCoreBootstrap(packageName, (corePackage) => corePackage['version']);
       }
     } catch (e) {
       e.message = e.stack.red

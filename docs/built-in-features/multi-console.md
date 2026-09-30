@@ -1,20 +1,20 @@
 ---
 title: "Configure Multi Console"
-description: "How to configure Multi Console. The Leapp Multi-Console Browser Extension allows you to open **multiple instances of the AWS Web Console in the same browser window** and helps you in managing them."
+description: "How to configure Multi Console. The Hopkey Multi-Console Browser Extension allows you to open **multiple instances of the AWS Web Console in the same browser window** and helps you in managing them."
 page_type: "built-in"
 structured_data_how_to_title: "Configure Multi Console"
 structured_data_how_to_tip1: "Install the extension for Chrome-based Browser or Firefox."
-structured_data_how_to_tip2: "Enable the Multi Console in the option panel of Leapp."
+structured_data_how_to_tip2: "Enable the Multi Console in the option panel of Hopkey."
 structured_data_how_to_tip3: "Right-click on a session you want to open in the AWS Web Console."
 structured_data_how_to_tip4: "Click on Open Web Console."
 social_title: "Configure Named Profiles"
-social_description: "How to configure Multi Console. The Leapp Multi-Console Browser Extension allows you to open **multiple instances of the AWS Web Console in the same browser window** and helps you in managing them."
+social_description: "How to configure Multi Console. The Hopkey Multi-Console Browser Extension allows you to open **multiple instances of the AWS Web Console in the same browser window** and helps you in managing them."
 social_relative_image_path: "configure-multi-console.png"
 ---
 
 ## What is Multi Console
 
-The Leapp Multi-Console Browser Extension allows you to open **multiple instances of 
+The Hopkey Multi-Console Browser Extension allows you to open **multiple instances of 
 the AWS Web Console in the same browser window** and helps you in managing them.
 
 <div class="button-container">
@@ -32,7 +32,7 @@ the AWS Web Console in the same browser window** and helps you in managing them.
 | Brave                      | :white_check_mark:
 | Safari                     | :x:
 
-## How to Configure Multi Console in Leapp
+## How to Configure Multi Console in Hopkey
 
 ### Install the Extension
 
@@ -68,13 +68,13 @@ The extension can only be installed manually. To do so, follow these instruction
 #### Firefox
 
 1. Visit `about:addons`
-2. Select Leapp Browser Extension and click on the 3 dots
+2. Select Hopkey Browser Extension and click on the 3 dots
 3. Click on Remove
 
 #### Chrome, Edge and other Chromium based browsers
 
 1. Visit `about://extensions`
-2. Search for Leapp Browser Extension and click on Remove
+2. Search for Hopkey Browser Extension and click on Remove
 3. See warning section below
 
 !!! warning
@@ -90,7 +90,7 @@ The extension can only be installed manually. To do so, follow these instruction
 
 ### How to use it
 
-Once you've installed the extension on your browser, you need to enable the Multi-Console Extension on the Leapp Desktop App in order to use it.
+Once you've installed the extension on your browser, you need to enable the Multi-Console Extension on the Hopkey Desktop App in order to use it.
 
 Click on the top-right cog icon to access the settings, click on the **Multi-Console** tab and then click **Enable Multi-Console Extension**.
 
@@ -105,11 +105,11 @@ From the contextual menu of a session (accessed by right-clicking on it), simply
 
 ---
 
-By clicking on the Leapp Multi-Console Extension icon in your browser, a list of all currently active sessions will be shown. 
+By clicking on the Hopkey Multi-Console Extension icon in your browser, a list of all currently active sessions will be shown. 
 
-This list contains information obtained from Leapp about the session, including **Session Name, Session Role and Session Region**.
+This list contains information obtained from Hopkey about the session, including **Session Name, Session Role and Session Region**.
 
-![leapp browser ui](../../images/built-in-features/leapp-browser-ui.png?style=even-smaller-img)
+![hopkey browser ui](../../images/built-in-features/hopkey-browser-ui.png?style=even-smaller-img)
 
 In the extension interface, click on a row to select and **focus the tab in which you opened the related AWS Console**, so you can easily navigate among many AWS Consoles
 at the same time.

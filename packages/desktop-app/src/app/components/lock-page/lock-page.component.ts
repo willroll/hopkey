@@ -1,12 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
-import { LoggedEntry, LogLevel, LogService } from "@noovolari/leapp-core/services/log-service";
+import { LoggedEntry, LogLevel, LogService } from "@hopkey/core/services/log-service";
 import { ApiErrorCodes, FormErrorCodes, TeamService } from "../../services/team-service";
 import { AppService } from "../../services/app.service";
 import { AppProviderService } from "../../services/app-provider.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { globalLeappProPlanStatus, LeappPlanStatus } from "../dialogs/options-dialog/options-dialog.component";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { globalHopkeyProPlanStatus, HopkeyPlanStatus } from "../dialogs/options-dialog/options-dialog.component";
+import { constants } from "@hopkey/core/models/constants";
 import { MessageToasterService, ToastLevel } from "../../services/message-toaster.service";
 import { AppNativeService } from "../../services/app-native.service";
 import { OptionsService } from "../../services/options.service";
@@ -97,9 +97,9 @@ export class LockPageComponent implements OnInit {
         this.appService.closeAllMenuTriggers();
 
         const teamOrPro = this.teamService.workspacesState.getValue().find((wState) => wState.type === "pro" || wState.type === "team");
-        const planStatus = teamOrPro.type === "team" ? LeappPlanStatus.enterprise : LeappPlanStatus.proEnabled;
-        await this.appProviderService.keychainService.saveSecret("Leapp", "leapp-enabled-plan", planStatus);
-        globalLeappProPlanStatus.next(planStatus);
+        const planStatus = teamOrPro.type === "team" ? HopkeyPlanStatus.enterprise : HopkeyPlanStatus.proEnabled;
+        await this.appProviderService.keychainService.saveSecret("Hopkey", "hopkey-enabled-plan", planStatus);
+        globalHopkeyProPlanStatus.next(planStatus);
 
         if (doesWorkspaceExist) {
           await this.teamService.pullFromRemote();
@@ -142,8 +142,8 @@ export class LockPageComponent implements OnInit {
   async switchToLocalWorkspace(): Promise<void> {
     await this.appProviderService.teamService.signOut();
     this.appService.closeAllMenuTriggers();
-    globalLeappProPlanStatus.next(LeappPlanStatus.free);
-    await this.appProviderService.keychainService.saveSecret("Leapp", "leapp-enabled-plan", LeappPlanStatus.free);
+    globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
+    await this.appProviderService.keychainService.saveSecret("Hopkey", "hopkey-enabled-plan", HopkeyPlanStatus.free);
     await this.router.navigate(["/dashboard"]);
   }
 

@@ -1,15 +1,15 @@
-import { Session } from "@noovolari/leapp-core/models/session";
-import { LeappCommand } from "../../leapp-command";
+import { Session } from "@hopkey/core/models/session";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { force, sessionId } from "../../flags";
 
-export default class DeleteSession extends LeappCommand {
+export default class DeleteSession extends HopkeyCommand {
   static description = "Delete a session";
 
   static examples = [
-    `$leapp session delete`,
-    `$leapp session delete --sessionId SESSIONID`,
-    "$leapp session delete --sessionId SESSIONID [--force, -f]",
+    `$hopkey session delete`,
+    `$hopkey session delete --sessionId SESSIONID`,
+    "$hopkey session delete --sessionId SESSIONID [--force, -f]",
   ];
 
   static flags = {

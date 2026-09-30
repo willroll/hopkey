@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { AppService } from "./app.service";
-import { CredentialsInfo } from "@noovolari/leapp-core/models/credentials-info";
-import { ExecuteService } from "@noovolari/leapp-core/services/execute-service";
+import { CredentialsInfo } from "@hopkey/core/models/credentials-info";
+import { ExecuteService } from "@hopkey/core/services/execute-service";
 import { AppProviderService } from "./app-provider.service";
-import { SsmService } from "@noovolari/leapp-core/services/ssm-service";
-import { LogService } from "@noovolari/leapp-core/services/log-service";
+import { SsmService } from "@hopkey/core/services/ssm-service";
+import { LogService } from "@hopkey/core/services/log-service";
 import { AnalyticsService } from "./analytics.service";
 
 @Injectable({
@@ -18,10 +18,10 @@ export class AppSsmService {
   private executeService: ExecuteService;
   private coreSsmService: SsmService;
 
-  constructor(private appService: AppService, private leappCoreService: AppProviderService, private analyticsService: AnalyticsService) {
-    this.coreSsmService = leappCoreService.ssmService;
-    this.logService = leappCoreService.logService;
-    this.executeService = leappCoreService.executeService;
+  constructor(private appService: AppService, private hopkeyCoreService: AppProviderService, private analyticsService: AnalyticsService) {
+    this.coreSsmService = hopkeyCoreService.ssmService;
+    this.logService = hopkeyCoreService.logService;
+    this.executeService = hopkeyCoreService.executeService;
   }
 
   /**

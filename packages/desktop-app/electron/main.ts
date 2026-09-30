@@ -29,19 +29,19 @@ if (process.platform === "linux") {
   app.commandLine.appendSwitch("in-process-gpu");
 }
 
-app.setAsDefaultProtocolClient('leapp');
+app.setAsDefaultProtocolClient('hopkey');
 
 
 // Main Window configuration: set here the options to make it works with your app
 // Electron is the application wrapper so NOT log is prompted when we build an
 // application, we need to log to a file instead
 const windowDefaultConfig = {
-  dir: path.join(__dirname, `/../../../dist/leapp-client`),
+  dir: path.join(__dirname, `/../../../dist/hopkey-client`),
   browserWindow: {
     width: 1200,
     height: 680,
     title: ``,
-    icon: path.join(__dirname, `assets/images/Leapp.png`),
+    icon: path.join(__dirname, `assets/images/Hopkey.png`),
     resizable: true,
     webPreferences: {
       devTools: !environment.production,
@@ -76,10 +76,12 @@ const buildAutoUpdater = (win: any): void => {
 
   const minutes = 10;
 
+  // New versions are announced by the latest*.yml files attached to the GitHub releases
   const data = {
-    provider: "generic",
-    url: "https://asset.noovolari.com/latest",
-    channel: "latest",
+    provider: "github",
+    owner: "willroll",
+    repo: "hopkey",
+    releaseType: "release",
   };
   autoUpdater.setFeedURL(data);
 
@@ -209,9 +211,9 @@ const generateMainWindow = () => {
     // Protocol handler for win32 and linux for deep linking when the app is already launched.
     // The url is passed in the args so we read and write to a temp file before the frontend is
     // launched, this way the frontend can read the temp file and load the plugin
-    if (process.platform !== 'darwin' && process.argv[1] && process.argv[1].split("leapp://")[1]) {
+    if (process.platform !== 'darwin' && process.argv[1] && process.argv[1].split("hopkey://")[1]) {
       // Keep only command line / deep linked arguments
-      fs.writeFileSync(path.join(os.homedir(),environment.deeplinkFile), process.argv[1].split("leapp://")[1]);
+      fs.writeFileSync(path.join(os.homedir(),environment.deeplinkFile), process.argv[1].split("hopkey://")[1]);
     }
   };
 
@@ -252,8 +254,8 @@ const generateMainWindow = () => {
 
   const createTray = () => {
     if (!taskbar) {
-      taskbar = new Tray(windowDefaultConfig.dir + `/assets/images/LeappTemplate.png`);
-      taskbar.setToolTip("Leapp");
+      taskbar = new Tray(windowDefaultConfig.dir + `/assets/images/HopkeyTemplate.png`);
+      taskbar.setToolTip("Hopkey");
       taskbar.on("click", () => {
         trayOpen = !trayOpen;
         if (trayOpen) {
@@ -317,8 +319,8 @@ const generateMainWindow = () => {
         if (win) {
           // Win32 and Linux on app already open
           if(argv.length > 0) {
-            if(argv[argv.length-1] && argv[argv.length-1]?.split("leapp://")[1]) {
-              win.webContents.send("PLUGIN_URL", argv[argv.length-1]?.split("leapp://")[1]);
+            if(argv[argv.length-1] && argv[argv.length-1]?.split("hopkey://")[1]) {
+              win.webContents.send("PLUGIN_URL", argv[argv.length-1]?.split("hopkey://")[1]);
             }
           }
           win.focus();
@@ -335,7 +337,7 @@ const generateMainWindow = () => {
     });
   }
   if (process.platform === "win32") {
-    app.setAppUserModelId("Leapp");
+    app.setAppUserModelId("Hopkey");
   }
 };
 // =============================== //

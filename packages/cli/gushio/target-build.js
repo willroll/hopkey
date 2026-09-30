@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'build',
-    description: 'Build the leapp CLI',
+    description: 'Build the hopkey CLI',
     version: '0.1',
   },
   run: async () => {
@@ -12,7 +12,7 @@ module.exports = {
 
     try {
       await gushio.run(path.join(__dirname, './target-clean.js'))
-      console.log('Building leapp CLI... ')
+      console.log('Building hopkey CLI... ')
 
       const teamServiceStubFile = path.join(__dirname, '../src/service/team-service-stub.ts')
       const teamServiceTargetFile = path.join(__dirname, '../src/service/team-service.ts')

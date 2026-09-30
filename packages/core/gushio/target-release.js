@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'release',
-    description: 'Release the leapp-core library on NPM',
+    description: 'Release the hopkey-core library on NPM',
     version: '0.1',
   },
   deps: [],
@@ -10,14 +10,14 @@ module.exports = {
     const shellJs = await gushio.import('shelljs')
 
     try {
-      console.log('Publishing leapp-core library... ')
+      console.log('Publishing hopkey-core library... ')
 
       shellJs.cd(path.join(__dirname, '..'))
       const result = shellJs.exec('npm publish')
       if (result.code !== 0) {
         throw new Error(result.stderr)
       }
-      console.log('leapp-core published on npm')
+      console.log('hopkey-core published on npm')
     } catch (e) {
       e.message = e.stack.red
       throw e

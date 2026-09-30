@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- macOS menu bar template: black on transparent, recolored by the system. -->
+  <g fill="#000000">
+    <path fill-rule="evenodd" d="M1 16a7.5 7.5 0 1 0 15 0a7.5 7.5 0 1 0 -15 0zM5.3 16a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0z"/>
+    <rect x="14.5" y="14.3" width="16.5" height="3.4" rx="1.7"/>
+    <rect x="23.4" y="16" width="2.9" height="6.6" rx="1"/>
+    <rect x="27.7" y="16" width="2.9" height="4.6" rx="1"/>
+  </g>
+</svg>

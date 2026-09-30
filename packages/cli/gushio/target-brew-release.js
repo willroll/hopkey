@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'brew-release',
-    description: 'Release leapp cli on npm and homebrew',
+    description: 'Release hopkey cli on npm and homebrew',
     version: '0.2'
   },
   deps: [
@@ -17,12 +17,18 @@ module.exports = {
     const getFormula = require('./homebrew/get-formula')
     const getInstallerFormula = require('./homebrew/get-installer-formula')
 
-    const gitHubOrganization = "Noovolari"
-    const gitHubRepo = "homebrew-brew"
-    const npmPath = "@noovolari/leapp-cli"
+    const requiredEnv = (name) => {
+      if (!process.env[name]) {
+        throw new Error(`${name} must be set`)
+      }
+      return process.env[name]
+    }
+    // Homebrew tap (e.g. willroll/homebrew-tap) and S3 bucket that host the formulas and the OCLIF installer
+    const [gitHubOrganization, gitHubRepo] = requiredEnv('HOMEBREW_TAP_REPOSITORY').split('/')
+    const npmPath = "@hopkey/cli"
     const tarballTargets = "darwin-x64"
-    const s3Bucket = "noovolari-leapp-website-distribution-cli"
-    const bucketRegion = "eu-west-1"
+    const s3Bucket = requiredEnv('CLI_INSTALLER_BUCKET')
+    const bucketRegion = process.env['CLI_INSTALLER_BUCKET_REGION'] || "eu-west-1"
 
     const gitPushToken = process.env['GIT_PUSH_TOKEN']
     const credentials = gitPushToken ? `${gitPushToken}:x-oauth-basic@` : ''
@@ -31,8 +37,8 @@ module.exports = {
     const formulaRepoPath = path.join(tempDir, gitHubRepo);
 
     const baseS3PublicUrl = `https://${s3Bucket}.s3.${bucketRegion}.amazonaws.com/`
-    const leappCliVersion = cliPackageJson.version
-    const gitFormulaCommitMessage = `leapp-cli v${leappCliVersion}`;
+    const hopkeyCliVersion = cliPackageJson.version
+    const gitFormulaCommitMessage = `hopkey-cli v${hopkeyCliVersion}`;
 
     try {
       console.log('Cloning formula repo... ')
@@ -68,8 +74,8 @@ module.exports = {
 
       console.log('Updating npm formula... ')
 
-      const formula = getFormula(leappCliVersion, tarballUrl, tarballSha256)
-      await fs.writeFile(path.join(formulaRepoPath, 'Formula/leapp-cli.rb'), formula)
+      const formula = getFormula(hopkeyCliVersion, tarballUrl, tarballSha256)
+      await fs.writeFile(path.join(formulaRepoPath, 'Formula/hopkey-cli.rb'), formula)
 
 
       console.log('Generating OCLIF installer... ')
@@ -94,19 +100,19 @@ module.exports = {
 
       const bucketParams = {
         Bucket: s3Bucket,
-        Key: `${leappCliVersion}/${tarballFileName}`,
+        Key: `${hopkeyCliVersion}/${tarballFileName}`,
         Body: await fs.readFile(path.join(__dirname, '../dist', tarballFileName)),
       };
       const s3Client = new S3Client({region: bucketRegion});
       await s3Client.send(new PutObjectCommand(bucketParams));
 
       const tarballS3Url = baseS3PublicUrl + bucketParams.Key
-      const installerFormula = getInstallerFormula(leappCliVersion, tarballS3Url, oclifInstallerSha256)
+      const installerFormula = getInstallerFormula(hopkeyCliVersion, tarballS3Url, oclifInstallerSha256)
 
 
       console.log('Updating installer formula... ')
 
-      await fs.writeFile(path.join(formulaRepoPath, 'Formula/leapp-cli-darwin-arm64.rb'), installerFormula)
+      await fs.writeFile(path.join(formulaRepoPath, 'Formula/hopkey-cli-darwin-arm64.rb'), installerFormula)
 
 
       console.log('Pushing updated formula repo... ')

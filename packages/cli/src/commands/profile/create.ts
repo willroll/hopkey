@@ -1,11 +1,11 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { profileName } from "../../flags";
 
-export default class CreateNamedProfile extends LeappCommand {
+export default class CreateNamedProfile extends HopkeyCommand {
   static description = "Create a new AWS named profile";
 
-  static examples = [`$leapp profile create`, `$leapp profile create --profileName PROFILENAME`];
+  static examples = [`$hopkey profile create`, `$hopkey profile create --profileName PROFILENAME`];
 
   static flags = {
     profileName,

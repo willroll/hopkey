@@ -6,7 +6,7 @@ module.exports = {
     "!src/**/cli-native-service.ts",
     "!src/**/team-service.ts",
     "!src/**/team-service-stub.ts",
-    "!src/**/leapp-team-core/**"
+    "!src/**/hopkey-team-core/**"
   ],
   coverageReporters: [
     "lcov",

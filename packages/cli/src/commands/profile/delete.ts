@@ -1,16 +1,16 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { AwsNamedProfile } from "@noovolari/leapp-core/models/aws/aws-named-profile";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { AwsNamedProfile } from "@hopkey/core/models/aws/aws-named-profile";
+import { Session } from "@hopkey/core/models/session";
 import { profileId, force } from "../../flags";
 
-export default class DeleteNamedProfile extends LeappCommand {
+export default class DeleteNamedProfile extends HopkeyCommand {
   static description = "Delete an AWS named profile";
 
   static examples = [
-    `$leapp profile delete`,
-    `$leapp profile delete --profileId PROFILEID`,
-    `$leapp profile delete --profileId PROFILEID [--force, -f]`,
+    `$hopkey profile delete`,
+    `$hopkey profile delete --profileId PROFILEID`,
+    `$hopkey profile delete --profileId PROFILEID [--force, -f]`,
   ];
 
   static flags = {

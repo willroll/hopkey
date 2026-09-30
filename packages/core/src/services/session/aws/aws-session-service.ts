@@ -1,4 +1,4 @@
-import { LeappBaseError } from "../../../errors/leapp-base-error";
+import { HopkeyBaseError } from "../../../errors/hopkey-base-error";
 import { IBehaviouralNotifier } from "../../../interfaces/i-behavioural-notifier";
 import { AwsProcessCredentials } from "../../../models/aws/aws-process-credential";
 import { CredentialsInfo } from "../../../models/credentials-info";
@@ -30,7 +30,7 @@ export abstract class AwsSessionService extends SessionService {
   async start(sessionId: string): Promise<void> {
     try {
       if (this.isThereAnotherPendingSessionWithSameNamedProfile(sessionId)) {
-        throw new LeappBaseError("Pending session with same named profile", this, LogLevel.info, "Pending session with same named profile");
+        throw new HopkeyBaseError("Pending session with same named profile", this, LogLevel.info, "Pending session with same named profile");
       }
       await this.stopAllWithSameNameProfile(sessionId);
       this.sessionLoading(sessionId);
@@ -115,7 +115,7 @@ export abstract class AwsSessionService extends SessionService {
   async applyConfigProfileCommand(sessionId: string): Promise<void> {
     try {
       const session = this.repository.getSessionById(sessionId) as any;
-      const command = `leapp session generate ${sessionId}`;
+      const command = `hopkey session generate ${sessionId}`;
       const profileName = this.repository.getProfileName(session.profileId);
       const profile = `profile ${profileName}`;
       const credentialProcess: { [key: string]: any } = {};

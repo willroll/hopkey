@@ -1,4 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
+import { legacyApp } from "../services/legacy-import-service";
 import { PluginContainer, PluginManagerService } from "./plugin-manager-service";
 import { constants } from "../models/constants";
 import { OperatingSystem } from "../models/operating-system";
@@ -53,8 +54,8 @@ describe("PluginManagerService", () => {
     (pluginManager as any)._pluginDir = "plugin-dir";
     pluginManager.verifyAndGeneratePluginFolderIfMissing();
     expect(nativeService.os.homedir).toHaveBeenCalled();
-    expect(nativeService.fs.existsSync).toHaveBeenCalledWith("homedir" + "/.Leapp/" + "plugin-dir");
-    expect(nativeService.fs.mkdirSync).toHaveBeenCalledWith("homedir" + "/.Leapp/" + "plugin-dir");
+    expect(nativeService.fs.existsSync).toHaveBeenCalledWith("homedir" + "/.hopkey/" + "plugin-dir");
+    expect(nativeService.fs.mkdirSync).toHaveBeenCalledWith("homedir" + "/.hopkey/" + "plugin-dir");
   });
 
   test("loadFromPluginDir", async () => {
@@ -97,10 +98,10 @@ describe("PluginManagerService", () => {
         readdirSync: jest.fn(() => pluginDirContent),
         existsSync: jest.fn(
           (pluginFilePath) =>
-            pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1" ||
-            pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-2" ||
-            pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1" + "/plugin.js" ||
-            pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-2" + "/plugin.js"
+            pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1" ||
+            pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-2" ||
+            pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1" + "/plugin.js" ||
+            pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-2" + "/plugin.js"
         ),
         mkdirSync: jest.fn(),
         lstatSync: jest.fn(() => ({
@@ -130,11 +131,11 @@ describe("PluginManagerService", () => {
 
     await pluginManager.loadFromPluginDir();
 
-    expect(nativeService.fs.readdirSync).toHaveBeenCalledWith(homedir + "/.Leapp/" + pluginDir);
+    expect(nativeService.fs.readdirSync).toHaveBeenCalledWith(homedir + "/.hopkey/" + pluginDir);
     expect(nativeService.os.homedir).toHaveBeenCalled();
 
     for (let i = 0; i < pluginDirContent.length; i++) {
-      const pluginFilePath = homedir + "/.Leapp/" + pluginDir + "/" + pluginDirContent[i];
+      const pluginFilePath = homedir + "/.hopkey/" + pluginDir + "/" + pluginDirContent[i];
       expect(nativeService.fs.existsSync).toHaveBeenCalledWith(pluginFilePath);
       expect(nativeService.fs.lstatSync).toHaveBeenCalledWith(pluginFilePath);
       expect((pluginManager as any).validatePlugin).toHaveBeenCalledWith(pluginFilePath, options, pluginDirContent[i]);
@@ -165,7 +166,7 @@ describe("PluginManagerService", () => {
       hashElement: { hashElement: null },
       fs: {
         readdirSync: () => pluginDirContent,
-        existsSync: (pluginFilePath) => pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1",
+        existsSync: (pluginFilePath) => pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1",
         mkdirSync: () => {},
         lstatSync: () => ({
           isDirectory: () => true,
@@ -195,7 +196,7 @@ describe("PluginManagerService", () => {
     const homedir = "homedir";
     const pluginDirContent = ["plugin-1"];
     const packageJson1 = {};
-    const path = homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1";
+    const path = homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1";
     const nativeService = {
       requireModule: null,
       hashElement: { hashElement: null },
@@ -231,7 +232,7 @@ describe("PluginManagerService", () => {
     const homedir = "homedir";
     const pluginDirContent = ["plugin-1"];
     const packageJson1 = {};
-    const path = homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1";
+    const path = homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1";
     const nativeService = {
       requireModule: () => {
         throw new Error("error");
@@ -240,7 +241,7 @@ describe("PluginManagerService", () => {
       fs: {
         readdirSync: () => pluginDirContent,
         existsSync: (pluginFilePath) =>
-          pluginFilePath === path || pluginFilePath === homedir + "/.Leapp/" + pluginDir + "/" + "plugin-1" + "/plugin.js",
+          pluginFilePath === path || pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1" + "/plugin.js",
         mkdirSync: () => {},
         lstatSync: () => ({
           isDirectory: () => true,
@@ -449,7 +450,7 @@ describe("PluginManagerService", () => {
       log: jest.fn(),
     } as any;
     const homedir = "homedir";
-    const packageName = "leapp-fake-plugin";
+    const packageName = "hopkey-fake-plugin";
     const tarballFilePath = "tarball-file-path";
     const fakePluginDir = "fake-plugin-dir";
     const tarballFileName = packageName + ".tgz";
@@ -483,7 +484,7 @@ describe("PluginManagerService", () => {
           },
         },
       },
-      keywords: ["leapp-plugin"],
+      keywords: ["hopkey-plugin"],
     };
     const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
     (pluginManager as any).http = {
@@ -491,7 +492,7 @@ describe("PluginManagerService", () => {
         toPromise: async () => (param2.responseType === "json" ? npmMetadata : new ArrayBuffer(10)),
       })),
     };
-    await pluginManager.installPlugin(`leapp://${packageName}`);
+    await pluginManager.installPlugin(`hopkey://${packageName}`);
     expect(nativeService.os.homedir).toHaveBeenCalled();
     expect(logService.log).toHaveBeenNthCalledWith(
       1,
@@ -501,7 +502,7 @@ describe("PluginManagerService", () => {
     expect((pluginManager as any).http.get).toHaveBeenNthCalledWith(2, npmMetadata.versions[npmMetadata["dist-tags"].latest].dist.tarball, {
       responseType: "arraybuffer",
     });
-    const pluginsDir = homedir + "/.Leapp/plugins";
+    const pluginsDir = homedir + "/.hopkey/plugins";
     expect(nativeService.path.join).toHaveBeenNthCalledWith(1, pluginsDir, tarballFileName);
     expect(nativeService.fs.writeFileSync).toHaveBeenCalledWith(tarballFilePath, Buffer.from(new ArrayBuffer(10)));
     expect(nativeService.path.join).toHaveBeenNthCalledWith(2, pluginsDir, packageName);
@@ -512,12 +513,12 @@ describe("PluginManagerService", () => {
     expect(logService.log).toHaveBeenNthCalledWith(2, new LoggedEntry(`Plugin ${packageName} installed correctly.`, this, LogLevel.info, true));
   });
 
-  test("installPlugin, no leapp-plugin keyword", async () => {
+  test("installPlugin, no hopkey-plugin keyword", async () => {
     const logService = {
       log: () => {},
     } as any;
     const homedir = "homedir";
-    const packageName = "not-a-leapp-plugin";
+    const packageName = "not-a-hopkey-plugin";
     const nativeService = {
       requireModule: null,
       hashElement: { hashElement: null },
@@ -545,9 +546,53 @@ describe("PluginManagerService", () => {
         toPromise: async () => (param2.responseType === "json" ? npmMetadata : ""),
       })),
     };
-    await expect(pluginManager.installPlugin(`leapp://${packageName}`)).rejects.toEqual(
-      new LoggedException(`${npmMetadata["name"]} is not a Leapp plugin`, this, LogLevel.error, true)
+    await expect(pluginManager.installPlugin(`hopkey://${packageName}`)).rejects.toEqual(
+      new LoggedException(`${npmMetadata["name"]} is not a Hopkey plugin`, this, LogLevel.error, true)
     );
+  });
+
+  test("installPlugin, legacy app keyword", async () => {
+    const packageName = "legacy-fake-plugin";
+    const nativeService = {
+      requireModule: null,
+      hashElement: { hashElement: null },
+      os: { homedir: () => "homedir" },
+      path: { join: jest.fn(() => "path") },
+      fs: { writeFileSync: jest.fn(), remove: jest.fn(), ensureDir: jest.fn() },
+      tar: { x: jest.fn() },
+    } as any;
+    const npmMetadata = {
+      ["dist-tags"]: { latest: "1.0.0" },
+      versions: { ["1.0.0"]: { dist: { tarball: `https://fake-url/${packageName}.tgz` } } },
+      keywords: [legacyApp.pluginKeyword],
+    };
+    const pluginManager = new PluginManagerService(null, nativeService, { log: jest.fn() } as any, null, null, null);
+    (pluginManager as any).http = {
+      get: jest.fn((_, param2: any) => ({
+        toPromise: async () => (param2.responseType === "json" ? npmMetadata : new ArrayBuffer(10)),
+      })),
+    };
+    await pluginManager.installPlugin(`hopkey://${packageName}`);
+    expect(nativeService.tar.x).toHaveBeenCalled();
+  });
+
+  test("extractMetadata, legacy app keyword and package.json key", () => {
+    const sessionFactory = { getCompatibleTypes: jest.fn(() => ["any"]) } as any;
+    const nativeService = { requireModule: null, hashElement: { hashElement: null } } as any;
+    const repository = { getPluginStatus: jest.fn(() => undefined) } as any;
+    const packageJson = {
+      version: "0.1.0",
+      author: "author",
+      name: "legacy-plugin",
+      description: "test description",
+      keywords: [legacyApp.pluginKeyword],
+      [legacyApp.pluginConfigKey]: { supportedSessions: [SessionType.awsIamUser], icon: "fas fa-key" },
+    };
+    const service = new PluginManagerService(null, nativeService, null, repository, sessionFactory, null) as any;
+    const result = service.extractMetadata(packageJson);
+    expect(result.supportedSessions).toStrictEqual([SessionType.awsIamUser]);
+    expect(result.icon).toBe("fas fa-key");
+    expect(result.active).toBe(true);
   });
 
   test("extractMetadata, success", () => {
@@ -567,7 +612,7 @@ describe("PluginManagerService", () => {
       name: "test-plugin",
       description: "test description",
       keywords: ["test-keyword", constants.npmRequiredPluginKeyword],
-      leappPlugin: {
+      hopkeyPlugin: {
         supportedSessions: [SessionType.awsIamUser],
       },
     };
@@ -808,14 +853,14 @@ describe("PluginManagerService", () => {
     const service = new PluginManagerService(null, nativeService, null, null, sessionFactory, null) as any;
 
     const packageJson1 = {};
-    let expectedMissingValues = ["version", "name", "author", "description", "keywords", "leappPlugin"];
+    let expectedMissingValues = ["version", "name", "author", "description", "keywords", "hopkeyPlugin"];
     expect(() => service.extractMetadata(packageJson1)).toThrowError(expectedMissingValues.join(", "));
 
     const packageJson2 = {
       version: "0.1.0",
       name: "test",
       description: "test description",
-      leappPlugin: {},
+      hopkeyPlugin: {},
     };
     expectedMissingValues = ["author", "keywords"];
     expect(() => service.extractMetadata(packageJson2)).toThrowError(expectedMissingValues.join(", "));
@@ -839,13 +884,13 @@ describe("PluginManagerService", () => {
       name: "test",
       description: "test description",
       keywords: ["test-keyword", constants.npmRequiredPluginKeyword],
-      leappPlugin: {
+      hopkeyPlugin: {
         entryClass: "test",
         supportedSessions: ["wrong-session"],
         supportedOS: [OperatingSystem.mac, "wrong-os"],
       },
     };
-    const expectedErrors = ["leappPlugin.supportedSessions: wrong-session is unsupported", "leappPlugin.supportedOS: wrong-os is unsupported"];
+    const expectedErrors = ["hopkeyPlugin.supportedSessions: wrong-session is unsupported", "hopkeyPlugin.supportedOS: wrong-os is unsupported"];
     const service = new PluginManagerService(null, nativeService, null, null, sessionFactory, null) as any;
     expect(() => service.extractMetadata(packageJson)).toThrowError(expectedErrors.join(", "));
   });

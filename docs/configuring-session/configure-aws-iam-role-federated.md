@@ -46,7 +46,7 @@ We currently only support SAML 2.0 federation.
 !!! Info
     Is your SAML 2.0 Identity Provider not included in the above list? Please, refer to the [FAQ](/latest/troubleshooting/faq/#how-can-i-add-support-to-a-new-saml-20-identity-provider) to add a new one.
 
-## How to configure an AWS IAM Role Federated in Leapp
+## How to configure an AWS IAM Role Federated in Hopkey
 
 1. From the top bar, click on the plus icon to add a new session.
 2. Select _Amazon AWS_ as the Cloud Provider.
@@ -58,7 +58,7 @@ We currently only support SAML 2.0 federation.
 
 | Field                      | Description                                                                                                              |
 |----------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `SESSION ALIAS`            | Your friendly session name in Leapp. Give it a meaningful name so it will be easier to find inside Leapp.       |
+| `SESSION ALIAS`            | Your friendly session name in Hopkey. Give it a meaningful name so it will be easier to find inside Hopkey.       |
 | `NAMED PROFILE`            | Your friendly session name in the AWS credential file. You will be able to reference it from the AWS CLI with `--name`. |
 | `REGION`                   | Your default region of choice. Select the one which you use the most for this Session.                                   |
 | `SAML 2.0 URL`             | Your SAML URL interface to start the authentication flow and log into your Identity provider.                               |

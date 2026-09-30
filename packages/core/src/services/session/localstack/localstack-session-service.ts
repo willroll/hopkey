@@ -1,4 +1,4 @@
-import { LeappBaseError } from "../../../errors/leapp-base-error";
+import { HopkeyBaseError } from "../../../errors/hopkey-base-error";
 import { IBehaviouralNotifier } from "../../../interfaces/i-behavioural-notifier";
 import { CredentialsInfo } from "../../../models/credentials-info";
 import { SessionStatus } from "../../../models/session-status";
@@ -49,7 +49,7 @@ export class LocalstackSessionService extends SessionService {
   async start(sessionId: string): Promise<void> {
     try {
       if (this.isThereAnotherPendingSessionWithSameNamedProfile(sessionId)) {
-        throw new LeappBaseError("Pending session with same named profile", this, LogLevel.info, "Pending session with same named profile");
+        throw new HopkeyBaseError("Pending session with same named profile", this, LogLevel.info, "Pending session with same named profile");
       }
       await this.stopAllWithSameNameProfile(sessionId);
       this.sessionLoading(sessionId);

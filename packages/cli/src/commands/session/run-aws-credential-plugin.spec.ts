@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from "@jest/globals";
 import RunAwsCredentialPlugin from "./run-aws-credential-plugin";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
+import { SessionType } from "@hopkey/core/models/session-type";
 
 describe("RunAwsCredentialPlugin", () => {
   const getTestCommand = (cliProviderService: any = null, argv = []): RunAwsCredentialPlugin => {

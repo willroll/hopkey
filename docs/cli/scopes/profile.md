@@ -1,20 +1,20 @@
-`leapp profile`
+`hopkey profile`
 ===============
 
-Leapp AWS Multi-profile management
+Hopkey AWS Multi-profile management
 
-* [`leapp profile create`](#leapp-profile-create)
-* [`leapp profile delete`](#leapp-profile-delete)
-* [`leapp profile edit`](#leapp-profile-edit)
-* [`leapp profile list`](#leapp-profile-list)
+* [`hopkey profile create`](#hopkey-profile-create)
+* [`hopkey profile delete`](#hopkey-profile-delete)
+* [`hopkey profile edit`](#hopkey-profile-edit)
+* [`hopkey profile list`](#hopkey-profile-list)
 
-## `leapp profile create`
+## `hopkey profile create`
 
 Create a new AWS named profile
 
 ```console
 USAGE
-  $ leapp profile create [--profileName <value>]
+  $ hopkey profile create [--profileName <value>]
 
 FLAGS
   --profileName=<value>  an AWS named profile Alias used to identify the profile in both config and credential file
@@ -23,62 +23,62 @@ DESCRIPTION
   Create a new AWS named profile
 
 EXAMPLES
-  $leapp profile create
+  $hopkey profile create
 
-  $leapp profile create --profileName PROFILENAME
+  $hopkey profile create --profileName PROFILENAME
 ```
 
-## `leapp profile delete`
+## `hopkey profile delete`
 
 Delete an AWS named profile
 
 ```console
 USAGE
-  $ leapp profile delete [--profileId <value>] [-f]
+  $ hopkey profile delete [--profileId <value>] [-f]
 
 FLAGS
   -f, --force          force a command without asking for confirmation (-f, --force)
-  --profileId=<value>  an AWS named profile ID in Leapp
+  --profileId=<value>  an AWS named profile ID in Hopkey
 
 DESCRIPTION
   Delete an AWS named profile
 
 EXAMPLES
-  $leapp profile delete
+  $hopkey profile delete
 
-  $leapp profile delete --profileId PROFILEID
+  $hopkey profile delete --profileId PROFILEID
 
-  $leapp profile delete --profileId PROFILEID [--force, -f]
+  $hopkey profile delete --profileId PROFILEID [--force, -f]
 ```
 
-## `leapp profile edit`
+## `hopkey profile edit`
 
 Rename an AWS named profile
 
 ```console
 USAGE
-  $ leapp profile edit [--profileId <value>] [--profileName <value>]
+  $ hopkey profile edit [--profileId <value>] [--profileName <value>]
 
 FLAGS
-  --profileId=<value>    an AWS named profile ID in Leapp
+  --profileId=<value>    an AWS named profile ID in Hopkey
   --profileName=<value>  an AWS named profile Alias used to identify the profile in both config and credential file
 
 DESCRIPTION
   Rename an AWS named profile
 
 EXAMPLES
-  $leapp profile edit
+  $hopkey profile edit
 
-  $leapp profile edit --profileId ID --profileName PROFILENAME
+  $hopkey profile edit --profileId ID --profileName PROFILENAME
 ```
 
-## `leapp profile list`
+## `hopkey profile list`
 
 Show profile list
 
 ```console
 USAGE
-  $ leapp profile list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
+  $ hopkey profile list [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |  |
     [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -96,5 +96,5 @@ DESCRIPTION
   Show profile list
 
 EXAMPLES
-  $leapp profile list
+  $hopkey profile list
 ```

@@ -2,8 +2,8 @@ import { describe, test, expect, beforeEach, jest } from "@jest/globals";
 import { AwsIamRoleChainedSession } from "../../../models/aws/aws-iam-role-chained-session";
 import { AwsIamRoleChainedService } from "./aws-iam-role-chained-service";
 import { SessionType } from "../../../models/session-type";
-import { LeappNotFoundError } from "../../../errors/leapp-not-found-error";
-import { LeappAwsStsError } from "../../../errors/leapp-aws-sts-error";
+import { HopkeyNotFoundError } from "../../../errors/hopkey-not-found-error";
+import { HopkeyAwsStsError } from "../../../errors/hopkey-aws-sts-error";
 import { constants } from "../../../models/constants";
 import { AwsIamRoleChainedSessionRequest } from "./aws-iam-role-chained-session-request";
 import { AssumeRoleCommand } from "@aws-sdk/client-sts";
@@ -252,7 +252,7 @@ describe("AwsIamRoleChainedService", () => {
     try {
       await awsIamRoleChainedService.generateCredentials(sessionId);
     } catch (err) {
-      expect(err).toEqual(new LeappNotFoundError(this, `Parent Account Session  not found for Chained Account ${session2.sessionName}`));
+      expect(err).toEqual(new HopkeyNotFoundError(this, `Parent Account Session  not found for Chained Account ${session2.sessionName}`));
     }
   });
 
@@ -333,7 +333,7 @@ describe("AwsIamRoleChainedService", () => {
     try {
       await (awsIamRoleChainedService as any).generateSessionToken("fake-session", sts, "fake-params");
     } catch (err) {
-      expect(err).toStrictEqual(new LeappAwsStsError(this, err.message));
+      expect(err).toStrictEqual(new HopkeyAwsStsError(this, err.message));
     }
   });
 

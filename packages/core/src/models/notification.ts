@@ -1,14 +1,14 @@
-export enum LeappNotificationType {
+export enum HopkeyNotificationType {
   info,
   warning,
   danger,
   success,
 }
 
-export class LeappNotification {
+export class HopkeyNotification {
   constructor(
     public uuid: string,
-    public type: LeappNotificationType,
+    public type: HopkeyNotificationType,
     public title: string,
     public buttonActionName: string,
     public description: string,

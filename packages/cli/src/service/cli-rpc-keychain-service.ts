@@ -1,5 +1,5 @@
-import { IKeychainService } from "@noovolari/leapp-core/interfaces/i-keychain-service";
-import { RemoteProceduresClient } from "@noovolari/leapp-core/services/remote-procedures-client";
+import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
+import { RemoteProceduresClient } from "@hopkey/core/services/remote-procedures-client";
 
 export class CliRpcKeychainService implements IKeychainService {
   constructor(private remoteProceduresClient: RemoteProceduresClient) {}

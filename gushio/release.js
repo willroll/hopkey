@@ -7,8 +7,8 @@ module.exports = {
     { name: 'semver', version: '7.3.7' },
   ],
   cli: {
-    name: "leapp-release",
-    description: "This CLI guides you through the release of Leapp Core, CLI, and Desktop App.",
+    name: "hopkey-release",
+    description: "This CLI guides you through the release of Hopkey Core, CLI, and Desktop App.",
     version: "0.1.0",
   },
   run: async () => {
@@ -25,7 +25,7 @@ module.exports = {
         "desktop-app": releaseDesktopApp
       };
       let target;
-      console.log(FgGreen, `Welcome to leapp-release script`)
+      console.log(FgGreen, `Welcome to hopkey-release script`)
       const prompt = new Select({
         name: "target",
         message: "What do you want to deploy?",
@@ -112,7 +112,7 @@ async function releaseCore(version) {
   try {
     shellJs.cd(path.join(__dirname, ".."))
 
-    console.log(FgGreen, "updating Leapp Core package.json version...");
+    console.log(FgGreen, "updating Hopkey Core package.json version...");
     const packageName = "core";
     await updatePackageJsonVersion(packageName, version);
     let result = shellJs.exec("git add .");
@@ -154,7 +154,7 @@ async function releaseCore(version) {
       //The pipeline starts now. The following commands are to ensure that
       //we set the pro environment and bootstrap it before releasing the CLI/DA
 
-      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/Noovolari/leapp/actions/workflows/core-ci-cd-prod.yml")
+      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/willroll/hopkey/actions/workflows/core-ci-cd-prod.yml")
     } else {
       await rollbackProject(commitId, version, "core");
     }
@@ -174,18 +174,18 @@ async function releaseCli(version) {
     shellJs.cd(path.join(__dirname, ".."))
 
     await setProEnvironment();
-    console.log(FgGreen, "updating Leapp CLI package.json version...");
+    console.log(FgGreen, "updating Hopkey CLI package.json version...");
     const packageName = "cli";
     await updatePackageJsonVersion(packageName, version);
 
-    console.log(FgGreen, "running Leapp CLI prepack script...");
+    console.log(FgGreen, "running Hopkey CLI prepack script...");
     shellJs.cd(path.join(__dirname, "..", "packages", "cli"))
     let result = shellJs.exec("npm run prepack");
     if (result.code !== 0) {
       throw new Error(result.stderr)
     }
 
-    console.log(FgGreen, "running Leapp CLI prepare-docs script...");
+    console.log(FgGreen, "running Hopkey CLI prepare-docs script...");
     result = shellJs.exec("npm run prepare-docs");
     if (result.code !== 0) {
       throw new Error(result.stderr)
@@ -230,7 +230,7 @@ async function releaseCli(version) {
         throw new Error(result.stderr)
       }
 
-      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/Noovolari/leapp/actions/workflows/cli-ci-cd-prod.yml")
+      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/willroll/hopkey/actions/workflows/cli-ci-cd-prod.yml")
     } else {
       await rollbackProject(commitId, version, "cli");
     }
@@ -255,7 +255,7 @@ async function releaseDesktopApp(version) {
     const desktopAppPath = ["..", "packages", "desktop-app"];
     shellJs.cd(path.join(__dirname, ...desktopAppPath))
 
-    console.log(FgGreen, "updating Leapp Desktop App package.json version...");
+    console.log(FgGreen, "updating Hopkey Desktop App package.json version...");
     let result = shellJs.exec(`npm run release -- --release-as ${version}`)
     if (result.code !== 0) {
       throw new Error(result.stderr)
@@ -317,7 +317,7 @@ async function releaseDesktopApp(version) {
         throw new Error(result.stderr)
       }
 
-      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/Noovolari/leapp/actions/workflows/desktop-app-cd-prod.yml")
+      console.log(FgGreen, "keep track of the release pipeline here: https://github.com/willroll/hopkey/actions/workflows/desktop-app-cd-prod.yml")
     } else {
       await rollbackProject(commitId, version, "desktop-app");
     }

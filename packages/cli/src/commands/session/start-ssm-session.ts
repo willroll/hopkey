@@ -1,17 +1,17 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
-import { CredentialsInfo } from "@noovolari/leapp-core/models/credentials-info";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { Session } from "@hopkey/core/models/session";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
+import { CredentialsInfo } from "@hopkey/core/models/credentials-info";
+import { constants } from "@hopkey/core/models/constants";
 import { region, sessionId, ssmInstanceId } from "../../flags";
 
-export default class StartSsmSession extends LeappCommand {
+export default class StartSsmSession extends HopkeyCommand {
   static description = "Start an AWS SSM session";
 
   static examples = [
-    `$leapp session start-ssm-session`,
-    `$leapp session start-ssm-session --sessionId SESSIONID --region AWSREGION --ssmInstanceId EC2INSTANCEID`,
+    `$hopkey session start-ssm-session`,
+    `$hopkey session start-ssm-session --sessionId SESSIONID --region AWSREGION --ssmInstanceId EC2INSTANCEID`,
   ];
 
   static flags = {
@@ -27,7 +27,7 @@ export default class StartSsmSession extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(StartSsmSession);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const selectedSession = await this.selectSession();
         const credentials = await this.generateCredentials(selectedSession);
         const selectedRegion = await this.selectRegion(selectedSession);

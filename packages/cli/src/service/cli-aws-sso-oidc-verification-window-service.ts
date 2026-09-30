@@ -1,9 +1,9 @@
-import { IAwsSsoOidcVerificationWindowService } from "@noovolari/leapp-core/interfaces/i-aws-sso-oidc-verification-window-service";
+import { IAwsSsoOidcVerificationWindowService } from "@hopkey/core/interfaces/i-aws-sso-oidc-verification-window-service";
 import {
   RegisterClientResponse,
   StartDeviceAuthorizationResponse,
   VerificationResponse,
-} from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
+} from "@hopkey/core/services/session/aws/aws-sso-role-service";
 const puppeteer = require("puppeteer");
 
 export class CliAwsSsoOidcVerificationWindowService implements IAwsSsoOidcVerificationWindowService {
@@ -27,11 +27,6 @@ export class CliAwsSsoOidcVerificationWindowService implements IAwsSsoOidcVerifi
   async closeBrowser(): Promise<void> {
     if (!this.browser) {
       return;
-    }
-
-    for (const page of await this.browser.pages()) {
-      page.removeAllListeners();
-      await page.close();
     }
 
     await this.browser.close();

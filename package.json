@@ -1,13 +1,13 @@
 {
-  "name": "Leapp",
+  "name": "Hopkey",
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
-  "repository": "https://github.com/Noovolari/leapp",
+  "repository": "https://github.com/willroll/hopkey",
   "private": true,
   "category": "public.app-category.developer-tools",
-  "homepage": "https://leapp.cloud",
+  "homepage": "https://github.com/willroll/hopkey",
   "devDependencies": {
     "@angular-eslint/builder": "13.1.0",
     "@angular-eslint/eslint-plugin": "13.1.0",
@@ -40,7 +40,7 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "prepare": "husky install",
-    "leapp-release": "gushio gushio/release.js",
+    "hopkey-release": "gushio gushio/release.js",
     "make-badges-core": "gushio gushio/make-badges.js core",
     "make-badges-cli": "gushio gushio/make-badges.js cli"
   },

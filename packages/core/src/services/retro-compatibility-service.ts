@@ -13,7 +13,7 @@ import { AzureSession } from "../models/azure/azure-session";
 import { AzureIntegration } from "../models/azure/azure-integration";
 import { IKeychainService } from "../interfaces/i-keychain-service";
 import { IntegrationType } from "../models/integration-type";
-import { LeappNotification } from "../models/notification";
+import { HopkeyNotification } from "../models/notification";
 
 export class RetroCompatibilityService {
   constructor(
@@ -257,11 +257,11 @@ export class RetroCompatibilityService {
       return;
     }
 
-    const leappNotifications = this.repository.getNotifications();
-    leappNotifications.forEach((notification: LeappNotification) => {
+    const hopkeyNotifications = this.repository.getNotifications();
+    hopkeyNotifications.forEach((notification: HopkeyNotification) => {
       notification.popup = notification.uuid === "uuid";
     });
-    workspace.notifications = leappNotifications;
+    workspace.notifications = hopkeyNotifications;
     this.persists(workspace);
     this.repository.reloadWorkspace();
   }

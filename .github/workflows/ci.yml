@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  HUSKY: "0"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: No upstream names left to rebrand
+        run: node tools/rebrand/rebrand.js --check
+      - run: npm run lint
+
+  core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: packages/core/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npx jest --ci
+
+  cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # keytar needs libsecret at runtime, and the puppeteer tests start Chrome with its sandbox, which
+      # Ubuntu 24.04 blocks through AppArmor unless unprivileged user namespaces are allowed
+      - name: Prepare the runner
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libsecret-1-0
+          if [ -e /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
+            sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            packages/cli/package-lock.json
+      - name: Build core
+        working-directory: packages/core
+        run: npm ci && npm run build
+      - run: npm ci
+        working-directory: packages/cli
+      - run: npx gushio gushio/target-build.js
+        working-directory: packages/cli
+      # Some tests open a real, non-headless browser window through puppeteer
+      - run: xvfb-run -a npx jest --ci --runInBand
+        working-directory: packages/cli
+
+  desktop-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            packages/core/package-lock.json
+            packages/desktop-app/package-lock.json
+      - name: Build core
+        working-directory: packages/core
+        run: npm ci && npm run build
+      - run: npm ci
+        working-directory: packages/desktop-app
+      - run: npx gushio gushio/target-build.js "configuration production"
+        working-directory: packages/desktop-app
+      - run: npx ng test --watch=false --browsers=ChromeHeadlessCI
+        working-directory: packages/desktop-app

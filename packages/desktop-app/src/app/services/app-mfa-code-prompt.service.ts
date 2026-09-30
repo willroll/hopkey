@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { InputDialogComponent } from "../components/dialogs/input-dialog/input-dialog.component";
 import { AppNativeService } from "./app-native.service";
-import { IMfaCodePrompter } from "@noovolari/leapp-core/interfaces/i-mfa-code-prompter";
+import { IMfaCodePrompter } from "@hopkey/core/interfaces/i-mfa-code-prompter";
 
 @Injectable({
   providedIn: "root",
@@ -50,6 +50,6 @@ export class AppMfaCodePromptService implements IMfaCodePrompter {
   }
 
   private newNotification(title: string, message: string): void {
-    new this.electronService.notification({ title, body: message, icon: __dirname + `/assets/images/Leapp.png` }).show();
+    new this.electronService.notification({ title, body: message, icon: __dirname + `/assets/images/Hopkey.png` }).show();
   }
 }

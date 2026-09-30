@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { Session } from "@hopkey/core/models/session";
+import { SessionStatus } from "@hopkey/core/models/session-status";
 import { SelectedSessionActionsService } from "../../services/selected-session-actions.service";
 import { OptionsService } from "../../services/options.service";
 import { ExtensionWebsocketService, FetchingState } from "../../services/extension-websocket.service";
 import { AnalyticsService } from "../../services/analytics.service";
 import { AppProviderService } from "../../services/app-provider.service";
 import { Role } from "../../services/team-service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 
 @Component({
   selector: "app-bottom-bar",
@@ -40,7 +40,7 @@ export class BottomBarComponent implements OnInit {
     });
   }
 
-  get isLeappTeamUser(): boolean {
+  get isHopkeyTeamUser(): boolean {
     const localWorkspace = this.appProviderService.teamService.workspacesState
       .getValue()
       .find((workspace) => workspace.name === constants.localWorkspaceName);

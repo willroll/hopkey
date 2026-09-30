@@ -5,7 +5,7 @@ import { ToastrModule } from "ngx-toastr";
 import { ErrorHandler } from "@angular/core";
 import { AppModule } from "../../app.module";
 import { AppProviderService } from "../app-provider.service";
-import { LoggedException, LogLevel } from "@noovolari/leapp-core/services/log-service";
+import { LoggedException, LogLevel } from "@hopkey/core/services/log-service";
 
 describe("ErrorService", () => {
   let spyLogService;
@@ -16,14 +16,14 @@ describe("ErrorService", () => {
     spyLogService = jasmine.createSpyObj("LogService", ["log"]);
     spyLogService.log.and.returnValue(true);
 
-    const spyLeappCoreService = jasmine.createSpyObj("LeappCoreService", [], {
+    const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
       logService: spyLogService,
     });
 
     handler = TestBed.configureTestingModule({
       imports: [AppModule, ToastrModule.forRoot()],
       providers: [{ provide: ErrorHandler, useClass: ErrorService }].concat(
-        mustInjected().concat([{ provide: AppProviderService, useValue: spyLeappCoreService }])
+        mustInjected().concat([{ provide: AppProviderService, useValue: spyHopkeyCoreService }])
       ),
     }).inject(ErrorHandler) as any;
 

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { AppNativeService } from "./app-native.service";
 import { AppProviderService } from "./app-provider.service";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
+import { Session } from "@hopkey/core/models/session";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
 import { BehaviorSubject } from "rxjs";
 import { MessageToasterService, ToastLevel } from "./message-toaster.service";
 import { WindowService } from "./window.service";
@@ -106,7 +106,7 @@ export class ExtensionWebsocketService {
       })
     );
     this.fetching$.next(FetchingState.fetching);
-    this.toastService.toast("Opening Web Console with the Leapp Extension...", ToastLevel.info);
+    this.toastService.toast("Opening Web Console with the Multi-Console Extension...", ToastLevel.info);
   }
 
   private pause(): Promise<void> {

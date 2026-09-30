@@ -1,7 +1,7 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { CredentialsInfo } from "@noovolari/leapp-core/models/credentials-info";
+import { CredentialsInfo } from "@hopkey/core/models/credentials-info";
 import OpenWebConsole from "./open-web-console";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
+import { SessionStatus } from "@hopkey/core/models/session-status";
 
 describe("OpenWebConsole", () => {
   const getTestCommand = (cliProviderService: any = null, argv = []): OpenWebConsole => {

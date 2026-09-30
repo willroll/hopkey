@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { AppService } from "../../../services/app.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AppProviderService } from "../../../services/app-provider.service";
 import { MessageToasterService, ToastLevel } from "../../../services/message-toaster.service";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { SessionType } from "@hopkey/core/models/session-type";
 import * as uuid from "uuid";
 
 @Component({

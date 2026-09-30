@@ -1,5 +1,5 @@
 import { describe, expect, jest, test } from "@jest/globals";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { constants } from "@hopkey/core/models/constants";
 import Workspace from "./workspace";
 
 describe("Workspace", () => {

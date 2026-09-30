@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'build',
-    description: 'Build the leapp core library',
+    description: 'Build the hopkey core library',
     version: '0.1',
   },
   run: async () => {
@@ -13,7 +13,7 @@ module.exports = {
     try {
       await gushio.run(path.join(__dirname, './target-clean.js'))
 
-      console.log('Building leapp-core library... ')
+      console.log('Building hopkey-core library... ')
       await compileFunction(path, shellJs)
       console.log('Build completed successfully')
 

@@ -1,51 +1,44 @@
-name: Docs docs.leapp.cloud
+name: Docs
 
+# Publishes the documentation to the gh-pages branch (GitHub Pages) with mike, under the desktop app version and the
+# "latest" alias that the links in the app point to.
 on:
   push:
     branches:
       - master
+    paths:
+      - docs/**
+      - docs_extra/**
+      - mkdocs.yml
+      - packages/desktop-app/package.json
+      - .github/workflows/docs.yml
+  workflow_dispatch:
 
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+permissions:
+  contents: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: setup-python-3.11
-        uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
         with:
-          python-version: 3.11
-
-      - name: install-dependencies
+          fetch-depth: 0 # the git-revision-date plugin reads the history
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: >
+          pip install "mkdocs<2" "mkdocs-material<10" mkdocs-video mkdocs-img2fig-plugin
+          mkdocs-git-revision-date-plugin mkdocs-minify-plugin "mike<3"
+      - name: Deploy
         run: |
-          pip install mkdocs-material
-          pip install mkdocs-video
-          pip install mkdocs-img2fig-plugin
-          pip install mkdocs-git-revision-date-plugin
-          pip install git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git
-          pip install mkdocs-minify-plugin
-          pip install mike==1.1.2
-
-      - name: get-leapp-version
-        run: |
-          echo "PACKAGE_VERSION=$(cat packages/desktop-app/package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')" >> $GITHUB_ENV
-          echo "${{env.PACKAGE_VERSION}}"
-
-      - name: deploy
-        run: |
-          git config --global user.name Alessandro Gaggia
-          git config --global user.email alex@besharp.it
-          git fetch origin gh-pages --depth=1
-          cd packages/cli
-          npm install
-          npm run prepare-docs
-          cd ../..
-          mike deploy --no-redirect --force --push --update-aliases ${{env.PACKAGE_VERSION}} latest
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages --depth=1 || true
+          version=$(jq -r .version packages/desktop-app/package.json)
+          mike deploy --push --update-aliases "$version" latest
           mike set-default --push latest
-
-      - name: update-sitemap
-        run: curl https://www.google.com/ping?sitemap=https://docs.leapp.cloud/latest/sitemap.xml

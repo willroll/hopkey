@@ -168,7 +168,7 @@ export class ExecuteService {
     //  both in reject and resolve cases. This will be a breaking change but
     //  provides all the information needed.
     return new Promise((resolve, reject) => {
-      execFn(command, { env, name: "Leapp", timeout: 60000 }, (err, stdout, stderr) => {
+      execFn(command, { env, name: "Hopkey", timeout: 60000 }, (err, stdout, stderr) => {
         const info = { command, stdout, stderr, error: err };
         if (info.error && info.error.cmd) {
           delete info.error.cmd;
@@ -176,7 +176,7 @@ export class ExecuteService {
         if (maskOutputLog) {
           Object.assign(info, { stdout: "****", stderr: "****" });
         }
-        this.logService.log(new LoggedEntry("execute from Leapp\ninfo:" + JSON.stringify(info, undefined, 4), this, LogLevel.info, false));
+        this.logService.log(new LoggedEntry("execute from Hopkey\ninfo:" + JSON.stringify(info, undefined, 4), this, LogLevel.info, false));
         if (err) {
           err.stdout = stdout;
           err.stderr = stderr;

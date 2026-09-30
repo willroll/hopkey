@@ -1,19 +1,19 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { AppService } from "../../services/app.service";
 import { MatMenuTrigger } from "@angular/material/menu";
 import { AppProviderService } from "../../services/app-provider.service";
-import { SessionSelectionState } from "@noovolari/leapp-core/models/session-selection-state";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { SessionSelectionState } from "@hopkey/core/models/session-selection-state";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { SessionStatus } from "@hopkey/core/models/session-status";
+import { constants } from "@hopkey/core/models/constants";
 import { OptionsService } from "../../services/options.service";
-import { AwsCredentialsPlugin } from "@noovolari/leapp-core/plugin-sdk/aws-credentials-plugin";
+import { AwsCredentialsPlugin } from "@hopkey/core/plugin-sdk/aws-credentials-plugin";
 import { SelectedSessionActionsService } from "../../services/selected-session-actions.service";
 import { ExtensionWebsocketService, FetchingState } from "../../services/extension-websocket.service";
 import { Subscription } from "rxjs";
 import { AnalyticsService } from "../../services/analytics.service";
-import { AwsSsoRoleSession } from "@noovolari/leapp-core/models/aws/aws-sso-role-session";
+import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
 import { Role } from "../../services/team-service";
 
 @Component({
@@ -44,7 +44,7 @@ export class ContextualMenuComponent implements OnInit, OnDestroy {
     private readonly analyticsService: AnalyticsService
   ) {}
 
-  get isLeappTeamUser(): boolean {
+  get isHopkeyTeamUser(): boolean {
     const localWorkspace = this.appProviderService.teamService.workspacesState
       .getValue()
       .find((workspace) => workspace.name === constants.localWorkspaceName);

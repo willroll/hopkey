@@ -1,23 +1,23 @@
-`leapp version`
+`hopkey version`
 ===============
 
 Displays the Cli and Core versions
 
-* [`leapp version`](#leapp-version)
+* [`hopkey version`](#hopkey-version)
 
-## `leapp version`
+## `hopkey version`
 
 Displays the Cli and Core versions
 
 ```
 USAGE
-  $ leapp version
+  $ hopkey version
 
 DESCRIPTION
   Displays the Cli and Core versions
 
 EXAMPLES
-  $leapp version
+  $hopkey version
 ```
 
-_See code: [src/commands/version.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/version.ts)_
+_See code: [src/commands/version.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/version.ts)_

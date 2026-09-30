@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { IdpUrl } from "@noovolari/leapp-core/models/idp-url";
+import { IdpUrl } from "@hopkey/core/models/idp-url";
 import { idpUrl, idpUrlId } from "../../flags";
 
-export default class EditIdpUrl extends LeappCommand {
+export default class EditIdpUrl extends HopkeyCommand {
   static description = "Edit an identity provider URL";
 
-  static examples = [`$leapp idp-url edit`, `$leapp idp-url edit --idpUrlId ID --idpUrl ADDRESS`];
+  static examples = [`$hopkey idp-url edit`, `$hopkey idp-url edit --idpUrlId ID --idpUrl ADDRESS`];
 
   static flags = {
     idpUrlId,
@@ -20,7 +20,7 @@ export default class EditIdpUrl extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(EditIdpUrl);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const selectedIdpUrl = await this.selectIdpUrl();
         const newIdpUrl = await this.getNewIdpUrl();
         await this.editIdpUrl(selectedIdpUrl.id, newIdpUrl);

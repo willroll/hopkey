@@ -51,7 +51,7 @@ export class WebConsoleService {
 
     const redirectUrl = new URL(federationUrl);
     redirectUrl.searchParams.append("Action", "login");
-    redirectUrl.searchParams.append("Issuer", "Leapp");
+    redirectUrl.searchParams.append("Issuer", "Hopkey");
     redirectUrl.searchParams.append("Destination", consoleHomeUrl);
     redirectUrl.searchParams.append("SigninToken", (response as any).SigninToken);
 

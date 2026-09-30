@@ -10,7 +10,7 @@
           <div class="form-group">
             <label>Select a named profile</label>
 
-            <app-leapp-select [controlName]="'awsProfile'"
+            <app-hopkey-select [controlName]="'awsProfile'"
                               [form]="form"
                               [placeholder]="'add a new named profile'"
                               [items]="profiles"
@@ -20,7 +20,7 @@
                               [bindLabel]="'label'"
                               [bindValue]="'value'"
                               [uppercased]="false"
-                              (selected)="profiles = $event.items; selectedProfile = $event.item;"></app-leapp-select>
+                              (selected)="profiles = $event.items; selectedProfile = $event.item;"></app-hopkey-select>
           </div>
         </div>
       </div>

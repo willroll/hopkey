@@ -3,7 +3,7 @@ import { Workspace } from "./workspace";
 import { IdpUrl } from "./idp-url";
 import { constants } from "./constants";
 import * as uuid from "uuid";
-import { LeappNotification, LeappNotificationType } from "./notification";
+import { HopkeyNotification, HopkeyNotificationType } from "./notification";
 
 jest.mock("uuid");
 
@@ -309,14 +309,14 @@ describe("Workspace Model", () => {
 
   test("get notifications", () => {
     const workspace = new Workspace();
-    const fakeNotifications = [new LeappNotification("fake-uuid", LeappNotificationType.info, "title", "action-name", "descr", false)];
+    const fakeNotifications = [new HopkeyNotification("fake-uuid", HopkeyNotificationType.info, "title", "action-name", "descr", false)];
     (workspace as any)._notifications = fakeNotifications;
     expect(workspace.notifications).toEqual(fakeNotifications);
   });
 
   test("set notifications", () => {
     const workspace = new Workspace();
-    const fakeNotifications = [new LeappNotification("fake-uuid", LeappNotificationType.info, "title", "action-name", "descr", false)];
+    const fakeNotifications = [new HopkeyNotification("fake-uuid", HopkeyNotificationType.info, "title", "action-name", "descr", false)];
     const notificationSpy = jest.spyOn(workspace, "notifications", "set");
     workspace.notifications = fakeNotifications;
     expect(notificationSpy).toHaveBeenCalledTimes(1);

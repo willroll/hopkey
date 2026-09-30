@@ -2,7 +2,7 @@ import { jest, describe, expect, test } from "@jest/globals";
 import { CliAwsSamlAuthenticationService } from "./cli-aws-saml-authentication-service";
 import { of } from "rxjs";
 import { Page, HTTPRequest } from "puppeteer";
-import { CloudProviderType } from "@noovolari/leapp-core/models/cloud-provider-type";
+import { CloudProviderType } from "@hopkey/core/models/cloud-provider-type";
 import * as process from "process";
 
 class PageStub {
@@ -154,7 +154,7 @@ describe("CliAwsAuthenticationService", () => {
     expect(browserProcess?.signalCode).toBeNull();
 
     await cliAwsAuthenticationService.closeAuthenticationWindow();
-    expect(browserProcess?.killed).toBeTruthy();
-    expect(browserProcess?.signalCode).toEqual("SIGKILL");
+    // puppeteer >= 20 shuts Chrome down gracefully instead of SIGKILL-ing it
+    expect(browserProcess?.exitCode !== null || browserProcess?.signalCode !== null).toBeTruthy();
   });
 });

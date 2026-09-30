@@ -344,7 +344,7 @@ describe("AwsSessionService", () => {
       getSessionById: () => ({ profileId: "fake-profile-id", region: "fake-region" }),
       getProfileName: () => "fake",
     } as any;
-    const credentialProcess = { ["profile fake"]: { ["credential_process"]: "leapp session generate fake-session-id", region: "fake-region" } };
+    const credentialProcess = { ["profile fake"]: { ["credential_process"]: "hopkey session generate fake-session-id", region: "fake-region" } };
     const fileService = {
       iniWriteSync: jest.fn(async () => {}),
     } as any;

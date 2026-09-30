@@ -1,5 +1,5 @@
-import { IMfaCodePrompter } from "@noovolari/leapp-core/interfaces/i-mfa-code-prompter";
-import { RemoteProceduresClient } from "@noovolari/leapp-core/services/remote-procedures-client";
+import { IMfaCodePrompter } from "@hopkey/core/interfaces/i-mfa-code-prompter";
+import { RemoteProceduresClient } from "@hopkey/core/services/remote-procedures-client";
 
 export class RemoteCliMfaCodePromptService implements IMfaCodePrompter {
   constructor(private remoteProcedureClient: RemoteProceduresClient) {}

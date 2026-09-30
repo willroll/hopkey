@@ -4,10 +4,10 @@ import { SessionType } from "./session-type";
 import { constants } from "./constants";
 
 /**
- * This class contains metadata that represents a Leapp Session;
- * it has a concrete implementation for each specific Leapp Session type.
+ * This class contains metadata that represents a Hopkey Session;
+ * it has a concrete implementation for each specific Hopkey Session type.
  * It implements an expired method used to tell whether the Session needs to be rotated or not.
- * In addition, this object is persisted in the Leapp configuration file (Leapp-lock.json).
+ * In addition, this object is persisted in the Hopkey configuration file (hopkey-lock.json).
  */
 export class Session {
   sessionId: string;

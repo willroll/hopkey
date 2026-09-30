@@ -6,25 +6,25 @@ import { SegmentDialogComponent } from "../dialogs/segment-dialog/segment-dialog
 import { FormControl, FormGroup } from "@angular/forms";
 import { BehaviorSubject } from "rxjs";
 import { globalOrderingFilter } from "../sessions/sessions.component";
-import { Session } from "@noovolari/leapp-core/models/session";
-import Segment, { GlobalFilters } from "@noovolari/leapp-core/models/segment";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
+import { Session } from "@hopkey/core/models/session";
+import Segment, { GlobalFilters } from "@hopkey/core/models/segment";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
 import { syncAllEvent } from "../integration-bar/integration-bar.component";
 import { AppProviderService } from "../../services/app-provider.service";
 import { AppNativeService } from "../../services/app-native.service";
 import { AppService } from "../../services/app.service";
-import { AwsSsoRoleSession } from "@noovolari/leapp-core/models/aws/aws-sso-role-session";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
+import { constants } from "@hopkey/core/models/constants";
 import { WindowService } from "../../services/window.service";
 import { OptionsService } from "../../services/options.service";
-import { AzureSession } from "@noovolari/leapp-core/models/azure/azure-session";
-import { OperatingSystem } from "@noovolari/leapp-core/models/operating-system";
+import { AzureSession } from "@hopkey/core/models/azure/azure-session";
+import { OperatingSystem } from "@hopkey/core/models/operating-system";
 import { UpdaterService } from "../../services/updater.service";
-import { LeappNotification, LeappNotificationType } from "@noovolari/leapp-core/models/notification";
+import { HopkeyNotification } from "@hopkey/core/models/notification";
 import { InfoDialogComponent } from "../dialogs/info-dialog/info-dialog.component";
-import { NotificationService } from "@noovolari/leapp-core/services/notification-service";
-import { NoovolariDialogComponent } from "../dialogs/noovolari-dialog/noovolari-dialog.component";
+import { NotificationService } from "@hopkey/core/services/notification-service";
+import { legacyApp } from "@hopkey/core/services/legacy-import-service";
 
 export const compactMode = new BehaviorSubject<boolean>(false);
 export const globalFilteredSessions = new BehaviorSubject<Session[]>([]);
@@ -69,7 +69,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
   filterExtended: boolean;
   compactMode: boolean;
-  isLeappTeamWorkspace: boolean;
+  isHopkeyTeamWorkspace: boolean;
 
   eConstants = constants;
 
@@ -113,38 +113,17 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
     this.notificationService = this.appProviderService.notificationService;
 
-    let notifications = this.notificationService.getNotifications().filter((n) => n.uuid === "noovolari-1000");
-    if (!notifications.find((n) => n.uuid === "noovolari-1000")) {
-      notifications = [
-        new LeappNotification(
-          "noovolari-1000",
-          LeappNotificationType.info,
-          "Noovolari important communication",
-          "Read more",
-          "",
-          false,
-          "https://blog.leapp.cloud/noovolari-has-officially-come-to-an-end",
-          "medal",
-          true
-        ),
-      ];
-    }
-    this.notificationService.setNotifications(notifications);
-
-    const firstNotReadPopupNotification = notifications.find((n) => n.popup && !n.read);
-    if (firstNotReadPopupNotification) {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout);
-        this.openNoovolariModal(firstNotReadPopupNotification);
-      }, 5000);
-    }
+    // Workspaces imported from the app Hopkey was forked from carry its end-of-life announcement, which doesn't apply here
+    this.notificationService.setNotifications(
+      this.notificationService.getNotifications().filter((notification) => notification.uuid !== legacyApp.shutdownNotificationUuid)
+    );
   }
 
   private static changeSessionsTableHeight() {
     document.querySelector(".sessions").classList.toggle("filtered");
   }
 
-  get notifications(): LeappNotification[] {
+  get notifications(): HopkeyNotification[] {
     return this.notificationService.getNotifications();
   }
 
@@ -218,7 +197,7 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     });
 
     this.workspaceStateSubscription = this.appProviderService.teamService.workspacesState.subscribe((workspacesState) => {
-      this.isLeappTeamWorkspace = !!workspacesState.find((workspace) => workspace.type === "team" && workspace.selected);
+      this.isHopkeyTeamWorkspace = !!workspacesState.find((workspace) => workspace.type === "team" && workspace.selected);
     });
   }
 
@@ -329,44 +308,30 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
   }
 
   goToGettingStarted(): void {
-    this.windowService.openExternalUrl("https://docs.leapp.cloud/");
+    this.windowService.openExternalUrl("https://willroll.github.io/hopkey/");
   }
 
   goToJoinTheCommunity(): void {
-    this.windowService.openExternalUrl(constants.slackUrl);
+    this.windowService.openExternalUrl(constants.communityUrl);
   }
 
   openAnIssue(): void {
     this.windowService.openExternalUrl(
-      `https://github.com/noovolari/leapp/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
+      `https://github.com/willroll/hopkey/issues/new?labels=bug&body=${encodeURIComponent(this.appService.issueBody)}`
     );
   }
 
   requestAFeature(): void {
     this.windowService.openExternalUrl(
-      `https://github.com/noovolari/leapp/issues/new?labels=enhancement&body=${encodeURIComponent(this.appService.featureBody)}`
+      `https://github.com/willroll/hopkey/issues/new?labels=enhancement&body=${encodeURIComponent(this.appService.featureBody)}`
     );
   }
 
-  openInfoModal(notification: LeappNotification): void {
+  openInfoModal(notification: HopkeyNotification): void {
     this.notificationService.setNotificationAsRead(notification.uuid);
     this.bsModalService.show(InfoDialogComponent, {
       animated: false,
-      class: "leapp-team-early-access-modal",
-      initialState: {
-        title: notification.title,
-        description: notification.description,
-        link: notification?.link,
-        buttonName: notification.buttonActionName,
-      },
-    });
-  }
-
-  openNoovolariModal(notification: LeappNotification): void {
-    this.notificationService.setNotificationAsRead(notification.uuid);
-    this.bsModalService.show(NoovolariDialogComponent, {
-      animated: false,
-      class: "noovolari-modal",
+      class: "hopkey-team-early-access-modal",
       initialState: {
         title: notification.title,
         description: notification.description,

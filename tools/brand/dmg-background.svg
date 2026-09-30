@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 380">
+  <!-- Background of the macOS disk image window (540x380). -->
+  <rect width="540" height="380" fill="#f5f8f8"/>
+  <g opacity="0.08" transform="translate(300 150) scale(0.24)">
+    <path d="M292 430 Q512 120 732 430" fill="none" stroke="#0f3d3e" stroke-width="36" stroke-linecap="round" stroke-dasharray="0 74"/>
+    <g fill="#0f3d3e">
+      <path fill-rule="evenodd" d="M224 580a128 128 0 1 0 256 0a128 128 0 1 0 -256 0zM300 580a52 52 0 1 0 104 0a52 52 0 1 0 -104 0z"/>
+      <rect x="456" y="552" width="348" height="56" rx="28"/>
+      <rect x="680" y="580" width="48" height="112" rx="14"/>
+      <rect x="752" y="580" width="48" height="80" rx="14"/>
+    </g>
+  </g>
+</svg>

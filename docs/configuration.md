@@ -1,10 +1,10 @@
-Now it's time to add your very first configuration. Follow the link to your preferred supported method and start enjoying Leapp.
+Now it's time to add your very first configuration. Follow the link to your preferred supported method and start enjoying Hopkey.
 
 ## Sessions
 ### AWS
 Select the configuration you need from the Access Method dropdown menu:
 
-![Leapp Iam User](https://user-images.githubusercontent.com/9497292/152333888-15199a27-e79b-4f51-9aea-494f67a9fd8a.png)
+![Hopkey Iam User](https://user-images.githubusercontent.com/9497292/152333888-15199a27-e79b-4f51-9aea-494f67a9fd8a.png)
 
 Then follow the links below.
 

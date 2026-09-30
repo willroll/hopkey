@@ -5,8 +5,8 @@
 There are no requirements for **macOS** and **Windows** users.
 
 ## Linux systems
-Leapp uses `libsecret` and `gnome-keyring` as dependencies to store all sensitive data into the keyring.
-Depending on your distribution, you **may** need to install them using these commands before running Leapp.
+Hopkey uses `libsecret` and `gnome-keyring` as dependencies to store all sensitive data into the keyring.
+Depending on your distribution, you **may** need to install them using these commands before running Hopkey.
 
 === "Arch Linux"
 
@@ -29,9 +29,9 @@ Depending on your distribution, you **may** need to install them using these com
     ```
 
 
-## Logging into EC2 Instances via AWS SSM with Leapp 
+## Logging into EC2 Instances via AWS SSM with Hopkey 
 
-In order to use AWS SSM on your System through Leapp, you must be able to execute this command 
+In order to use AWS SSM on your System through Hopkey, you must be able to execute this command 
 on your own at least once, when the correct credentials are active.
 
 ```bash

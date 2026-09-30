@@ -1,5 +1,5 @@
-owner: Noovolari
-repo: leapp
+owner: willroll
+repo: hopkey
 provider: github
 releaseType: release
-updaterCacheDirName: leapp-updater
+updaterCacheDirName: hopkey-updater

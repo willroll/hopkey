@@ -1,21 +1,21 @@
 import { beforeEach, describe, test, jest, expect } from "@jest/globals";
-import { LeappNotification, LeappNotificationType } from "../models/notification";
+import { HopkeyNotification, HopkeyNotificationType } from "../models/notification";
 import { NotificationService } from "./notification-service";
 
 describe("NotificationService", () => {
-  let mockedNotification1: LeappNotification;
-  let mockedNotification2: LeappNotification;
-  let mockedNotifications: LeappNotification[] = [];
+  let mockedNotification1: HopkeyNotification;
+  let mockedNotification2: HopkeyNotification;
+  let mockedNotifications: HopkeyNotification[] = [];
   let mockedRepository: any;
 
   beforeEach(() => {
-    mockedNotification1 = new LeappNotification("1234a", LeappNotificationType.info, "title1", "Ok", "", false);
-    mockedNotification2 = new LeappNotification("3456a", LeappNotificationType.info, "title2", "Ok", "", true);
+    mockedNotification1 = new HopkeyNotification("1234a", HopkeyNotificationType.info, "title1", "Ok", "", false);
+    mockedNotification2 = new HopkeyNotification("3456a", HopkeyNotificationType.info, "title2", "Ok", "", true);
     mockedNotifications = [mockedNotification1, mockedNotification2];
 
     mockedRepository = {
       getNotifications: jest.fn(() => mockedNotifications),
-      setNotifications: jest.fn((notifications: LeappNotification[]) => (mockedNotifications = notifications)),
+      setNotifications: jest.fn((notifications: HopkeyNotification[]) => (mockedNotifications = notifications)),
     } as any;
   });
 

@@ -1,46 +1,46 @@
-`leapp region`
+`hopkey region`
 ==============
 
-Leapp regions management
+Hopkey regions management
 
-* [`leapp region get-default`](#leapp-region-get-default)
-* [`leapp region set-default`](#leapp-region-set-default)
+* [`hopkey region get-default`](#hopkey-region-get-default)
+* [`hopkey region set-default`](#hopkey-region-set-default)
 
-## `leapp region get-default`
+## `hopkey region get-default`
 
 Displays the default region
 
 ```
 USAGE
-  $ leapp region get-default
+  $ hopkey region get-default
 
 DESCRIPTION
   Displays the default region
 
 EXAMPLES
-  $leapp region get-default
+  $hopkey region get-default
 ```
 
-_See code: [src/commands/region/get-default.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/region/get-default.ts)_
+_See code: [src/commands/region/get-default.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/region/get-default.ts)_
 
-## `leapp region set-default`
+## `hopkey region set-default`
 
 Change the default region
 
 ```
 USAGE
-  $ leapp region set-default [--region <value>]
+  $ hopkey region set-default [--region <value>]
 
 FLAGS
-  --region=<value>  Session Region for AWS sessions in Leapp
+  --region=<value>  Session Region for AWS sessions in Hopkey
 
 DESCRIPTION
   Change the default region
 
 EXAMPLES
-  $leapp region set-default
+  $hopkey region set-default
 
-  $leapp region set-default --region AWSREGION
+  $hopkey region set-default --region AWSREGION
 ```
 
-_See code: [src/commands/region/set-default.ts](https://github.com/noovolari/leapp/blob/v0.1.65/src/commands/region/set-default.ts)_
+_See code: [src/commands/region/set-default.ts](https://github.com/willroll/hopkey/blob/v0.1.65/src/commands/region/set-default.ts)_

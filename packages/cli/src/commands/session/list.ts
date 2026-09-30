@@ -1,24 +1,24 @@
 import { ux } from "@oclif/core";
 import { Config } from "@oclif/core/lib/config/config";
-import { SessionStatus } from "@noovolari/leapp-core/models/session-status";
-import { LeappCommand } from "../../leapp-command";
-import { Session } from "@noovolari/leapp-core/models/session";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
-import { AwsIamRoleFederatedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-federated-session";
-import { AzureSession } from "@noovolari/leapp-core/models/azure/azure-session";
-import { AwsSsoRoleSession } from "@noovolari/leapp-core/models/aws/aws-sso-role-session";
-import { AwsIamRoleChainedSession } from "@noovolari/leapp-core/models/aws/aws-iam-role-chained-session";
+import { SessionStatus } from "@hopkey/core/models/session-status";
+import { HopkeyCommand } from "../../hopkey-command";
+import { Session } from "@hopkey/core/models/session";
+import { SessionType } from "@hopkey/core/models/session-type";
+import { AwsIamRoleFederatedSession } from "@hopkey/core/models/aws/aws-iam-role-federated-session";
+import { AzureSession } from "@hopkey/core/models/azure/azure-session";
+import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
+import { AwsIamRoleChainedSession } from "@hopkey/core/models/aws/aws-iam-role-chained-session";
 
-export default class ListSessions extends LeappCommand {
+export default class ListSessions extends HopkeyCommand {
   static description = "Show sessions list with all properties; filter query is case sensitive";
   static examples = [
-    `$leapp session list`,
-    `$leapp session list --filter="ID=Foo" -x`,
-    `$leapp session list --filter="Session Name=Foo"`,
-    `$leapp session list --filter="Type=Foo"`,
-    `$leapp session list --filter="Named Profile=Foo"`,
-    `$leapp session list --filter="Region/Location=Foo"`,
-    `$leapp session list --filter="Status=Foo"`,
+    `$hopkey session list`,
+    `$hopkey session list --filter="ID=Foo" -x`,
+    `$hopkey session list --filter="Session Name=Foo"`,
+    `$hopkey session list --filter="Type=Foo"`,
+    `$hopkey session list --filter="Named Profile=Foo"`,
+    `$hopkey session list --filter="Region/Location=Foo"`,
+    `$hopkey session list --filter="Status=Foo"`,
   ];
 
   static flags = {

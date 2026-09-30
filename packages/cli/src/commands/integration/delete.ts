@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
 import { integrationId } from "../../flags";
-import { Integration } from "@noovolari/leapp-core/models/integration";
+import { Integration } from "@hopkey/core/models/integration";
 
-export default class DeleteIntegration extends LeappCommand {
+export default class DeleteIntegration extends HopkeyCommand {
   static description = "Delete an integration";
 
-  static examples = ["$leapp integration delete", "$leapp integration delete --integrationId ID"];
+  static examples = ["$hopkey integration delete", "$hopkey integration delete --integrationId ID"];
 
   static flags = {
     integrationId,

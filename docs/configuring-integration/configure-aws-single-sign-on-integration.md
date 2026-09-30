@@ -20,13 +20,13 @@ AWS Identity Center (ex AWS Single Sign-On) is a cloud service that allows you t
 
 AWS SSO provides a directory that you can use to create users, organize them in groups, and set permissions across those groups; alternatively, you can obtain them from your Microsoft Active Directory or any standards-based identity provider, such as Okta Universal Directory or Azure AD.
 
-After logging in the first time, Leapp will map all your roles and users into Sessions.  
+After logging in the first time, Hopkey will map all your roles and users into Sessions.  
 
 !!! Info
 
     To get started using AWS SSO refer to [this guide](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html){: target='_blank'}.
 
-## How to configure an AWS Identity Center (ex AWS Single Sign-On) integration in Leapp
+## How to configure an AWS Identity Center (ex AWS Single Sign-On) integration in Hopkey
 
 1. Click on the _Add Integration_ button in the sidebar.
 2. Select _AWS Single Sign-On_ as the Integration type.

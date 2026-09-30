@@ -1,13 +1,13 @@
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
-import { LeappCommand } from "../../leapp-command";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { profileId, sessionId } from "../../flags";
 
-export default class ChangeSessionProfile extends LeappCommand {
+export default class ChangeSessionProfile extends HopkeyCommand {
   static description = "Change a session named-profile";
 
-  static examples = [`$leapp session change-profile`, `$leapp session change-profile --profileId PROFILEID --sessionId SESSIONID`];
+  static examples = [`$hopkey session change-profile`, `$hopkey session change-profile --profileId PROFILEID --sessionId SESSIONID`];
 
   static flags = {
     sessionId,
@@ -21,7 +21,7 @@ export default class ChangeSessionProfile extends LeappCommand {
   async run(): Promise<void> {
     try {
       const { flags } = await this.parse(ChangeSessionProfile);
-      if (LeappCommand.areFlagsNotDefined(flags, this)) {
+      if (HopkeyCommand.areFlagsNotDefined(flags, this)) {
         const selectedSession = await this.selectSession();
         const selectedProfile = await this.selectProfile(selectedSession);
         await this.changeSessionProfile(selectedSession, selectedProfile);

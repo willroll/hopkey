@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { RemoteProceduresServer } from "@noovolari/leapp-core/services/remote-procedures-server";
+import { RemoteProceduresServer } from "@hopkey/core/services/remote-procedures-server";
 import { environment } from "../environments/environment";
 import { AppService } from "./services/app.service";
 import { Router } from "@angular/router";
@@ -8,29 +8,30 @@ import { AppMfaCodePromptService } from "./services/app-mfa-code-prompt.service"
 import { AppAwsAuthenticationService } from "./services/app-aws-authentication.service";
 import { UpdaterService } from "./services/updater.service";
 import compareVersions from "compare-versions";
-import { LoggedEntry, LogLevel, LogService } from "@noovolari/leapp-core/services/log-service";
-import { BehaviouralSubjectService } from "@noovolari/leapp-core/services/behavioural-subject-service";
-import { TimerService } from "@noovolari/leapp-core/services/timer-service";
-import { constants } from "@noovolari/leapp-core/models/constants";
-import { FileService } from "@noovolari/leapp-core/services/file-service";
-import { AwsCoreService } from "@noovolari/leapp-core/services/aws-core-service";
-import { RetroCompatibilityService } from "@noovolari/leapp-core/services/retro-compatibility-service";
+import { LoggedEntry, LogLevel, LogService } from "@hopkey/core/services/log-service";
+import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-subject-service";
+import { TimerService } from "@hopkey/core/services/timer-service";
+import { constants } from "@hopkey/core/models/constants";
+import { FileService } from "@hopkey/core/services/file-service";
+import { AwsCoreService } from "@hopkey/core/services/aws-core-service";
+import { RetroCompatibilityService } from "@hopkey/core/services/retro-compatibility-service";
 import { AppProviderService } from "./services/app-provider.service";
-import { SessionFactory } from "@noovolari/leapp-core/services/session-factory";
-import { RotationService } from "@noovolari/leapp-core/services/rotation-service";
+import { SessionFactory } from "@hopkey/core/services/session-factory";
+import { RotationService } from "@hopkey/core/services/rotation-service";
 import { AppVerificationWindowService } from "./services/app-verification-window.service";
 import { WindowService } from "./services/window.service";
 import { AppNativeService } from "./services/app-native.service";
-import { AwsSsoIntegrationService } from "@noovolari/leapp-core/services/integration/aws-sso-integration-service";
-import { AwsSsoRoleService } from "@noovolari/leapp-core/services/session/aws/aws-sso-role-service";
+import { AwsSsoIntegrationService } from "@hopkey/core/services/integration/aws-sso-integration-service";
+import { AwsSsoRoleService } from "@hopkey/core/services/session/aws/aws-sso-role-service";
 import { OptionsService } from "./services/options.service";
-import { IntegrationIsOnlineStateRefreshService } from "@noovolari/leapp-core/services/integration/integration-is-online-state-refresh-service";
-import { AzureSessionService } from "@noovolari/leapp-core/services/session/azure/azure-session-service";
-import { AzureCoreService } from "@noovolari/leapp-core/services/azure-core-service";
-import { PluginManagerService } from "@noovolari/leapp-core/plugin-sdk/plugin-manager-service";
+import { IntegrationIsOnlineStateRefreshService } from "@hopkey/core/services/integration/integration-is-online-state-refresh-service";
+import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-session-service";
+import { AzureCoreService } from "@hopkey/core/services/azure-core-service";
+import { PluginManagerService } from "@hopkey/core/plugin-sdk/plugin-manager-service";
 import { ExtensionWebsocketService } from "./services/extension-websocket.service";
 import { TeamService, Role } from "./services/team-service";
 import { AnalyticsService } from "./services/analytics.service";
+import { legacyApp } from "@hopkey/core/services/legacy-import-service";
 
 @Component({
   selector: "app-root",
@@ -132,11 +133,15 @@ export class AppComponent implements OnInit {
     // Create folders and files if missing
     this.updaterService.createFoldersIfMissing();
 
+    // Copy the system vault secrets of a workspace imported from the app Hopkey was forked from:
+    // the migrations below may need them
+    await this.importLegacySecrets();
+
     // Before retrieving an actual copy of the workspace we
     // check and in case apply, our retro compatibility service
     await this.retroCompatibilityService.applyWorkspaceMigrations();
 
-    // Check the existence of a pre-Leapp credential file and make a backup
+    // Check the existence of a pre-Hopkey credential file and make a backup
     this.showCredentialBackupMessageIfNeeded();
 
     // All sessions start stopped when app is launched
@@ -170,7 +175,7 @@ export class AppComponent implements OnInit {
     if (this.fileService.existsSync(this.appNativeService.path.join(this.appNativeService.os.homedir(), environment.deeplinkFile))) {
       try {
         const deepLink = this.fileService.readFileSync(this.appNativeService.path.join(this.appNativeService.os.homedir(), environment.deeplinkFile));
-        if (this.isOpenLeappDeepLink(deepLink)) {
+        if (this.isOpenHopkeyDeepLink(deepLink)) {
           const afterQuestionMark = deepLink.split("?")[1];
           const splitByAmpersand = afterQuestionMark.split("&");
           teamMemberEmail = splitByAmpersand[0].split("=")[1];
@@ -218,7 +223,7 @@ export class AppComponent implements OnInit {
       await this.router.navigate(["/dashboard"]);
     }
 
-    // Start the websocket server for the Leapp Browser Extension
+    // Start the websocket server for the Hopkey Browser Extension
     this.extensionWebsocketService.bootstrap();
 
     (async (): Promise<void> => this.remoteProceduresServer.startServer())();
@@ -252,13 +257,38 @@ export class AppComponent implements OnInit {
     this.appService.quit();
   }
 
+  private async importLegacySecrets(): Promise<void> {
+    try {
+      const importedSecrets = await this.appProviderService.legacyImportService.importSecrets();
+      if (importedSecrets !== undefined) {
+        this.loggingService.log(
+          new LoggedEntry(
+            `Imported your ${legacyApp.appName} workspace and ${importedSecrets} secret(s) from the system vault.`,
+            this,
+            LogLevel.info,
+            true
+          )
+        );
+      }
+    } catch (error) {
+      this.loggingService.log(
+        new LoggedEntry(
+          `Could not copy your ${legacyApp.appName} secrets from the system vault, retrying at the next launch: ${error?.message ?? error}`,
+          this,
+          LogLevel.warn,
+          true
+        )
+      );
+    }
+  }
+
   /**
    * Show that we created a copy of original credential file if present in the system
    */
   private showCredentialBackupMessageIfNeeded() {
     // TODO: move this logic inside a service
     const oldAwsCredentialsPath = this.fileService.homeDir() + "/" + constants.credentialsDestination;
-    const newAwsCredentialsPath = oldAwsCredentialsPath + ".leapp.bkp";
+    const newAwsCredentialsPath = oldAwsCredentialsPath + ".hopkey.bkp";
     const check =
       this.behaviouralSubjectService.sessions.length === 0 &&
       this.fileService.existsSync(oldAwsCredentialsPath) &&
@@ -271,7 +301,7 @@ export class AppComponent implements OnInit {
       this.fileService.writeFileSyncWithOptions(oldAwsCredentialsPath, "", { mode: "600" });
       this.appService.getDialog().showMessageBox({
         type: "info",
-        icon: __dirname + "/assets/images/Leapp.png",
+        icon: __dirname + "/assets/images/Hopkey.png",
         // eslint-disable-next-line max-len
         message: "You had a previous credential file. We made a backup of the old one in the same directory before starting.",
       });
@@ -315,7 +345,7 @@ export class AppComponent implements OnInit {
     });
 
     ipc.on("PLUGIN_URL", (_, url) => {
-      if (this.isOpenLeappDeepLink(url)) {
+      if (this.isOpenHopkeyDeepLink(url)) {
         const afterQuestionMark = url.split("?")[1];
         const splitByAmpersand = afterQuestionMark.split("&");
         const teamMemberEmail = splitByAmpersand[0].split("=")[1];
@@ -361,7 +391,7 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private isOpenLeappDeepLink(deepLinkUrl: string): boolean {
-    return deepLinkUrl.indexOf("01255ef8-open-leapp?email=") > -1;
+  private isOpenHopkeyDeepLink(deepLinkUrl: string): boolean {
+    return deepLinkUrl.indexOf("01255ef8-open-hopkey?email=") > -1;
   }
 }

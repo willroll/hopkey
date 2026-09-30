@@ -1,13 +1,13 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { Session } from "@noovolari/leapp-core/models/session";
+import { Session } from "@hopkey/core/models/session";
 import { AppService } from "../../../services/app.service";
 import { AppProviderService } from "../../../services/app-provider.service";
-import { SessionFactory } from "@noovolari/leapp-core/services/session-factory";
-import { AwsSessionService } from "@noovolari/leapp-core/services/session/aws/aws-session-service";
-import { SsmService } from "@noovolari/leapp-core/services/ssm-service";
-import { LeappBaseError } from "@noovolari/leapp-core/errors/leapp-base-error";
-import { LogLevel } from "@noovolari/leapp-core/services/log-service";
-import { constants } from "@noovolari/leapp-core/models/constants";
+import { SessionFactory } from "@hopkey/core/services/session-factory";
+import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session-service";
+import { SsmService } from "@hopkey/core/services/ssm-service";
+import { HopkeyBaseError } from "@hopkey/core/errors/hopkey-base-error";
+import { LogLevel } from "@hopkey/core/services/log-service";
+import { constants } from "@hopkey/core/models/constants";
 import { AnalyticsService } from "../../../services/analytics.service";
 
 @Component({
@@ -76,7 +76,7 @@ export class SsmModalDialogComponent implements OnInit {
         this.instances = [];
         this.instancesNotFiltered = [];
         this.askingSsmRegion = true;
-        throw new LeappBaseError("SSM Error", this, LogLevel.error, err.message);
+        throw new HopkeyBaseError("SSM Error", this, LogLevel.error, err.message);
       } finally {
         this.ssmLoading = false;
       }

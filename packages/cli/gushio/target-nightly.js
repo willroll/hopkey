@@ -1,7 +1,7 @@
 module.exports = {
   cli: {
     name: 'nightly',
-    description: 'Release the leapp Cli on NPM under the branch Nightly',
+    description: 'Release the hopkey Cli on NPM under the branch Nightly',
     version: '0.1',
   },
   deps: [],
@@ -10,29 +10,29 @@ module.exports = {
     const shellJs = await gushio.import('shelljs')
     const readPackageJsonFunction = require('../../../gushio/read-package-json-func')
     const writePackageJsonFunction = require('../../../gushio/write-package-json-func')
-    const leappCoreBootstrap = require('../../../gushio/leapp-core-bootstrap')
+    const hopkeyCoreBootstrap = require('../../../gushio/hopkey-core-bootstrap')
     const getNightlyVersion = require('../../../gushio/get-nightly-version')
 
     let cliPackage;
     let originalPackage;
 
     try {
-      console.log('Reading leapp Cli package.json... ')
+      console.log('Reading hopkey Cli package.json... ')
       cliPackage = await readPackageJsonFunction(path, "cli");
       originalPackage = JSON.parse(JSON.stringify(cliPackage));
 
-      cliPackage["name"] = `@noovolari/leapp-cli-nightly`;
+      cliPackage["name"] = `@hopkey/cli-nightly`;
       cliPackage["version"] = cliPackage["version"] + `-nightly.${getNightlyVersion()}`;
 
       await writePackageJsonFunction(path, "cli", cliPackage);
-      await leappCoreBootstrap("cli", () => `npm:@noovolari/leapp-core-nightly@latest`);
+      await hopkeyCoreBootstrap("cli", () => `npm:@hopkey/core-nightly@latest`);
 
       shellJs.cd(path.join(__dirname, '..'))
       const result = shellJs.exec('npm publish')
       if (result.code !== 0) {
         throw new Error(result.stderr)
       }
-      console.log('leapp cli published on npm')
+      console.log('hopkey cli published on npm')
     } catch (e) {
       e.message = e.stack.red
       throw e

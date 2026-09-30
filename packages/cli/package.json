@@ -1,21 +1,21 @@
 {
-  "name": "@noovolari/leapp-cli",
-  "description": "Leapp's Command Line Interface\n\nIt relies on Leapp Core, which encapsulates the domain logic.\n\nFor more information about the project visit the [site](www.leapp.cloud).",
+  "name": "@hopkey/cli",
+  "description": "Hopkey's Command Line Interface\n\nIt relies on Hopkey Core, which encapsulates the domain logic.\n\nFor more information about the project visit the [repository](https://github.com/willroll/hopkey).",
   "version": "0.1.65",
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
   "bin": {
-    "leapp": "./bin/run"
+    "hopkey": "./bin/run"
   },
-  "bugs": "https://github.com/Noovolari/leapp/issues",
+  "bugs": "https://github.com/willroll/hopkey/issues",
   "dependencies": {
     "@aws-sdk/client-sso": "3.525.0",
     "@aws-sdk/client-sso-oidc": "3.525.0",
     "@azure/msal-node": "^1.9.0",
     "@babel/plugin-proposal-decorators": "^7.16.5",
-    "@noovolari/leapp-core": "file:../core",
+    "@hopkey/core": "file:../core",
     "@oclif/core": "2.1.4",
     "@oclif/plugin-help": "^5.1.12",
     "@smithy/node-http-handler": "2.4.1",
@@ -40,7 +40,7 @@
     "http-proxy-agent": "4.0.1",
     "https-proxy-agent": "5.0.0",
     "ini": "~2.0.0",
-    "inquirer": "9.3.7",
+    "inquirer": "8.2.7",
     "is-url": "^1.2.4",
     "js-ini": "1.5.1",
     "jwt-decode": "~3.1.2",
@@ -97,13 +97,13 @@
     "src/dpapi-addon",
     "binding.gyp"
   ],
-  "homepage": "https://github.com/noovolari/leapp",
+  "homepage": "https://github.com/willroll/hopkey",
   "keywords": [
     "oclif"
   ],
   "main": "dist/index.js",
   "oclif": {
-    "bin": "leapp",
+    "bin": "hopkey",
     "commands": "./dist/commands",
     "plugins": [
       "@oclif/plugin-help"
@@ -114,23 +114,23 @@
         "description": "SAML 2.0 Identity providers URL management"
       },
       "integration": {
-        "description": "Leapp Integrations management"
+        "description": "Hopkey Integrations management"
       },
       "profile": {
-        "description": "Leapp AWS Multi-profile management"
+        "description": "Hopkey AWS Multi-profile management"
       },
       "region": {
-        "description": "Leapp regions management"
+        "description": "Hopkey regions management"
       },
       "session": {
         "description": "Sessions management"
       }
     },
     "macos": {
-      "identifier": "cloud.leapp"
+      "identifier": "io.github.willroll.hopkey.cli"
     }
   },
-  "repository": "noovolari/leapp",
+  "repository": "willroll/hopkey",
   "publishConfig": {
     "access": "public"
   },

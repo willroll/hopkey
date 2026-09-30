@@ -1,12 +1,12 @@
 export const constants = {
   //General
-  appName: "Leapp",
-  rsaBinFileDestination: ".Leapp/rsa.bin",
-  lockFileDestination: ".Leapp/Leapp-lock.json",
-  lockFileBackupPath: ".Leapp/Leapp-lock.backup.bin",
-  latestUrl: "https://leapp.cloud/releases.html",
+  appName: "Hopkey",
+  rsaBinFileDestination: ".hopkey/rsa.bin",
+  lockFileDestination: ".hopkey/hopkey-lock.json",
+  lockFileBackupPath: ".hopkey/hopkey-lock.backup.bin",
+  latestUrl: "https://github.com/willroll/hopkey/releases/latest",
   workspaceLastVersion: 7,
-  slackUrl: "https://join.slack.com/t/noovolari/shared_invite/zt-opn8q98k-HDZfpJ2_2U3RdTnN~u_B~Q",
+  communityUrl: "https://github.com/willroll/hopkey/discussions",
   localWorkspaceName: "Local workspace",
   localWorkspaceDescription: "Community Edition",
   currentWorkspaceKeychainKey: "current-workspace",
@@ -48,9 +48,9 @@ export const constants = {
   cliStartAwsFederatedSessionChannel: "aws-federated-session-start-channel",
   cliLogoutAwsFederatedSessionChannel: "aws-federated-session-logout-channel",
   cliRefreshSessionsChannel: "refresh-sessions-channel",
-  ipcServerId: "leapp_da",
+  ipcServerId: "hopkey_da",
 
-  roleSessionName: "assumed-from-leapp",
+  roleSessionName: "assumed-from-hopkey",
   // Credential Process
   credentialFile: "credential-file-method",
   credentialProcess: "credential-process-method",
@@ -60,15 +60,15 @@ export const constants = {
   ssmRegionDefault: "Use default region",
 
   // Contains Env for SSM on macOS
-  ssmSourceFileDestination: ".Leapp/ssm-env",
-  pluginEnvFileDestination: ".Leapp/plugin-env",
+  ssmSourceFileDestination: ".hopkey/ssm-env",
+  pluginEnvFileDestination: ".hopkey/plugin-env",
 
-  npmRequiredPluginKeyword: "leapp-plugin",
+  npmRequiredPluginKeyword: "hopkey-plugin",
   skipPluginValidation: true,
   disablePluginSystem: false,
+  // Noovolari's plugin signature service and public key, only used when skipPluginValidation is false.
+  // Hopkey has no plugin signing service yet: replace both before enabling plugin validation.
   pluginPortalUrl: "https://vv0r45fadf.execute-api.eu-west-1.amazonaws.com/api/api/v1/plugins",
-  // Public Key for signature
-  // TODO: move it to the leapp site in future
   publicKey:
     "-----BEGIN PUBLIC KEY-----\n" +
     "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqti1Z2PXLzKgkAgm9sMH\n" +

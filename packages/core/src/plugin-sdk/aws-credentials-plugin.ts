@@ -29,7 +29,7 @@ export abstract class AwsCredentialsPlugin implements IPlugin {
   }
 
   /**
-   * This method is invoked by the AwsCredentialsPlugin run method; it expects both the Leapp Session metadata and credentials. The latter
+   * This method is invoked by the AwsCredentialsPlugin run method; it expects both the Hopkey Session metadata and credentials. The latter
    * are generated in the run method, prior the applySessionAction invocation.
    *
    * @param session

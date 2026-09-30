@@ -1,11 +1,11 @@
 {
-  "name": "@noovolari/leapp-core",
+  "name": "@hopkey/core",
   "version": "0.1.165",
   "author": {
-    "name": "Noovolari",
-    "email": "info@noovolari.com"
+    "name": "Hopkey contributors",
+    "url": "https://github.com/willroll/hopkey/graphs/contributors"
   },
-  "description": "Leapp's core module",
+  "description": "Hopkey's core module",
   "dependencies": {
     "folder-hash": "^4.0.2",
     "require-module": "^0.1.0",
@@ -106,10 +106,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Noovolari/leapp.git"
+    "url": "git+https://github.com/willroll/hopkey.git"
   },
   "bugs": {
-    "url": "https://github.com/Noovolari/leapp/issues"
+    "url": "https://github.com/willroll/hopkey/issues"
   },
-  "homepage": "https://github.com/Noovolari/leapp"
+  "homepage": "https://github.com/willroll/hopkey"
 }

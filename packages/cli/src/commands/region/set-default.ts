@@ -1,12 +1,12 @@
-import { LeappCommand } from "../../leapp-command";
+import { HopkeyCommand } from "../../hopkey-command";
 import { Config } from "@oclif/core/lib/config/config";
-import { SessionType } from "@noovolari/leapp-core/models/session-type";
+import { SessionType } from "@hopkey/core/models/session-type";
 import { region } from "../../flags";
 
-export default class ChangeDefaultRegion extends LeappCommand {
+export default class ChangeDefaultRegion extends HopkeyCommand {
   static description = "Change the default region";
 
-  static examples = [`$leapp region set-default`, `$leapp region set-default --region AWSREGION`];
+  static examples = [`$hopkey region set-default`, `$hopkey region set-default --region AWSREGION`];
 
   static flags = {
     region,
