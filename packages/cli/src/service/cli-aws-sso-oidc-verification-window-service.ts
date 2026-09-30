@@ -29,11 +29,6 @@ export class CliAwsSsoOidcVerificationWindowService implements IAwsSsoOidcVerifi
       return;
     }
 
-    for (const page of await this.browser.pages()) {
-      page.removeAllListeners();
-      await page.close();
-    }
-
     await this.browser.close();
   }
 

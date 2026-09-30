@@ -70,8 +70,9 @@ export class CliAwsSamlAuthenticationService implements IAwsSamlAuthenticationSe
   async closeAuthenticationWindow(): Promise<void> {
     if (this.browser) {
       for (const page of await this.browser.pages()) {
-        page.removeAllListeners();
-        await page.close();
+        // Name the events: without one, puppeteer's removeAllListeners() also closes the page
+        page.removeAllListeners("request");
+        page.removeAllListeners("close");
       }
 
       await this.browser.close();
