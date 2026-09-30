@@ -141,6 +141,8 @@ export class AppComponent implements OnInit {
     // check and in case apply, our retro compatibility service
     await this.retroCompatibilityService.applyWorkspaceMigrations();
 
+    await this.moveProxyPasswordToKeychain();
+
     // Check the existence of a pre-Hopkey credential file and make a backup
     this.showCredentialBackupMessageIfNeeded();
 
@@ -260,6 +262,20 @@ export class AppComponent implements OnInit {
 
     // Finally quit
     this.appService.quit();
+  }
+
+  private async moveProxyPasswordToKeychain(): Promise<void> {
+    try {
+      await this.optionsService.moveProxyPasswordToKeychain();
+    } catch (error) {
+      this.loggingService.log(
+        new LoggedEntry(
+          `Could not move the proxy password to the system vault, retrying at the next launch: ${error?.message ?? error}`,
+          this,
+          LogLevel.warn
+        )
+      );
+    }
   }
 
   private async importLegacySecrets(): Promise<void> {

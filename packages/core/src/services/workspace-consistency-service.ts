@@ -107,12 +107,12 @@ export class WorkspaceConsistencyService {
   }
 
   private saveBackup(workspace: Workspace) {
-    this.fileService.writeFileSync(this.fileLockBackupPath, this.fileService.encryptText(serialize(workspace)));
+    this.fileService.writePrivateFileSync(this.fileLockBackupPath, this.fileService.encryptText(serialize(workspace)));
   }
 
   private save(workspace: Workspace) {
     const path = `${this.fileService.homeDir()}/${this.workspaceFileName}`;
-    this.fileService.writeFileSync(path, this.fileService.encryptText(serialize(workspace)));
+    this.fileService.writePrivateFileSync(path, this.fileService.encryptText(serialize(workspace)));
   }
 
   private loadWorkspace(): Workspace {
@@ -123,7 +123,7 @@ export class WorkspaceConsistencyService {
 
   private restoreBackup(): Workspace {
     const backupWorkspaceContents = this.fileService.readFileSync(this.fileLockBackupPath);
-    this.fileService.writeFileSync(this.fileLockPath, backupWorkspaceContents);
+    this.fileService.writePrivateFileSync(this.fileLockPath, backupWorkspaceContents);
     const workspace = deserialize(Workspace, this.fileService.decryptText(backupWorkspaceContents));
     this.checkConsistency(workspace);
     this.logService.log(new LoggedEntry("hopkey-lock.json was corrupted and has been restored from the latest backup.", this, LogLevel.error, true));
@@ -134,9 +134,9 @@ export class WorkspaceConsistencyService {
     const newWorkspace = this.createNewWorkspace();
     const encryptedWorkspace = this.fileService.encryptText(serialize(newWorkspace));
     const path = this.fileService.homeDir() + "/" + this.workspaceFileName;
-    this.fileService.writeFileSync(path, encryptedWorkspace);
+    this.fileService.writePrivateFileSync(path, encryptedWorkspace);
     if (this.workspaceFileName === constants.lockFileDestination) {
-      this.fileService.writeFileSync(this.fileLockBackupPath, encryptedWorkspace);
+      this.fileService.writePrivateFileSync(this.fileLockBackupPath, encryptedWorkspace);
     }
     this.logService.log(
       new LoggedEntry("Hopkey failed to restore the latest hopkey-lock.json backup. hopkey-lock.json was reinitialized.", this, LogLevel.error, true)

@@ -206,27 +206,31 @@ describe("WorkspaceConsistencyService", () => {
     mockedWorkspace.sessions = [{ name: "testName" } as any];
     const fileLockBackupPathSpy = jest.spyOn(service, "fileLockBackupPath", "get").mockImplementation(() => "backup/path");
     fileService.encryptText = jest.fn(() => "encryptedText");
-    fileService.writeFileSync = jest.fn();
+    fileService.writePrivateFileSync = jest.fn();
 
     service.saveBackup(mockedWorkspace);
 
     expect(fileService.encryptText).toHaveBeenCalledWith(serialize(mockedWorkspace));
     expect(fileLockBackupPathSpy).toHaveBeenCalled();
-    expect(fileService.writeFileSync).toHaveBeenCalledWith("backup/path", "encryptedText");
+    expect(fileService.writePrivateFileSync).toHaveBeenCalledWith("backup/path", "encryptedText");
   });
 
   test("save", () => {
     service.workspaceFileName = "workspace-file-name-mock";
-    service.fileService = { homeDir: jest.fn(() => "homedir-mock"), encryptText: jest.fn(() => "encrypted-text-mock"), writeFileSync: jest.fn() };
+    service.fileService = {
+      homeDir: jest.fn(() => "homedir-mock"),
+      encryptText: jest.fn(() => "encrypted-text-mock"),
+      writePrivateFileSync: jest.fn(),
+    };
     const mockedWorkspace = { mockedObject: "mocked-object", sessions: [] };
     mockedWorkspace.sessions = [{ name: "testName" } as any];
     fileService.encryptText = jest.fn(() => "encryptedText");
-    fileService.writeFileSync = jest.fn();
+    fileService.writePrivateFileSync = jest.fn();
 
     service.save(mockedWorkspace);
 
     expect(service.fileService.encryptText).toHaveBeenCalledWith(serialize(mockedWorkspace));
-    expect(service.fileService.writeFileSync).toHaveBeenCalledWith("homedir-mock/" + "workspace-file-name-mock", "encrypted-text-mock");
+    expect(service.fileService.writePrivateFileSync).toHaveBeenCalledWith("homedir-mock/" + "workspace-file-name-mock", "encrypted-text-mock");
   });
 
   test("loadWorkspace", () => {
@@ -235,7 +239,7 @@ describe("WorkspaceConsistencyService", () => {
     service.fileService = {
       homeDir: jest.fn(() => "homedir-mock"),
       encryptText: jest.fn(() => "encrypted-text-mock"),
-      writeFileSync: jest.fn(),
+      writePrivateFileSync: jest.fn(),
       decryptText: jest.fn(() => decryptedWorkspace),
       readFileSync: jest.fn(() => "content"),
     };
@@ -252,7 +256,7 @@ describe("WorkspaceConsistencyService", () => {
     const serializedWorkspace = serialize(workspace);
 
     fileService.readFileSync = jest.fn(() => "backup-content");
-    fileService.writeFileSync = jest.fn();
+    fileService.writePrivateFileSync = jest.fn();
     fileService.decryptText = jest.fn(() => serializedWorkspace);
     logService.log = jest.fn();
     service.checkConsistency = jest.fn();
@@ -264,7 +268,7 @@ describe("WorkspaceConsistencyService", () => {
     expect(fileLockBackupPath).toHaveBeenCalled();
     expect(fileService.readFileSync).toHaveBeenCalledWith("backup/path");
     expect(fileLockPath).toHaveBeenCalled();
-    expect(fileService.writeFileSync).toHaveBeenCalledWith("actual/path", "backup-content");
+    expect(fileService.writePrivateFileSync).toHaveBeenCalledWith("actual/path", "backup-content");
     expect(fileService.decryptText).toHaveBeenCalledWith("backup-content");
     expect(service.checkConsistency).toHaveBeenCalledWith(workspace);
     expect(logService.log).toHaveBeenCalledWith(
@@ -279,13 +283,13 @@ describe("WorkspaceConsistencyService", () => {
     service.fileService = {
       homeDir: jest.fn(() => "homedir-mock"),
       encryptText: jest.fn(() => "encrypted-text-mock"),
-      writeFileSync: jest.fn(),
+      writePrivateFileSync: jest.fn(),
       decryptText: jest.fn(() => decryptedWorkspace),
       readFileSync: jest.fn(() => "content"),
     };
     service.nativeService = { os: { homedir: jest.fn(() => "homedir-mock") } };
     const newWorkspace = { mockedObject: "mocked-object" };
-    fileService.writeFileSync = jest.fn();
+    fileService.writePrivateFileSync = jest.fn();
     fileService.encryptText = jest.fn(() => "encrypted-workspace");
     logService.log = jest.fn();
     service.createNewWorkspace = jest.fn(() => newWorkspace);
@@ -294,9 +298,17 @@ describe("WorkspaceConsistencyService", () => {
 
     expect(service.createNewWorkspace).toHaveBeenCalled();
     expect(service.fileService.encryptText).toHaveBeenCalledWith(serialize(newWorkspace));
-    expect(service.fileService.writeFileSync).toHaveBeenCalledTimes(2);
-    expect(service.fileService.writeFileSync).toHaveBeenNthCalledWith(1, "homedir-mock/" + constants.lockFileDestination, "encrypted-text-mock");
-    expect(service.fileService.writeFileSync).toHaveBeenNthCalledWith(2, "homedir-mock/" + constants.lockFileBackupPath, "encrypted-text-mock");
+    expect(service.fileService.writePrivateFileSync).toHaveBeenCalledTimes(2);
+    expect(service.fileService.writePrivateFileSync).toHaveBeenNthCalledWith(
+      1,
+      "homedir-mock/" + constants.lockFileDestination,
+      "encrypted-text-mock"
+    );
+    expect(service.fileService.writePrivateFileSync).toHaveBeenNthCalledWith(
+      2,
+      "homedir-mock/" + constants.lockFileBackupPath,
+      "encrypted-text-mock"
+    );
     expect(logService.log).toHaveBeenCalledWith(
       new LoggedEntry(
         "Hopkey failed to restore the latest hopkey-lock.json backup. hopkey-lock.json was reinitialized.",

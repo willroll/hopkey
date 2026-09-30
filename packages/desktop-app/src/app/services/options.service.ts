@@ -3,6 +3,18 @@ import Folder from "@hopkey/core/models/folder";
 import { AppProviderService } from "./app-provider.service";
 import { WorkspaceService } from "@hopkey/core/services/workspace-service";
 import { Session } from "@hopkey/core/models/session";
+import { constants } from "@hopkey/core/models/constants";
+
+interface ProxyConfiguration {
+  proxyProtocol: string;
+  proxyUrl?: string;
+  proxyPort: string;
+  username?: string;
+  password?: string;
+}
+
+// The proxy password is a secret: it's kept in the keychain, not in the workspace file
+export const proxyPasswordKeychainItemName = "proxy-password";
 
 @Injectable({ providedIn: "root" })
 export class OptionsService {
@@ -22,15 +34,34 @@ export class OptionsService {
     this.workspaceService.persistWorkspace(workspace);
   }
 
-  get proxyConfiguration(): { proxyProtocol: string; proxyUrl?: string; proxyPort: string; username?: string; password?: string } {
+  get proxyConfiguration(): ProxyConfiguration {
     const workspace = this.workspaceService.getWorkspace();
     return workspace.proxyConfiguration;
   }
 
-  updateProxyConfiguration(value: { proxyProtocol: string; proxyUrl?: string; proxyPort: string; username?: string; password?: string }): void {
+  async getProxyPassword(): Promise<string> {
+    return (await this.appProviderService.keychainService.getSecret(constants.appName, proxyPasswordKeychainItemName)) ?? "";
+  }
+
+  async updateProxyConfiguration(value: ProxyConfiguration): Promise<void> {
+    const { password, ...configuration } = value;
+    await this.saveProxyPassword(password);
     const workspace = this.workspaceService.getWorkspace();
-    workspace.proxyConfiguration = value;
+    workspace.proxyConfiguration = configuration;
     this.workspaceService.persistWorkspace(workspace);
+  }
+
+  /**
+   * Leapp and earlier versions of Hopkey kept the proxy password in the workspace file
+   */
+  async moveProxyPasswordToKeychain(): Promise<void> {
+    const workspace = this.workspaceService.getWorkspace();
+    const password = workspace.proxyConfiguration?.password;
+    if (password) {
+      await this.saveProxyPassword(password);
+      delete workspace.proxyConfiguration.password;
+      this.workspaceService.persistWorkspace(workspace);
+    }
   }
 
   get defaultRegion(): string {
@@ -169,5 +200,13 @@ export class OptionsService {
     const workspace = this.workspaceService.getWorkspace();
     workspace.touchIdEnabled = value;
     this.workspaceService.persistWorkspace(workspace);
+  }
+
+  private async saveProxyPassword(password?: string): Promise<void> {
+    if (password) {
+      await this.appProviderService.keychainService.saveSecret(constants.appName, proxyPasswordKeychainItemName, password);
+    } else {
+      await this.appProviderService.keychainService.deleteSecret(constants.appName, proxyPasswordKeychainItemName);
+    }
   }
 }

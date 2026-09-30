@@ -33,7 +33,9 @@ describe("File Service", () => {
       readFileSync: jest.fn((_filePath, _opt: { encoding: "utf-8" }) => "[config]\nfake-key=fake-value\n"),
       readdirSync: jest.fn((_source, _opt: { withFileTypes: true }) => directories),
       mkdirSync: jest.fn((_path, _options) => {}),
+      chmodSync: jest.fn((_path, _mode) => {}),
     },
+    process: { platform: "linux" },
     copydir: {
       sync: jest.fn((_source, _target, _opt: { mode: true }) => {}),
     },
@@ -132,6 +134,30 @@ describe("File Service", () => {
     const fileService = new FileService(nativeService);
     fileService.writeFileSync(newPath, data);
     expect(nativeService.fs.writeFileSync).toHaveBeenNthCalledWith(1, newPath, data);
+  });
+
+  test("writePrivateFileSync - new and existing files end up readable by the user only", () => {
+    const fileService = new FileService(nativeService);
+    fileService.writePrivateFileSync("private/file", "secret");
+    expect(nativeService.fs.writeFileSync).toHaveBeenCalledWith("private/file", "secret", { mode: 0o600 });
+    expect(nativeService.fs.chmodSync).toHaveBeenCalledWith("private/file", 0o600);
+  });
+
+  test("makeDirectoryPrivate - on macOS and Linux, an existing directory", () => {
+    const fileService = new FileService(nativeService);
+    nativeService.fs.chmodSync.mockClear();
+
+    fileService.makeDirectoryPrivate(existsPath);
+    expect(nativeService.fs.chmodSync).toHaveBeenCalledWith(existsPath, 0o700);
+
+    nativeService.fs.chmodSync.mockClear();
+    fileService.makeDirectoryPrivate(fakePath);
+    expect(nativeService.fs.chmodSync).not.toHaveBeenCalled();
+
+    nativeService.process.platform = "win32";
+    fileService.makeDirectoryPrivate(existsPath);
+    expect(nativeService.fs.chmodSync).not.toHaveBeenCalled();
+    nativeService.process.platform = "linux";
   });
 
   test("writeFileSyncWithOptions", () => {

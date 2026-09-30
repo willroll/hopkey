@@ -52,6 +52,8 @@ describe("Repository", () => {
     mockedFileService = new FileService(mockedNativeService);
     mockedFileService.readFileSync = jest.fn();
     mockedFileService.writeFileSync = jest.fn(() => {});
+    mockedFileService.writePrivateFileSync = jest.fn(() => {});
+    mockedFileService.makeDirectoryPrivate = jest.fn();
     mockedFileService.encryptText = jest.fn(() => JSON.stringify(mockedWorkspace));
     mockedFileService.existsSync = jest.fn(() => false);
     mockedFileService.newDir = jest.fn();
@@ -108,13 +110,19 @@ describe("Repository", () => {
   test("createWorkspace() - imports the legacy app workspace instead of creating a new one", () => {
     const legacyImportService = { importWorkspace: jest.fn(() => true) };
     workspaceConsistencyService.createNewWorkspace = jest.fn(() => mockedWorkspace);
-    mockedFileService.writeFileSync = jest.fn();
+    mockedFileService.writePrivateFileSync = jest.fn();
+    mockedFileService.makeDirectoryPrivate = jest.fn();
 
     repository = new Repository(mockedNativeService, mockedFileService, workspaceConsistencyService, legacyImportService as any);
 
     expect(legacyImportService.importWorkspace).toHaveBeenCalled();
     expect(workspaceConsistencyService.createNewWorkspace).not.toHaveBeenCalled();
-    expect(mockedFileService.writeFileSync).not.toHaveBeenCalled();
+    expect(mockedFileService.writePrivateFileSync).not.toHaveBeenCalled();
+    expect(mockedFileService.makeDirectoryPrivate).toHaveBeenCalledWith("/.hopkey");
+  });
+
+  test("constructor - keeps ~/.hopkey to the user", () => {
+    expect(mockedFileService.makeDirectoryPrivate).toHaveBeenCalledWith("/.hopkey");
   });
 
   test("removeWorkspace() - the workspace file exists", () => {
@@ -164,8 +172,7 @@ describe("Repository", () => {
 
     repository.persistWorkspace(workspace);
 
-    expect(mockedFileService.writeFileSync).not.toBe(null);
-    expect(mockedFileService.writeFileSync).toHaveBeenCalledWith("/" + constants.lockFileDestination, JSON.stringify(workspace));
+    expect(mockedFileService.writePrivateFileSync).toHaveBeenCalledWith("/" + constants.lockFileDestination, JSON.stringify(workspace));
   });
 
   test("getSessions() - get the sessions persisted in the workspace", () => {
@@ -177,8 +184,7 @@ describe("Repository", () => {
     repository.workspace = workspace;
     repository.persistWorkspace(workspace);
 
-    expect(mockedFileService.writeFileSync).not.toBe(null);
-    expect(mockedFileService.writeFileSync).toHaveBeenCalledWith("/" + constants.lockFileDestination, JSON.stringify(workspace));
+    expect(mockedFileService.writePrivateFileSync).toHaveBeenCalledWith("/" + constants.lockFileDestination, JSON.stringify(workspace));
     expect(repository.getSessions()).toStrictEqual([mockedSession]);
   });
 

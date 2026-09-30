@@ -159,7 +159,7 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     this.proxyUrl = this.optionsService.proxyConfiguration.proxyUrl;
     this.proxyPort = this.optionsService.proxyConfiguration.proxyPort;
     this.proxyUsername = this.optionsService.proxyConfiguration.username || "";
-    this.proxyPassword = this.optionsService.proxyConfiguration.password || "";
+    this.proxyPassword = await this.optionsService.getProxyPassword();
     this.webConsoleSessionDuration = this.optionsService.samlRoleSessionDuration || constants.samlRoleSessionDuration;
 
     this.form.controls["idpUrl"].setValue(this.idpUrlValue);
@@ -232,7 +232,7 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
    */
   async saveOptions(): Promise<void> {
     if (this.form.valid) {
-      this.optionsService.updateProxyConfiguration({
+      await this.optionsService.updateProxyConfiguration({
         proxyUrl: this.form.controls["proxyUrl"].value,
         proxyProtocol: this.form.controls["proxyProtocol"].value,
         proxyPort: this.form.controls["proxyPort"].value,
