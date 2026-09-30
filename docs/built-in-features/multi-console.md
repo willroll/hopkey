@@ -98,6 +98,12 @@ Click on the top-right cog icon to access the settings, click on the **Multi-Con
 
 From the contextual menu of a session (accessed by right-clicking on it), simply select **Open Web Console**. 
 
+!!! info
+
+    Hopkey talks to the extension through port 8095 on your computer, only while the option is enabled. It listens on
+    the loopback address only and lets in browser extensions only, since the web console links it sends sign you in to
+    AWS.
+
 !!! info 
     
     If any communication error occurs, your browser is not open or you don't have the extension installed/enabled on it, the web console will be opened in your default

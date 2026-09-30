@@ -52,7 +52,7 @@ export class OptionsService {
   }
 
   /**
-   * Leapp and earlier versions of Hopkey kept the proxy password in the workspace file
+   * Earlier versions, and the workspaces imported from them, kept the proxy password in the workspace file
    */
   async moveProxyPasswordToKeychain(): Promise<void> {
     const workspace = this.workspaceService.getWorkspace();

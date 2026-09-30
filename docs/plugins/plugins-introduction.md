@@ -14,6 +14,10 @@ From the Hopkey option menu, go to the Plugins tab. Insert the name of the npm p
 
 ![](../../images/plugin-system/screen2.png?style=smaller-img)
 
+A web page can also offer a plugin with a `hopkey://` link. Hopkey then shows the name of the npm package the link
+points to and installs it only if you confirm: plugins run inside Hopkey and can use all your sessions, so only install
+the ones you trust.
+
 ###Add manually
 
 Go to Options by clicking the top right gear icon then click the Plugins tab. Click the Folder Icon. This will open the plugin folder inside .hopkey. 
