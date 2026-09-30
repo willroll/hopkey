@@ -170,6 +170,7 @@ export class AppComponent implements OnInit {
     let teamMemberFirstName;
     let teamMemberLastName;
     let teamMemberTeamName;
+    let pluginLink: string;
 
     // Deep link with app closed
     if (this.fileService.existsSync(this.appNativeService.path.join(this.appNativeService.os.homedir(), environment.deeplinkFile))) {
@@ -183,8 +184,7 @@ export class AppComponent implements OnInit {
           teamMemberLastName = decodeURIComponent(splitByAmpersand[2].split("=")[1]);
           teamMemberTeamName = decodeURIComponent(splitByAmpersand[3].split("=")[1]);
         } else if (!constants.disablePluginSystem) {
-          await this.pluginManagerService.installPlugin(deepLink);
-          await this.pluginManagerService.loadFromPluginDir();
+          pluginLink = deepLink;
         }
       } catch (err) {
         this.loggingService.log(new LoggedEntry(`Error in install plugin from file: ${err.toString()}`, this, LogLevel.info));
@@ -227,6 +227,11 @@ export class AppComponent implements OnInit {
     this.extensionWebsocketService.bootstrap();
 
     (async (): Promise<void> => this.remoteProceduresServer.startServer())();
+
+    // Asked once the app is up, so that the question doesn't hold up the launch
+    if (pluginLink) {
+      this.installPluginFromLink(pluginLink);
+    }
   }
 
   closeAllRightClickMenus(): void {
@@ -356,7 +361,7 @@ export class AppComponent implements OnInit {
           this.router.navigate(["/lock"], { queryParams: { teamMemberEmail, teamMemberFirstName, teamMemberLastName, teamMemberTeamName } });
         }
       } else if (!constants.disablePluginSystem) {
-        this.pluginManagerService.installPlugin(url);
+        this.installPluginFromLink(url);
       }
     });
   }
@@ -389,6 +394,33 @@ export class AppComponent implements OnInit {
         }
       }
     });
+  }
+
+  /**
+   * Any web page can open a hopkey:// link, and a plugin runs inside Hopkey with access to every session: a link only
+   * installs one once the user agrees
+   */
+  private async installPluginFromLink(deepLink: string): Promise<void> {
+    try {
+      // Only an npm package name gets past this, so it is safe in the dialog's HTML
+      const packageName = this.pluginManagerService.pluginPackageName(deepLink);
+      const message =
+        `A link asks Hopkey to install the plugin <b>${packageName}</b> from npm.<br><br>` +
+        "Plugins run inside Hopkey and can use all your sessions. Install it only if you trust its author.";
+      const confirmed = await new Promise<boolean>((resolve) =>
+        this.windowService.confirmDialog(message, (status: string) => resolve(status === constants.confirmed), "Install plugin", "Cancel")
+      );
+      if (confirmed) {
+        await this.pluginManagerService.installPlugin(deepLink);
+        await this.pluginManagerService.loadFromPluginDir();
+      }
+    } catch (error) {
+      this.loggingService.log(
+        error instanceof LoggedEntry
+          ? error
+          : new LoggedEntry(`Hopkey could not install the plugin: ${error?.message ?? error}`, this, LogLevel.error, true)
+      );
+    }
   }
 
   private isOpenHopkeyDeepLink(deepLinkUrl: string): boolean {

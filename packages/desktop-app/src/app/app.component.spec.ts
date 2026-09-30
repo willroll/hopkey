@@ -5,7 +5,7 @@ import { mustInjected } from "../base-injectables";
 import { AppProviderService } from "./services/app-provider.service";
 import { Workspace } from "@hopkey/core/models/workspace";
 import { constants } from "@hopkey/core/models/constants";
-import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
+import { LoggedEntry, LoggedException, LogLevel } from "@hopkey/core/services/log-service";
 
 describe("AppComponent", () => {
   beforeEach(waitForAsync(() => {
@@ -202,5 +202,67 @@ describe("AppComponent", () => {
     expect((app as any).appProviderService.sessionManagementService.stopAllSessions).toHaveBeenCalledTimes(1);
     expect((app as any).teamService.signOut).toHaveBeenCalledTimes(1);
     expect((app as any).appService.quit).toHaveBeenCalledTimes(1);
+  });
+
+  describe("installPluginFromLink", () => {
+    let app;
+    let answer: string;
+
+    beforeEach(() => {
+      const fixture = TestBed.createComponent(AppComponent);
+      app = fixture.debugElement.componentInstance;
+      answer = constants.confirmed;
+      (app as any).windowService = {
+        confirmDialog: jasmine.createSpy("confirmDialog").and.callFake((_message, callback) => callback(answer)),
+      };
+      (app as any).pluginManagerService = {
+        pluginPackageName: (link: string) => {
+          if (link.includes("<")) {
+            throw new LoggedException(`"${link}" is not the name of an npm package`, null, LogLevel.error, true);
+          }
+          return link.replace("hopkey://", "");
+        },
+        installPlugin: jasmine.createSpy("installPlugin"),
+        loadFromPluginDir: jasmine.createSpy("loadFromPluginDir"),
+      };
+      (app as any).loggingService = { log: jasmine.createSpy("log") };
+    });
+
+    it("installs and loads the plugin once the user agrees", async () => {
+      await (app as any).installPluginFromLink("hopkey://hopkey-plugin-example");
+
+      const [message, , confirmText] = (app as any).windowService.confirmDialog.calls.mostRecent().args;
+      expect(message).toContain("install the plugin <b>hopkey-plugin-example</b> from npm");
+      expect(message).toContain("can use all your sessions");
+      expect(confirmText).toBe("Install plugin");
+      expect((app as any).pluginManagerService.installPlugin).toHaveBeenCalledWith("hopkey://hopkey-plugin-example");
+      expect((app as any).pluginManagerService.loadFromPluginDir).toHaveBeenCalled();
+    });
+
+    it("installs nothing when the user cancels", async () => {
+      answer = constants.confirmClosed;
+      await (app as any).installPluginFromLink("hopkey://hopkey-plugin-example");
+
+      expect((app as any).windowService.confirmDialog).toHaveBeenCalled();
+      expect((app as any).pluginManagerService.installPlugin).not.toHaveBeenCalled();
+      expect((app as any).pluginManagerService.loadFromPluginDir).not.toHaveBeenCalled();
+    });
+
+    it("doesn't ask about a link that isn't an npm package", async () => {
+      await (app as any).installPluginFromLink("hopkey://<img src=x>");
+
+      expect((app as any).windowService.confirmDialog).not.toHaveBeenCalled();
+      expect((app as any).pluginManagerService.installPlugin).not.toHaveBeenCalled();
+      expect((app as any).loggingService.log.calls.mostRecent().args[0].message).toBe('"hopkey://<img src=x>" is not the name of an npm package');
+    });
+
+    it("reports a plugin that fails to install", async () => {
+      (app as any).pluginManagerService.installPlugin.and.rejectWith(new Error("socket hang up"));
+      await (app as any).installPluginFromLink("hopkey://hopkey-plugin-example");
+
+      const logged = (app as any).loggingService.log.calls.mostRecent().args[0];
+      expect(logged.message).toBe("Hopkey could not install the plugin: socket hang up");
+      expect(logged.display).toBeTrue();
+    });
   });
 });
