@@ -20,6 +20,7 @@ import { PluginContainer } from "@hopkey/core/plugin-sdk/plugin-manager-service"
 import { BillingPeriod, HopkeyProPreCheckoutDialogComponent } from "../hopkey-pro-pre-checkout-dialog/hopkey-pro-pre-checkout-dialog.component";
 import { BehaviorSubject, Subscription } from "rxjs";
 import { colorThemeSubject } from "../../check-icon-svg/check-icon-svg.component";
+import { ExtensionWebsocketService } from "../../../services/extension-websocket.service";
 
 export enum HopkeyPlanStatus {
   free = "free",
@@ -123,7 +124,8 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     private windowService: WindowService,
     private toasterService: MessageToasterService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private extensionWebsocketService: ExtensionWebsocketService
   ) {
     this.selectedTerminal = this.optionsService.macOsTerminal || constants.macOsTerminal;
 
@@ -582,6 +584,11 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   toggleExtension(): void {
     this.extensionEnabled = !this.extensionEnabled;
     this.optionsService.extensionEnabled = this.extensionEnabled;
+    if (this.extensionEnabled) {
+      this.extensionWebsocketService.start();
+    } else {
+      this.extensionWebsocketService.stop();
+    }
   }
 
   openHopkeyProPreCheckoutDialog(): void {

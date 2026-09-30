@@ -6,6 +6,8 @@ import { AwsSessionService } from "@hopkey/core/services/session/aws/aws-session
 import { BehaviorSubject } from "rxjs";
 import { MessageToasterService, ToastLevel } from "./message-toaster.service";
 import { WindowService } from "./window.service";
+import { OptionsService } from "./options.service";
+import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
 
 export enum FetchingState {
   notFetching,
@@ -13,14 +15,19 @@ export enum FetchingState {
   fetching,
 }
 
+export const extensionPort = 8095;
+// The Multi-Console extension connects to localhost, which can resolve to either loopback address
+export const extensionHosts = ["127.0.0.1", "::1"];
+// The extension connects from its background page, whose origin is the extension itself: web pages have http(s) origins
+const extensionOrigin = /^(chrome-extension|moz-extension|safari-web-extension):\/\/[^/]+$/;
+export const isExtensionOrigin = (origin?: string): boolean => extensionOrigin.test(origin ?? "");
+
 @Injectable({
   providedIn: "root",
 })
 export class ExtensionWebsocketService {
-  public wsServer: any;
-  public port: string;
-  public wsClient: any;
   public fetching$: BehaviorSubject<FetchingState>;
+  private wsServers: any[] = [];
   private fetchingTimeout: any;
   private consoleUrl: string;
 
@@ -28,7 +35,8 @@ export class ExtensionWebsocketService {
     private appNativeService: AppNativeService,
     private appProviderService: AppProviderService,
     private toastService: MessageToasterService,
-    private windowService: WindowService
+    private windowService: WindowService,
+    private optionsService: OptionsService
   ) {
     this.fetching$ = new BehaviorSubject(FetchingState.notFetching);
     this.fetching$.subscribe(async (value) => {
@@ -55,28 +63,47 @@ export class ExtensionWebsocketService {
   }
 
   bootstrap(): void {
+    if (this.optionsService.extensionEnabled) {
+      this.start();
+    }
+  }
+
+  /**
+   * Listens for the Multi-Console extension on the loopback addresses only, and lets in browser extensions only: the web
+   * console URLs it sends sign in to AWS
+   */
+  start(): void {
+    if (this.wsServers.length > 0) {
+      return;
+    }
     const ws = this.appNativeService.ws;
-    this.wsServer = new ws.WebSocketServer({
-      //TODO add configurable port option
-      port: 8095,
-    });
-    this.wsServer.on("connection", (wsClient) => {
-      this.wsClient = wsClient;
-      this.wsClient.on("message", (data) => {
-        const parsedData = JSON.parse(data.toString("utf8"));
-        if (parsedData.type === "send-fetching-state") {
-          this.fetching$.next(parsedData.fetching ? FetchingState.fetching : FetchingState.notFetching);
-        }
+    this.wsServers = extensionHosts.map((host) => {
+      const wsServer = new ws.WebSocketServer({ host, port: extensionPort, verifyClient: (info) => isExtensionOrigin(info.origin) });
+      wsServer.on("error", (error) => {
+        const message = `The browser extension server can't listen on ${host}:${extensionPort}: ${error.message}`;
+        this.appProviderService.logService.log(new LoggedEntry(message, this, LogLevel.warn));
       });
+      wsServer.on("connection", (wsClient) => wsClient.on("message", (data) => this.receive(data)));
+      return wsServer;
     });
   }
 
+  stop(): void {
+    for (const wsServer of this.wsServers) {
+      wsServer.clients.forEach((client) => client.terminate());
+      wsServer.close();
+    }
+    this.wsServers = [];
+  }
+
   sendMessage(payload: any): void {
-    this.wsServer.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(payload);
-      }
-    });
+    for (const wsServer of this.wsServers) {
+      wsServer.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(payload);
+        }
+      });
+    }
   }
 
   async openWebConsoleWithExtension(session: Session): Promise<void> {
@@ -107,6 +134,18 @@ export class ExtensionWebsocketService {
     );
     this.fetching$.next(FetchingState.fetching);
     this.toastService.toast("Opening Web Console with the Multi-Console Extension...", ToastLevel.info);
+  }
+
+  private receive(data: any): void {
+    let parsedData;
+    try {
+      parsedData = JSON.parse(data.toString("utf8"));
+    } catch (_) {
+      return;
+    }
+    if (parsedData?.type === "send-fetching-state") {
+      this.fetching$.next(parsedData.fetching ? FetchingState.fetching : FetchingState.notFetching);
+    }
   }
 
   private pause(): Promise<void> {
