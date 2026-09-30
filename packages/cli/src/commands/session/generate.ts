@@ -7,7 +7,7 @@ import { Args } from "@oclif/core";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 
 export default class GenerateSession extends HopkeyCommand {
-  static description = "Generate STS temporary credentials for the given AWS session id";
+  static description = "Generate STS temporary credentials for the given AWS session id, if the session is started";
   static examples = [`$hopkey session generate 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d`];
   static args = {
     sessionId: Args.string({

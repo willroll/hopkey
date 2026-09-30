@@ -320,6 +320,7 @@ describe("AwsSessionService", () => {
     const repository = {
       getSessionById: jest.fn(() => ({
         type: SessionType.awsIamUser,
+        status: SessionStatus.active,
         sessionTokenExpiration: "aws_session_token_expiration",
       })),
     };
@@ -348,6 +349,35 @@ describe("AwsSessionService", () => {
     expect(generateProcessCredentials.SecretAccessKey).toBe("aws_secret_access_key");
     expect(generateProcessCredentials.SessionToken).toBe("aws_session_token");
     expect(generateProcessCredentials.Expiration).toBe("aws_session_token_expiration");
+  });
+
+  test("generateProcessCredentials - refuses a session that isn't started", async () => {
+    const repository = {
+      getSessionById: jest.fn(() => ({ type: SessionType.awsSsoRole, sessionName: "production", status: SessionStatus.inactive })),
+    };
+    const awsSessionService = new (AwsSessionService as any)();
+    awsSessionService.repository = repository;
+    awsSessionService.generateCredentialsProxy = jest.fn();
+
+    await expect(awsSessionService.generateProcessCredentials("sessionId")).rejects.toThrow(
+      'The session production isn\'t started: start it in Hopkey or with "hopkey session start"'
+    );
+    expect(awsSessionService.generateCredentialsProxy).not.toHaveBeenCalled();
+  });
+
+  test("generateProcessCredentials - serves a session that is starting", async () => {
+    const repository = {
+      getSessionById: jest.fn(() => ({ type: SessionType.awsIamUser, status: SessionStatus.pending, sessionTokenExpiration: "expiration" })),
+    };
+    const awsSessionService = new (AwsSessionService as any)();
+    awsSessionService.repository = repository;
+    awsSessionService.generateCredentialsProxy = jest.fn(async () => ({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      sessionToken: { aws_access_key_id: "key", aws_secret_access_key: "secret", aws_session_token: "token" },
+    }));
+
+    const credentials = await awsSessionService.generateProcessCredentials("sessionId");
+    expect(credentials.AccessKeyId).toBe("key");
   });
 
   test("generateProcessCredentials - error if session is not an AWS one", async () => {

@@ -556,6 +556,7 @@ describe("AwsIamRoleChainedService - agents", () => {
 
   test("generateProcessCredentials - a regular session is not recorded", async () => {
     delete agentSession().agent;
+    agentSession().status = SessionStatus.active;
     await service.generateProcessCredentials("agent1");
     expect(agentActivityService.record).not.toHaveBeenCalled();
     expect(agentActivityService.requestingProcesses).not.toHaveBeenCalled();
