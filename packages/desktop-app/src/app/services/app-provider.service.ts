@@ -51,6 +51,8 @@ import { NotificationService } from "@hopkey/core/services/notification-service"
 import { TeamService } from "./team-service";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 import { FetchHttpHandler } from "@smithy/fetch-http-handler";
+import { AgentActivityService } from "@hopkey/core/services/agent-activity-service";
+import { AgentService } from "@hopkey/core/services/agent-service";
 
 @Injectable({
   providedIn: "root",
@@ -102,6 +104,8 @@ export class AppProviderService {
   private integrationFactoryInstance: IntegrationFactory;
   private teamServiceInstance: TeamService;
   private notificationServiceInstance: NotificationService;
+  private agentActivityServiceInstance: AgentActivityService;
+  private agentServiceInstance: AgentService;
 
   constructor(
     private appNativeService: AppNativeService,
@@ -109,6 +113,25 @@ export class AppProviderService {
     private ngZone: NgZone,
     private http: HttpClient
   ) {}
+
+  public get agentActivityService(): AgentActivityService {
+    if (!this.agentActivityServiceInstance) {
+      this.agentActivityServiceInstance = new AgentActivityService(this.appNativeService);
+    }
+    return this.agentActivityServiceInstance;
+  }
+
+  public get agentService(): AgentService {
+    if (!this.agentServiceInstance) {
+      this.agentServiceInstance = new AgentService(
+        this.repository,
+        this.namedProfileService,
+        this.awsIamRoleChainedService,
+        this.agentActivityService
+      );
+    }
+    return this.agentServiceInstance;
+  }
 
   public get notificationService(): NotificationService {
     if (!this.notificationServiceInstance) {
@@ -217,7 +240,8 @@ export class AppProviderService {
         this.awsCoreService,
         this.fileService,
         this.awsIamUserService,
-        this.awsParentSessionFactory
+        this.awsParentSessionFactory,
+        this.agentActivityService
       );
     }
     return this.awsIamRoleChainedServiceInstance;

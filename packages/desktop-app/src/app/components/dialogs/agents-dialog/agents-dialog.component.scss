@@ -1,0 +1,99 @@
+@import "../../../../assets/scss/mixins/palette";
+@import "../../../../assets/scss/mixins/utility";
+@import "../../../../assets/scss/modals";
+
+.agents-modal {
+  max-width: 820px;
+  width: 100%;
+
+  .modal-content {
+    padding: 0;
+  }
+}
+
+.agents-intro {
+  margin-bottom: 16px;
+  color: $silver-dark;
+}
+
+.agents-empty {
+  padding: 24px 0;
+  text-align: center;
+  color: $silver-dark;
+}
+
+.agents-filter-reset {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.agents-refresh {
+  float: right;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.agents-table {
+  width: 100%;
+  table-layout: fixed;
+
+  th {
+    height: 42px !important;
+    z-index: 2;
+  }
+
+  th,
+  td {
+    padding-right: 12px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .agents-event-problem td {
+    color: $danger-color;
+  }
+}
+
+// Agent, named profile, role, permissions, last activity, enabled
+.agents-list {
+  th:nth-child(1) {
+    width: 13%;
+  }
+  th:nth-child(2) {
+    width: 17%;
+  }
+  th:nth-child(3) {
+    width: 14%;
+  }
+  th:nth-child(4) {
+    width: 20%;
+  }
+  th:nth-child(5) {
+    width: 26%;
+  }
+  th:nth-child(6) {
+    width: 10%;
+  }
+}
+
+// Time, agent, event, requested by, details
+.agents-activity {
+  th:nth-child(1) {
+    width: 24%;
+  }
+  th:nth-child(2) {
+    width: 13%;
+  }
+  th:nth-child(3) {
+    width: 12%;
+  }
+  th:nth-child(4) {
+    width: 24%;
+  }
+  th:nth-child(5) {
+    width: 27%;
+  }
+}

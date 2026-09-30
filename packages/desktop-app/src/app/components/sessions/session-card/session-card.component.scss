@@ -282,6 +282,12 @@ td:nth-child(4) {
   i.moon-Pin-filled {
     padding-left: 5px !important;
   }
+
+  i.agent-session-badge {
+    padding-left: 6px;
+    font-size: 12px;
+    color: $silver-dark;
+  }
 }
 
 .ssm-ul {

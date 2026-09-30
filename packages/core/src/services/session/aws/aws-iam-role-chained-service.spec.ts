@@ -7,6 +7,9 @@ import { HopkeyAwsStsError } from "../../../errors/hopkey-aws-sts-error";
 import { constants } from "../../../models/constants";
 import { AwsIamRoleChainedSessionRequest } from "./aws-iam-role-chained-session-request";
 import { AssumeRoleCommand } from "@aws-sdk/client-sts";
+import { AgentPermissions } from "../../../models/aws/aws-agent";
+import { SessionStatus } from "../../../models/session-status";
+import { AgentActivityEvent } from "../../agent-activity-service";
 
 describe("AwsIamRoleChainedService", () => {
   let sessionNotifier;
@@ -360,5 +363,266 @@ describe("AwsIamRoleChainedService", () => {
     jest.spyOn(awsIamRoleChainedService as any, "removeSecrets");
     awsIamRoleChainedService.removeSecrets("");
     expect(awsIamRoleChainedService.removeSecrets).toHaveBeenCalled();
+  });
+});
+
+describe("AwsIamRoleChainedService - agents", () => {
+  const agent = { name: "claude", permissions: AgentPermissions.readOnly, durationSeconds: 900, setSourceIdentity: false };
+  const roleArn = "arn:aws:iam::123456789012:role/agents";
+  let sessions: any[];
+  let workspace: any;
+  let repository: any;
+  let fileService: any;
+  let awsCoreService: any;
+  let agentActivityService: any;
+  let parentSessionService: any;
+  let service: AwsIamRoleChainedService;
+
+  const agentSession = (): any => sessions.find((session) => session.sessionId === "agent1");
+  const recordedEvents = (): string[] => agentActivityService.record.mock.calls.map((call) => call[2]);
+
+  beforeEach(() => {
+    sessions = [
+      { sessionId: "parent", sessionName: "me", type: SessionType.awsSsoRole, status: SessionStatus.inactive, profileId: "defaultProfile" },
+      {
+        sessionId: "agent1",
+        sessionName: "claude",
+        type: SessionType.awsIamRoleChained,
+        status: SessionStatus.inactive,
+        roleArn,
+        region: "eu-west-1",
+        profileId: "agentProfile",
+        parentSessionId: "parent",
+        roleSessionName: "agent-claude",
+        agent: { ...agent },
+      },
+    ];
+    workspace = { credentialMethod: constants.credentialFile, sessions };
+    repository = {
+      getWorkspace: jest.fn(() => workspace),
+      getSessions: jest.fn(() => sessions),
+      getSessionById: jest.fn((sessionId: string) => {
+        const found = sessions.find((session) => session.sessionId === sessionId);
+        if (!found) {
+          throw new Error(`session with id ${sessionId} not found.`);
+        }
+        return found;
+      }),
+      addSession: jest.fn((session: any) => sessions.push(session)),
+      updateSession: jest.fn(),
+      updateSessions: jest.fn(),
+      deleteSession: jest.fn((sessionId: string) =>
+        sessions.splice(
+          sessions.findIndex((session) => session.sessionId === sessionId),
+          1
+        )
+      ),
+      getDefaultProfileId: jest.fn(() => "defaultProfile"),
+      getProfileName: jest.fn((profileId: string) => (profileId === "defaultProfile" ? "default" : "agent-claude")),
+      listPending: jest.fn(() => sessions.filter((session) => session.status === SessionStatus.pending)),
+      listActive: jest.fn(() => sessions.filter((session) => session.status === SessionStatus.active)),
+      listIamRoleChained: jest.fn(() => []),
+    };
+    fileService = {
+      existsSync: jest.fn(() => true),
+      writeFileSyncWithOptions: jest.fn(),
+      iniWriteSync: jest.fn(async () => {}),
+      iniParseSync: jest.fn(async () => ({ ["profile agent-claude"]: {} })),
+      replaceWriteSync: jest.fn(async () => {}),
+    };
+    awsCoreService = {
+      awsConfigPath: jest.fn(() => "config-path"),
+      awsCredentialPath: jest.fn(() => "credentials-path"),
+      stsOptions: jest.fn(() => ({})),
+    };
+    agentActivityService = { record: jest.fn(), requestingProcesses: jest.fn(async () => ["aws", "claude"]) };
+    parentSessionService = {
+      generateCredentialsProxy: jest.fn(async () => ({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        sessionToken: { aws_access_key_id: "parent-key", aws_secret_access_key: "parent-secret", aws_session_token: "parent-token" },
+      })),
+    };
+    service = new AwsIamRoleChainedService(
+      null,
+      repository,
+      awsCoreService,
+      fileService,
+      null,
+      { getSessionService: () => parentSessionService } as any,
+      agentActivityService
+    );
+    (service as any).generateSessionToken = jest.fn(async (session: any) => {
+      session.sessionTokenExpiration = "2026-09-30T10:15:00.000Z";
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      return { sessionToken: { aws_access_key_id: "agent-key", aws_secret_access_key: "agent-secret", aws_session_token: "agent-token" } };
+    });
+  });
+
+  test("generateCredentials scopes the role session to the agent", async () => {
+    await service.generateCredentials("agent1");
+    expect((service as any).generateSessionToken.mock.calls[0][2]).toEqual({
+      ["RoleSessionName"]: "agent-claude",
+      ["RoleArn"]: roleArn,
+      ["DurationSeconds"]: 900,
+      ["PolicyArns"]: [{ arn: "arn:aws:iam::aws:policy/ReadOnlyAccess" }],
+    });
+  });
+
+  test("start - hands out an agent's credentials through credential_process even in credential file mode", async () => {
+    await service.start("agent1");
+
+    expect(fileService.iniWriteSync).toHaveBeenCalledWith("config-path", {
+      ["profile agent-claude"]: { ["credential_process"]: "hopkey session generate agent1", region: "eu-west-1" },
+    });
+    expect((service as any).generateSessionToken).not.toHaveBeenCalled();
+    expect(agentSession().status).toBe(SessionStatus.active);
+    expect(recordedEvents()).toEqual([AgentActivityEvent.enabled]);
+  });
+
+  test("start - refuses an agent on the default named profile", async () => {
+    agentSession().profileId = "defaultProfile";
+    await expect(service.start("agent1")).rejects.toThrow("An agent needs a named profile of its own, not the default one");
+    expect(fileService.iniWriteSync).not.toHaveBeenCalled();
+    expect(recordedEvents()).toEqual([]);
+  });
+
+  test("stop - removes the agent's credential_process and records it", async () => {
+    agentSession().status = SessionStatus.active;
+    await service.stop("agent1");
+
+    expect(fileService.replaceWriteSync).toHaveBeenCalledWith("config-path", {});
+    expect(agentSession().status).toBe(SessionStatus.inactive);
+    expect(recordedEvents()).toEqual([AgentActivityEvent.disabled]);
+  });
+
+  test("generateProcessCredentials - refuses a disabled agent", async () => {
+    await expect(service.generateProcessCredentials("agent1")).rejects.toThrow(
+      'The agent claude is disabled: enable it in Hopkey or with "hopkey agent enable claude"'
+    );
+    expect(parentSessionService.generateCredentialsProxy).not.toHaveBeenCalled();
+    expect(agentActivityService.record).toHaveBeenCalledWith(agentSession(), agentSession().agent, AgentActivityEvent.refused, {
+      requestedBy: ["aws", "claude"],
+    });
+  });
+
+  test("generateProcessCredentials - hands out the credentials of an enabled agent and records it", async () => {
+    agentSession().status = SessionStatus.active;
+    const credentials = await service.generateProcessCredentials("agent1");
+
+    expect(JSON.parse(JSON.stringify(credentials))).toEqual({
+      ["Version"]: 1,
+      ["AccessKeyId"]: "agent-key",
+      ["SecretAccessKey"]: "agent-secret",
+      ["SessionToken"]: "agent-token",
+      ["Expiration"]: "2026-09-30T10:15:00.000Z",
+    });
+    expect(agentActivityService.record).toHaveBeenCalledWith(agentSession(), agentSession().agent, AgentActivityEvent.credentials, {
+      requestedBy: ["aws", "claude"],
+      durationSeconds: 900,
+      expiration: "2026-09-30T10:15:00.000Z",
+    });
+  });
+
+  test("generateProcessCredentials - no credentials go out when the activity can't be recorded", async () => {
+    agentSession().status = SessionStatus.active;
+    agentActivityService.record.mockImplementation(() => {
+      throw new Error("disk full");
+    });
+    await expect(service.generateProcessCredentials("agent1")).rejects.toThrow("Hopkey could not record the activity of the agent claude: disk full");
+  });
+
+  test("generateProcessCredentials - no credentials go out without an activity history", async () => {
+    agentSession().status = SessionStatus.active;
+    const serviceWithoutHistory = new AwsIamRoleChainedService(null, repository, awsCoreService, fileService, null, {
+      getSessionService: () => parentSessionService,
+    } as any);
+    (serviceWithoutHistory as any).generateSessionToken = (service as any).generateSessionToken;
+    await expect(serviceWithoutHistory.generateProcessCredentials("agent1")).rejects.toThrow(
+      "Hopkey could not record the activity of the agent claude: no activity history is set up"
+    );
+  });
+
+  test("generateProcessCredentials - records a failure to get credentials", async () => {
+    agentSession().status = SessionStatus.active;
+    (service as any).generateSessionToken.mockImplementation(async () => {
+      throw new Error("not authorized to perform: sts:SetSourceIdentity");
+    });
+    await expect(service.generateProcessCredentials("agent1")).rejects.toThrow("sts:SetSourceIdentity");
+    expect(agentActivityService.record).toHaveBeenCalledWith(agentSession(), agentSession().agent, AgentActivityEvent.failed, {
+      requestedBy: ["aws", "claude"],
+      message: "not authorized to perform: sts:SetSourceIdentity",
+    });
+  });
+
+  test("generateProcessCredentials - a regular session is not recorded", async () => {
+    delete agentSession().agent;
+    await service.generateProcessCredentials("agent1");
+    expect(agentActivityService.record).not.toHaveBeenCalled();
+    expect(agentActivityService.requestingProcesses).not.toHaveBeenCalled();
+  });
+
+  test("create - an agent gets a unique name and a named profile of its own", async () => {
+    const request = { sessionName: "codex", region: "eu-west-1", roleArn, parentSessionId: "parent" };
+    await expect(service.create({ ...request, profileId: "codexProfile", agent: { ...agent } })).rejects.toThrow(
+      "An agent named claude already exists"
+    );
+    await expect(service.create({ ...request, profileId: "defaultProfile", agent: { ...agent, name: "codex" } })).rejects.toThrow(
+      "not the default one"
+    );
+    await expect(service.create({ ...request, profileId: "agentProfile", agent: { ...agent, name: "codex" } })).rejects.toThrow(
+      "claude uses this one"
+    );
+    await expect(service.create({ ...request, profileId: "codexProfile", agent: { ...agent, name: "codex", durationSeconds: 60 } })).rejects.toThrow(
+      "between 15 and 60 minutes"
+    );
+    expect(repository.addSession).not.toHaveBeenCalled();
+
+    await service.create({ ...request, profileId: "codexProfile", roleSessionName: "ignored", agent: { ...agent, name: "codex" } });
+    const created = repository.addSession.mock.calls[0][0];
+    expect(created.agent).toEqual({ name: "codex", permissions: AgentPermissions.readOnly, durationSeconds: 900, setSourceIdentity: false });
+    expect(created.roleSessionName).toBe("agent-codex");
+    expect(recordedEvents()).toEqual([AgentActivityEvent.created]);
+  });
+
+  test("update - an active session that becomes an agent restarts with credential_process", async () => {
+    delete agentSession().agent;
+    agentSession().status = SessionStatus.active;
+    await service.update("agent1", {
+      sessionName: "claude",
+      region: "eu-west-1",
+      roleArn,
+      parentSessionId: "parent",
+      profileId: "agentProfile",
+      agent: { ...agent },
+    });
+
+    // Stopped as a regular session, from the credentials file, then started as an agent
+    expect(fileService.replaceWriteSync).toHaveBeenCalledWith("credentials-path", expect.anything());
+    expect(fileService.iniWriteSync).toHaveBeenCalledWith("config-path", expect.anything());
+    expect(agentSession().agent).toEqual(agent);
+    expect(agentSession().roleSessionName).toBe("agent-claude");
+    expect(agentSession().status).toBe(SessionStatus.active);
+    expect(recordedEvents()).toEqual([AgentActivityEvent.updated, AgentActivityEvent.enabled]);
+  });
+
+  test("update - removing the agent settings of an inactive session doesn't restart it", async () => {
+    await service.update("agent1", {
+      sessionName: "claude",
+      region: "eu-west-1",
+      roleArn,
+      roleSessionName: "assumed-by-me",
+      parentSessionId: "parent",
+      profileId: "agentProfile",
+    });
+    expect(agentSession().agent).toBeUndefined();
+    expect(agentSession().roleSessionName).toBe("assumed-by-me");
+    expect(fileService.iniWriteSync).not.toHaveBeenCalled();
+    expect(recordedEvents()).toEqual([AgentActivityEvent.updated]);
+  });
+
+  test("delete - records the removal of an agent", async () => {
+    await service.delete("agent1");
+    expect(sessions.find((session) => session.sessionId === "agent1")).toBeUndefined();
+    expect(agentActivityService.record).toHaveBeenCalledWith({ sessionId: "agent1", roleArn }, agent, AgentActivityEvent.removed, {});
   });
 });

@@ -110,6 +110,9 @@
     ],
     "topicSeparator": " ",
     "topics": {
+      "agent": {
+        "description": "AI agent credentials, sandboxing and activity history"
+      },
       "idp-url": {
         "description": "SAML 2.0 Identity providers URL management"
       },

@@ -20,6 +20,7 @@ nav:
       - Index: 'cli/index.md'
       - Usage:
           - Help: 'cli/scopes/help.md'
+          - Agent: 'cli/scopes/agent.md'
           - Session: 'cli/scopes/session.md'
           - Integration: 'cli/scopes/integration.md'
           - Profile: 'cli/scopes/profile.md'
@@ -35,6 +36,7 @@ nav:
           - 'Configure AWS IAM User': 'configuring-session/configure-aws-iam-user.md'
           - 'Configure AWS IAM Role Federated': 'configuring-session/configure-aws-iam-role-federated.md'
           - 'Configure AWS IAM Role Chained': 'configuring-session/configure-aws-iam-role-chained.md'
+          - 'Give AI agents their own credentials': 'configuring-session/ai-agents.md'
           - 'Configure LocalStack': 'configuring-session/configure-localstack.md'
       - 'Configuring an Integration':
           - 'Configure AWS Single Sign-On integration': 'configuring-integration/configure-aws-single-sign-on-integration.md'

@@ -77,6 +77,8 @@ describe("AwsSessionService", () => {
   test("start - will start your session", async () => {
     const repository = {
       getWorkspace: jest.fn(() => ({ credentialMethod: constants.credentialFile })),
+      getSessionById: jest.fn(() => ({ sessionId: "sessionId", profileId: "profileId" })),
+      getSessions: jest.fn(() => []),
     } as any;
     const sessionNotifier = {} as any;
     const credentialsInfo = {} as any;
@@ -106,6 +108,8 @@ describe("AwsSessionService", () => {
   test("start - using credentialProcess", async () => {
     const repository = {
       getWorkspace: () => ({ credentialMethod: constants.credentialProcess }),
+      getSessionById: () => ({ sessionId: "fake-session-id", profileId: "profileId" }),
+      getSessions: () => [],
     } as any;
     const awsSessionService: any = new (AwsSessionService as any)(null, repository);
     awsSessionService.isThereAnotherPendingSessionWithSameNamedProfile = () => false;
@@ -115,6 +119,24 @@ describe("AwsSessionService", () => {
     awsSessionService.applyConfigProfileCommand = jest.fn(async () => {});
     await awsSessionService.start("fake-session-id");
     expect(await awsSessionService.applyConfigProfileCommand).toHaveBeenCalledWith("fake-session-id");
+  });
+
+  test("start - refuses a session on the named profile of an agent", async () => {
+    const session = { sessionId: "sessionId", profileId: "agentProfileId", status: SessionStatus.inactive };
+    const agentSession = { sessionId: "agentSessionId", profileId: "agentProfileId", agent: { name: "claude" } };
+    const repository = {
+      getSessionById: jest.fn(() => session),
+      getSessions: jest.fn(() => [session, agentSession]),
+      updateSessions: jest.fn(),
+    } as any;
+    const awsSessionService: any = new (AwsSessionService as any)(null, repository);
+    awsSessionService.isThereAnotherPendingSessionWithSameNamedProfile = () => false;
+    awsSessionService.stopAllWithSameNameProfile = jest.fn(async () => {});
+    awsSessionService.generateCredentials = jest.fn();
+
+    await expect(awsSessionService.start("sessionId")).rejects.toThrow("The named profile of this session belongs to the agent claude");
+    expect(awsSessionService.stopAllWithSameNameProfile).not.toHaveBeenCalled();
+    expect(awsSessionService.generateCredentials).not.toHaveBeenCalled();
   });
 
   test("rotate - apply rotation by generating a new set of credentials", async () => {
@@ -346,6 +368,8 @@ describe("AwsSessionService", () => {
     } as any;
     const credentialProcess = { ["profile fake"]: { ["credential_process"]: "hopkey session generate fake-session-id", region: "fake-region" } };
     const fileService = {
+      existsSync: jest.fn(() => true),
+      writeFileSyncWithOptions: jest.fn(),
       iniWriteSync: jest.fn(async () => {}),
     } as any;
     const fakeConfigPath = "fake-config-path";
@@ -355,6 +379,25 @@ describe("AwsSessionService", () => {
     const awsSessionService: any = new (AwsSessionService as any)(null, repository, awsCoreService, fileService);
     await awsSessionService.applyConfigProfileCommand("fake-session-id");
     expect(fileService.iniWriteSync).toHaveBeenCalledWith(fakeConfigPath, credentialProcess);
+    expect(fileService.writeFileSyncWithOptions).not.toHaveBeenCalled();
+  });
+
+  test("applyConfigProfileCommand - creates a missing config file first", async () => {
+    const repository = {
+      getSessionById: () => ({ profileId: "fake-profile-id", region: "fake-region" }),
+      getProfileName: () => "fake",
+    } as any;
+    const calls: string[] = [];
+    const fileService = {
+      existsSync: jest.fn(() => false),
+      writeFileSyncWithOptions: jest.fn(() => calls.push("create")),
+      iniWriteSync: jest.fn(async () => calls.push("write")),
+    } as any;
+    const awsCoreService = { awsConfigPath: () => "fake-config-path" } as any;
+    const awsSessionService: any = new (AwsSessionService as any)(null, repository, awsCoreService, fileService);
+    await awsSessionService.applyConfigProfileCommand("fake-session-id");
+    expect(fileService.writeFileSyncWithOptions).toHaveBeenCalledWith("fake-config-path", "", { mode: "600" });
+    expect(calls).toEqual(["create", "write"]);
   });
 
   test("applyConfigProfileCommand - throw and catch error", async () => {
@@ -364,6 +407,7 @@ describe("AwsSessionService", () => {
       getProfileName: () => {},
     } as any;
     const fileService = {
+      existsSync: () => true,
       iniWriteSync: () => {
         throw expectedError;
       },
@@ -384,6 +428,7 @@ describe("AwsSessionService", () => {
     } as any;
     const credentialProcess = { ["profile fake"]: "fake-value" };
     const fileService = {
+      existsSync: jest.fn(() => true),
       iniParseSync: jest.fn(async () => credentialProcess),
       replaceWriteSync: jest.fn(),
     } as any;
@@ -396,6 +441,19 @@ describe("AwsSessionService", () => {
     expect(fileService.iniParseSync).toHaveBeenCalledWith(fakeConfigPath);
     expect(fileService.replaceWriteSync).toHaveBeenCalledWith(fakeConfigPath, credentialProcess);
     expect(credentialProcess["profile fake"]).toBeUndefined();
+  });
+
+  test("deApplyConfigProfileCommand - nothing to remove without a config file", async () => {
+    const repository = {
+      getSessionById: () => ({ profileId: "fake-profile-id" }),
+      getProfileName: () => "fake",
+    } as any;
+    const fileService = { existsSync: jest.fn(() => false), iniParseSync: jest.fn(), replaceWriteSync: jest.fn() } as any;
+    const awsCoreService = { awsConfigPath: () => "fake-config-path" } as any;
+    const awsSessionService: any = new (AwsSessionService as any)(null, repository, awsCoreService, fileService);
+    await awsSessionService.deApplyConfigProfileCommand("fake-session-id");
+    expect(fileService.iniParseSync).not.toHaveBeenCalled();
+    expect(fileService.replaceWriteSync).not.toHaveBeenCalled();
   });
 
   test("isThereAnotherPendingSessionWithSameNamedProfile - true if another session with the same name profile is pending", () => {
