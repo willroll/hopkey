@@ -1,7 +1,7 @@
 import { RegisterClientResponse, StartDeviceAuthorizationResponse, VerificationResponse } from "./session/aws/aws-sso-role-service";
 import { constants } from "../models/constants";
 import { INativeService } from "../interfaces/i-native-service";
-import { RpcRequest, RpcResponse, arrayToUInt8Array, uInt8ArrayToArray } from "./remote-procedures-server";
+import { RpcRequest, RpcResponse, arrayToUInt8Array, configureIpcSocket, uInt8ArrayToArray } from "./remote-procedures-server";
 
 const connectionError = "unable to connect with desktop app";
 
@@ -151,6 +151,7 @@ export class RemoteProceduresClient {
     onCallback?: (data: RpcResponse, resolve: (value: unknown) => void, reject: (reason?: any) => void) => void
   ): Promise<any> {
     const ipc = this.nativeService.nodeIpc;
+    configureIpcSocket(this.nativeService, this.serverId);
     ipc.config.id = "hopkey_cli";
     ipc.config.maxRetries = 2;
     ipc.config.silent = true;
