@@ -115,8 +115,8 @@ CloudTrail, under its role session name and source identity.
 ## Limits
 
 - An agent that runs as your user on your computer can also reach your own credentials: keys in
-  `~/.aws/credentials`, and your other sessions through the Hopkey CLI. Switch your own sessions to the
-  [credential process](../security/credential-process.md) method so no keys sit in files, and to fully isolate an
-  agent, run it in a container or as another user that can only reach its own profile.
+  `~/.aws/credentials`, and the sessions you started, through the Hopkey CLI. Switch your own sessions to the
+  [credential process](../security/credential-process.md) method so no keys sit in files, stop the sessions you don't
+  need, and to fully isolate an agent, run it in a container or as another user that can only reach its own profile.
 - Agent sessions are AWS only.
 - The Hopkey app must be running for agents, like the Hopkey CLI, to get credentials.

@@ -20,6 +20,22 @@ export const arrayToUInt8Array = (serializedArray: Array<number>): Buffer => {
   return Buffer.from(serializedArray);
 };
 
+// macOS takes Unix socket paths of up to 103 bytes, Linux 107
+const maxUnixSocketPathBytes = 103;
+
+/**
+ * Sets where the desktop app listens for the CLI, on both sides. node-ipc's default Unix socket, /tmp/app.<id>, is in a
+ * folder every user can write to, so another user could take the path before the app starts: ~/.hopkey only lets the
+ * user in. Windows keeps its named pipe, which node-ipc names after the default path, and so do home folders too long
+ * for a Unix socket path.
+ */
+export const configureIpcSocket = (nativeService: INativeService, serverId: string): void => {
+  const ipc = nativeService.nodeIpc;
+  const hopkeyDirectory = nativeService.path.join(nativeService.os.homedir(), nativeService.path.dirname(constants.lockFileDestination)) + "/";
+  const fits = Buffer.byteLength(hopkeyDirectory + ipc.config.appspace + serverId) <= maxUnixSocketPathBytes;
+  ipc.config.socketRoot = nativeService.process.platform !== "win32" && fits ? hopkeyDirectory : "/tmp/";
+};
+
 export interface RpcResponse {
   result?: any;
   error?: any;
@@ -70,6 +86,7 @@ export class RemoteProceduresServer {
 
   startServer(): void {
     const ipc = this.nativeService.nodeIpc;
+    configureIpcSocket(this.nativeService, this.serverId);
     ipc.config.id = this.serverId;
     ipc.serve(() => {
       ipc.server.on("message", (data: RpcRequest, ipcSocket: Socket) => {
@@ -186,6 +203,7 @@ export class RemoteProceduresServer {
 
   private async keychainSaveSecret(emitFunction: EmitFunction, socket: Socket, data: RpcRequest): Promise<void> {
     try {
+      this.checkKeychainService(data.params.service);
       await this.keychainService.saveSecret(data.params.service, data.params.account, data.params.password);
       emitFunction(socket, "message", {});
     } catch (error) {
@@ -195,6 +213,7 @@ export class RemoteProceduresServer {
 
   private async keychainGetSecret(emitFunction: EmitFunction, socket: Socket, data: RpcRequest): Promise<void> {
     try {
+      this.checkKeychainService(data.params.service);
       const result = await this.keychainService.getSecret(data.params.service, data.params.account);
       emitFunction(socket, "message", { result });
     } catch (error) {
@@ -204,10 +223,18 @@ export class RemoteProceduresServer {
 
   private async keychainDeleteSecret(emitFunction: EmitFunction, socket: Socket, data: RpcRequest): Promise<void> {
     try {
+      this.checkKeychainService(data.params.service);
       const result = await this.keychainService.deleteSecret(data.params.service, data.params.account);
       emitFunction(socket, "message", { result });
     } catch (error) {
       emitFunction(socket, "message", { error: error.message });
+    }
+  }
+
+  // The CLI only needs Hopkey's own items: programs that call the app don't get the rest of the user's keychain
+  private checkKeychainService(service: string): void {
+    if (service !== constants.appName) {
+      throw new Error(`Hopkey only shares its own keychain items, not those of ${service}`);
     }
   }
 

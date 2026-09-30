@@ -13,6 +13,8 @@ Leapp's.
   `~/.hopkey` data directory and the "Hopkey" keychain service. Leapp data is imported on first launch.
 * no usage analytics are collected, and update notifications come from the
   [Hopkey releases](https://github.com/willroll/hopkey/releases).
+* `hopkey session generate` only hands out credentials for sessions that are started, like the `credential_process`
+  entries it serves.
 
 ### Features
 
@@ -21,6 +23,20 @@ Leapp's.
 * import an existing Leapp workspace, its plugins and its system vault secrets on first launch
 * load plugins published for Leapp
 * bundle the icons instead of loading them from a remote Font Awesome kit
+
+### Security
+
+* any program of the user could get credentials for any session with `hopkey session generate`, started or not
+* the CLI talked to the app through `/tmp/app.hopkey_da`, a path any user of the computer could take first: the socket
+  is now in `~/.hopkey` on macOS and Linux. Over it, the app only shares its own keychain items, not those of other
+  services.
+* the Multi-Console extension server listened on every network interface, from every launch, and sent AWS console
+  sign-in links to any client: it now listens on the loopback addresses, to browser extensions only, while the option
+  is enabled
+* a `hopkey://` link installed an npm package as a plugin without asking: Hopkey now shows the package and waits for
+  you to confirm
+* the workspace file and its backup could be read by other users: they are now written with mode 600, `~/.hopkey` is
+  kept at 700, and the proxy password moved from the workspace file to the keychain
 
 ### Bug Fixes
 

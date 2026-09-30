@@ -1,12 +1,16 @@
 import { afterEach, beforeEach, describe, expect, jest, test } from "@jest/globals";
-import { RemoteProceduresServer } from "./remote-procedures-server";
+import { configureIpcSocket, RemoteProceduresServer } from "./remote-procedures-server";
 import * as ipc from "node-ipc";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 import { RemoteProceduresClient } from "./remote-procedures-client";
 import { Workspace } from "../models/workspace";
 import { constants } from "../models/constants";
 
 describe("RemoteProcedures", () => {
   let nativeService;
+  let homeDir;
   let testId;
   let client: RemoteProceduresClient;
   let server: RemoteProceduresServer;
@@ -29,7 +33,9 @@ describe("RemoteProcedures", () => {
     });
 
   beforeEach(() => {
-    nativeService = { nodeIpc: ipc };
+    homeDir = fs.mkdtempSync(path.join(os.tmpdir(), "hopkey-rpc-"));
+    fs.mkdirSync(path.join(homeDir, ".hopkey"));
+    nativeService = { nodeIpc: ipc, os: { homedir: () => homeDir }, path, process };
     server = null;
     testId = `rpc_test${Math.random() * 10000}`;
     client = new RemoteProceduresClient(nativeService as any, testId);
@@ -39,6 +45,7 @@ describe("RemoteProcedures", () => {
     if (server) {
       server.stopServer();
     }
+    fs.rmSync(homeDir, { recursive: true, force: true });
   });
 
   const startServer = () => {
@@ -68,6 +75,30 @@ describe("RemoteProcedures", () => {
         )
       ).rejects.toEqual("disconnected");
     });
+  });
+
+  test("the app listens in ~/.hopkey, not in /tmp", async () => {
+    startServer();
+    await retry(async () => expect(await client.isDesktopAppRunning()).toBe(true));
+    expect(ipc.config.socketRoot).toBe(path.join(homeDir, ".hopkey") + "/");
+    expect(fs.statSync(path.join(homeDir, ".hopkey", `app.${testId}`)).isSocket()).toBe(true);
+  });
+
+  test("configureIpcSocket - Windows keeps node-ipc's named pipe", () => {
+    const windows = { nodeIpc: { config: { appspace: "app." } }, os: { homedir: () => "C:\\Users\\me" }, path, process: { platform: "win32" } };
+    configureIpcSocket(windows as any, "hopkey_da");
+    expect(windows.nodeIpc.config["socketRoot"]).toBe("/tmp/");
+  });
+
+  test("configureIpcSocket - a home folder too long for a Unix socket path keeps /tmp", () => {
+    const longHome = {
+      nodeIpc: { config: { appspace: "app." } },
+      os: { homedir: () => "/home/" + "a".repeat(90) },
+      path,
+      process: { platform: "linux" },
+    };
+    configureIpcSocket(longHome as any, "hopkey_da");
+    expect(longHome.nodeIpc.config["socketRoot"]).toBe("/tmp/");
   });
 
   test("isDesktopAppRunning, server not running", async () => {
@@ -370,8 +401,8 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      await client.keychainSaveSecret("fake-service", "fake-account", "fake-password");
-      expect(keychainService.saveSecret).toHaveBeenCalledWith("fake-service", "fake-account", "fake-password");
+      await client.keychainSaveSecret(constants.appName, "fake-account", "fake-password");
+      expect(keychainService.saveSecret).toHaveBeenCalledWith(constants.appName, "fake-account", "fake-password");
     });
   });
 
@@ -386,7 +417,7 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      await expect(client.keychainSaveSecret(null, null, null)).rejects.toEqual("unexpected error");
+      await expect(client.keychainSaveSecret(constants.appName, null, null)).rejects.toEqual("unexpected error");
     });
   });
 
@@ -399,8 +430,8 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      const result = await client.keychainGetSecret("fake-service", "fake-account");
-      expect(keychainService.getSecret).toHaveBeenCalledWith("fake-service", "fake-account");
+      const result = await client.keychainGetSecret(constants.appName, "fake-account");
+      expect(keychainService.getSecret).toHaveBeenCalledWith(constants.appName, "fake-account");
       expect(result).toBe("fake-secret");
     });
   });
@@ -416,7 +447,7 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      await expect(client.keychainGetSecret(null, null)).rejects.toEqual("unexpected error");
+      await expect(client.keychainGetSecret(constants.appName, null)).rejects.toEqual("unexpected error");
     });
   });
 
@@ -429,8 +460,8 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      const result = await client.keychainDeleteSecret("fake-service", "fake-account");
-      expect(keychainService.deleteSecret).toHaveBeenCalledWith("fake-service", "fake-account");
+      const result = await client.keychainDeleteSecret(constants.appName, "fake-account");
+      expect(keychainService.deleteSecret).toHaveBeenCalledWith(constants.appName, "fake-account");
       expect(result).toBeTruthy();
     });
   });
@@ -446,8 +477,29 @@ describe("RemoteProcedures", () => {
     (server as any).keychainService = keychainService;
 
     await retry(async () => {
-      await expect(client.keychainDeleteSecret(null, null)).rejects.toEqual("unexpected error");
+      await expect(client.keychainDeleteSecret(constants.appName, null)).rejects.toEqual("unexpected error");
     });
+  });
+
+  test("keychain items of other services aren't shared", async () => {
+    const keychainService = {
+      saveSecret: jest.fn(),
+      getSecret: jest.fn(async () => "someone else's secret"),
+      deleteSecret: jest.fn(async () => true),
+    };
+
+    startServer();
+    (server as any).keychainService = keychainService;
+
+    const refusal = "Hopkey only shares its own keychain items, not those of github.com";
+    await retry(async () => {
+      await expect(client.keychainGetSecret("github.com", "me")).rejects.toEqual(refusal);
+      await expect(client.keychainSaveSecret("github.com", "me", "secret")).rejects.toEqual(refusal);
+      await expect(client.keychainDeleteSecret("github.com", "me")).rejects.toEqual(refusal);
+    });
+    expect(keychainService.getSecret).not.toHaveBeenCalled();
+    expect(keychainService.saveSecret).not.toHaveBeenCalled();
+    expect(keychainService.deleteSecret).not.toHaveBeenCalled();
   });
 
   test("refreshWorkspaceState, server not running", async () => {

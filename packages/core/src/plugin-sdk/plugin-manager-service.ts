@@ -11,6 +11,10 @@ import { PluginEnvironment } from "./plugin-environment";
 import { AwsCredentialsPlugin } from "./aws-credentials-plugin";
 import { legacyApp } from "../services/legacy-import-service";
 
+// npm package names: lowercase and URL-safe, optionally scoped (see npm's validate-npm-package-name)
+const npmPackageName = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
+const maxNpmPackageNameLength = 214;
+
 export class PluginContainer {
   public pluginInstances: IPlugin[];
 
@@ -160,8 +164,20 @@ export class PluginManagerService {
     return arrayToReturn;
   }
 
+  /**
+   * The npm package a hopkey:// link or a plugin name points to. Anything else is refused before it reaches npm or the
+   * screen, since a link can come from any web page.
+   */
+  pluginPackageName(url: string): string {
+    const packageName = url.replace("hopkey://", "").trim();
+    if (!npmPackageName.test(packageName) || packageName.length > maxNpmPackageNameLength) {
+      throw new LoggedException(`"${packageName}" is not the name of an npm package`, this, LogLevel.error, true);
+    }
+    return packageName;
+  }
+
   async installPlugin(url: string): Promise<void> {
-    const packageName = url.replace("hopkey://", "");
+    const packageName = this.pluginPackageName(url);
     const pluginsDir = this.nativeService.os.homedir() + "/.hopkey/plugins";
 
     this.logService.log(new LoggedEntry(`We are ready to install Plugin ${packageName}, please wait...`, this, LogLevel.info, true));

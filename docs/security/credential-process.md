@@ -64,6 +64,10 @@ region=REGION
 5) You can start more than one session, depending on how many named-profile you've created; 
 for every session started with a unique named-profile, a new entry will be created in the config file.
 
+6) When you stop a session, Hopkey removes its entry, and `hopkey session generate` refuses to hand out credentials
+for it until you start it again: any program running on your computer can run that command, so only the sessions you
+started hand out credentials.
+
 !!! Info
 
     AWS CLI, SDks, and third-party tools that can read credentials from the config file can reach AWS services with this method.

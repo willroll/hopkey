@@ -154,7 +154,7 @@ EXAMPLES
 
 ## `hopkey session generate SESSIONID`
 
-Generate STS temporary credentials for the given AWS session id
+Generate STS temporary credentials for the given AWS session id, if the session is started
 
 ```console
 USAGE
@@ -164,7 +164,7 @@ ARGUMENTS
   SESSIONID  id of the session
 
 DESCRIPTION
-  Generate STS temporary credentials for the given AWS session id
+  Generate STS temporary credentials for the given AWS session id, if the session is started
 
 EXAMPLES
   $hopkey session generate 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d

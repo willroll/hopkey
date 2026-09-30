@@ -3,6 +3,9 @@ import { INativeService } from "../interfaces/i-native-service";
 
 const cryptoJS = require("crypto-js");
 
+const privateFileMode = 0o600;
+const privateDirectoryMode = 0o700;
+
 export class FileService {
   private readSubscription: Subscription;
   private _aesKey: string;
@@ -112,6 +115,29 @@ export class FileService {
 
   writeFileSyncWithOptions(filePath: string, content: string, options: any): any {
     return this.nativeService.fs.writeFileSync(filePath, content, options);
+  }
+
+  /**
+   * Write a file only the user can read and write: the mode given to writeFileSync only applies to new files, so an
+   * existing file is restricted too
+   *
+   * @param filePath - the filepath to write to
+   * @param content - the content to write
+   */
+  writePrivateFileSync(filePath: string, content: string): void {
+    this.nativeService.fs.writeFileSync(filePath, content, { mode: privateFileMode });
+    this.nativeService.fs.chmodSync(filePath, privateFileMode);
+  }
+
+  /**
+   * Keep an existing directory to the user alone, on macOS and Linux: Windows doesn't use these modes
+   *
+   * @param directoryPath - the directory path
+   */
+  makeDirectoryPrivate(directoryPath: string): void {
+    if (this.nativeService.process.platform !== "win32" && this.existsSync(directoryPath)) {
+      this.nativeService.fs.chmodSync(directoryPath, privateDirectoryMode);
+    }
   }
 
   /**

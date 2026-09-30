@@ -513,6 +513,30 @@ describe("PluginManagerService", () => {
     expect(logService.log).toHaveBeenNthCalledWith(2, new LoggedEntry(`Plugin ${packageName} installed correctly.`, this, LogLevel.info, true));
   });
 
+  test("pluginPackageName - the npm package of a link or a name", () => {
+    const pluginManager = new PluginManagerService(null, { requireModule: null, hashElement: { hashElement: null } } as any, null, null, null, null);
+    expect(pluginManager.pluginPackageName("hopkey://hopkey-plugin-example")).toBe("hopkey-plugin-example");
+    expect(pluginManager.pluginPackageName("hopkey://@acme/hopkey-plugin.v2\n")).toBe("@acme/hopkey-plugin.v2");
+    expect(pluginManager.pluginPackageName("hopkey-plugin-example")).toBe("hopkey-plugin-example");
+    for (const notAPackage of [
+      "hopkey://../../-/user/me",
+      "hopkey://Example",
+      "hopkey://<b>plugin</b>",
+      "hopkey://a b",
+      "hopkey://",
+      "a".repeat(215),
+    ]) {
+      expect(() => pluginManager.pluginPackageName(notAPackage)).toThrowError(/is not the name of an npm package/);
+    }
+  });
+
+  test("installPlugin, refuses a link that isn't an npm package before asking npm", async () => {
+    const pluginManager = new PluginManagerService(null, { requireModule: null, hashElement: { hashElement: null } } as any, null, null, null, null);
+    (pluginManager as any).http = { get: jest.fn() };
+    await expect(pluginManager.installPlugin("hopkey://../../-/whoami")).rejects.toThrow('"../../-/whoami" is not the name of an npm package');
+    expect((pluginManager as any).http.get).not.toHaveBeenCalled();
+  });
+
   test("installPlugin, no hopkey-plugin keyword", async () => {
     const logService = {
       log: () => {},

@@ -34,6 +34,8 @@ export class Repository {
   ) {
     this.workspaceFileName = constants.lockFileDestination;
     this.createWorkspace();
+    // The workspace, the agent history and the socket the CLI talks to are in there: other users have no business in it
+    this.fileService.makeDirectoryPrivate(this.nativeService.os.homedir() + "/.hopkey");
   }
 
   // WORKSPACE
@@ -85,7 +87,7 @@ export class Repository {
 
   persistWorkspace(workspace: Workspace): void {
     const path = this.nativeService.os.homedir() + "/" + this.workspaceFileName;
-    this.fileService.writeFileSync(path, this.fileService.encryptText(serialize(workspace)));
+    this.fileService.writePrivateFileSync(path, this.fileService.encryptText(serialize(workspace)));
   }
 
   // SESSIONS
