@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question or help
+    url: https://github.com/willroll/hopkey/discussions/categories/q-a
+    about: Ask how to set up or use Hopkey in GitHub Discussions.
+  - name: Security vulnerability
+    url: https://github.com/willroll/hopkey/security/advisories/new
+    about: Report security problems privately instead of opening a public issue.
