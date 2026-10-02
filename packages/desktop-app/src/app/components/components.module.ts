@@ -47,7 +47,7 @@ import { ContextualMenuComponent } from "./contextual-menu/contextual-menu.compo
 import { BottomBarComponent } from "./bottom-bar/bottom-bar.component";
 import { ScrollingModule } from "@angular/cdk/scrolling";
 import { BrowserModule } from "@angular/platform-browser";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
@@ -95,6 +95,14 @@ import { AgentSettingsComponent } from "./agent-settings/agent-settings.componen
     InfoDialogComponent,
     CheckIconSvgComponent,
   ],
+  exports: [
+    ConfirmationDialogComponent,
+    AuthorizationDialogComponent,
+    InputDialogComponent,
+    CommandBarComponent,
+    SideBarComponent,
+    SessionsComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -115,7 +123,6 @@ import { AgentSettingsComponent } from "./agent-settings/agent-settings.componen
     MatTooltipModule,
     ScrollingModule,
     BrowserModule,
-    HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
@@ -132,13 +139,6 @@ import { AgentSettingsComponent } from "./agent-settings/agent-settings.componen
     MatTabsModule,
     MatButtonModule,
   ],
-  exports: [
-    ConfirmationDialogComponent,
-    AuthorizationDialogComponent,
-    InputDialogComponent,
-    CommandBarComponent,
-    SideBarComponent,
-    SessionsComponent,
-  ],
+  providers: [provideHttpClient(withInterceptorsFromDi())],
 })
 export class ComponentsModule {}
