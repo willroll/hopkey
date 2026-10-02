@@ -4,7 +4,7 @@ Now it's time to add your very first configuration. Follow the link to your pref
 ### AWS
 Select the configuration you need from the Access Method dropdown menu:
 
-![Hopkey Iam User](https://user-images.githubusercontent.com/9497292/152333888-15199a27-e79b-4f51-9aea-494f67a9fd8a.png)
+![The Access method dropdown](../images/screens/newuxui/aws-access-method.png?style=smaller-img)
 
 Then follow the links below.
 
