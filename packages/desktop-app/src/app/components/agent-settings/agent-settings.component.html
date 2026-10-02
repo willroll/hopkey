@@ -1,40 +1,64 @@
 <ng-container [formGroup]="form">
   <div class="form-field agent-toggle">
     <mat-checkbox formControlName="agentEnabled"></mat-checkbox><span> Use for an AI agent</span>
-    <small class="agent-hint">The agent gets short-lived credentials through credential process only, narrowed by the permissions below
-      and recorded in its activity history. Give it a named profile of its own.</small>
+    <small class="agent-hint"
+      >The agent gets short-lived credentials through credential process only, narrowed by the permissions below and recorded in its activity history.
+      Give it a named profile of its own.</small
+    >
   </div>
 
-  <ng-container *ngIf="agentEnabled">
-    <div class="form-field">
-      <label>Agent Name</label>
-      <input spellcheck="false" formControlName="agentName" type="text" class="form-control" placeholder="Agent Name, e.g. claude *" />
-      <small class="text-error" *ngIf="(form.controls['agentName'].dirty || form.controls['agentName'].touched) && (form.controls['agentName'].errors || !form.controls['agentName'].value)">
-        Use up to 58 letters, digits and _+=,.&#64;- characters, starting with a letter or a digit</small>
-      <small class="agent-hint">CloudTrail shows the agent's calls as <code>agent-{{agentName}}</code>.</small>
-    </div>
-
-    <div class="form-field">
-      <label>Permissions</label>
-      <ng-select formControlName="agentPermissions" bindLabel="label" bindValue="value" [clearable]="false" [items]="permissionsOptions"
-                 dropdownPosition="top"></ng-select>
-    </div>
-
-    <div class="form-field" *ngIf="form.get('agentPermissions').value === eAgentPermissions.custom">
-      <label>Session Policy</label>
-      <textarea spellcheck="false" formControlName="agentSessionPolicy" class="form-control agent-policy" rows="6"
-                placeholder='{"Version": "2012-10-17", "Statement": [...]}'></textarea>
-    </div>
-
-    <div class="form-field">
-      <label>Credentials Last</label>
-      <ng-select formControlName="agentDuration" bindLabel="label" bindValue="value" [clearable]="false" [items]="durationOptions"
-                 dropdownPosition="top"></ng-select>
-    </div>
-
-    <div class="form-field agent-toggle">
-      <mat-checkbox formControlName="agentSourceIdentity"></mat-checkbox><span> Set the agent as source identity</span>
-      <small class="agent-hint">AWS keeps it through further role changes. The role's trust policy must allow <code>sts:SetSourceIdentity</code>.</small>
-    </div>
-  </ng-container>
+  @if (agentEnabled) {
+  <div class="form-field">
+    <label>Agent Name</label>
+    <input spellcheck="false" formControlName="agentName" type="text" class="form-control" placeholder="Agent Name, e.g. claude *" />
+    @if ((form.controls['agentName'].dirty || form.controls['agentName'].touched) && (form.controls['agentName'].errors ||
+    !form.controls['agentName'].value)) {
+    <small class="text-error"> Use up to 58 letters, digits and _+=,.&#64;- characters, starting with a letter or a digit</small>
+    }
+    <small class="agent-hint"
+      >CloudTrail shows the agent's calls as <code>agent-{{ agentName }}</code
+      >.</small
+    >
+  </div>
+  <div class="form-field">
+    <label>Permissions</label>
+    <ng-select
+      formControlName="agentPermissions"
+      bindLabel="label"
+      bindValue="value"
+      [clearable]="false"
+      [items]="permissionsOptions"
+      dropdownPosition="top"
+    ></ng-select>
+  </div>
+  @if (form.get('agentPermissions').value === eAgentPermissions.custom) {
+  <div class="form-field">
+    <label>Session Policy</label>
+    <textarea
+      spellcheck="false"
+      formControlName="agentSessionPolicy"
+      class="form-control agent-policy"
+      rows="6"
+      placeholder='{"Version": "2012-10-17", "Statement": [...]}'
+    ></textarea>
+  </div>
+  }
+  <div class="form-field">
+    <label>Credentials Last</label>
+    <ng-select
+      formControlName="agentDuration"
+      bindLabel="label"
+      bindValue="value"
+      [clearable]="false"
+      [items]="durationOptions"
+      dropdownPosition="top"
+    ></ng-select>
+  </div>
+  <div class="form-field agent-toggle">
+    <mat-checkbox formControlName="agentSourceIdentity"></mat-checkbox><span> Set the agent as source identity</span>
+    <small class="agent-hint"
+      >AWS keeps it through further role changes. The role's trust policy must allow <code>sts:SetSourceIdentity</code>.</small
+    >
+  </div>
+  }
 </ng-container>

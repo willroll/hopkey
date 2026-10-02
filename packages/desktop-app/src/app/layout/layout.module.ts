@@ -10,6 +10,6 @@ import { ComponentsModule } from "../components/components.module";
 @NgModule({
   declarations: [MainLayoutComponent],
   exports: [],
-  imports: [CommonModule, TabsModule.forRoot(), BsDropdownModule.forRoot(), RouterModule, TooltipModule, ComponentsModule],
+  imports: [CommonModule, TabsModule, BsDropdownModule, RouterModule, TooltipModule, ComponentsModule],
 })
 export class LayoutModule {}

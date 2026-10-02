@@ -27,8 +27,8 @@ import { ComponentsModule } from "./components/components.module";
     ReactiveFormsModule,
     NgSelectModule,
     LayoutModule,
-    TooltipModule.forRoot(),
-    ModalModule.forRoot(),
+    TooltipModule,
+    ModalModule,
   ],
   providers: [{ provide: ErrorHandler, useClass: ErrorService }, provideHttpClient(withInterceptorsFromDi())],
 })

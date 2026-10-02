@@ -9,37 +9,21 @@
     "baseUrl": "./",
     "declaration": false,
     "experimentalDecorators": true,
-    "lib": [
-      "ES2019",
-      "DOM"
-    ],
     "module": "ES2020",
     "moduleResolution": "bundler",
     "sourceMap": true,
     "target": "ES2019",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "paths": {
-      "stream": [
-        "../node_modules/stream-browserify"
-      ],
-      "assert": [
-        "../node_modules/assert"
-      ],
-      "fs": [
-        "../node_modules/fs-web"
-      ]
+      "stream": ["../node_modules/stream-browserify"],
+      "assert": ["../node_modules/assert"],
+      "fs": ["../node_modules/fs-web"]
     },
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "./gushio/**",
     "src/test.ts",
