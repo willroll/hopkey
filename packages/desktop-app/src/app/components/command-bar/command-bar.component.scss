@@ -185,7 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version. */
   &.mat-menu-item-style {
     height: 36px;
     padding: 0 20px;
@@ -240,11 +240,11 @@
 }
 
 ::ng-deep {
-  .mat-menu-panel {
+  .mat-mdc-menu-panel {
     max-width: 320px!important;
   }
-  .mat-menu-panel .mat-menu-content {
-    .mat-menu-item {
+  .mat-mdc-menu-panel .mat-mdc-menu-content {
+    .mat-mdc-menu-item {
       img.icon-not-menu {
         width: 20px;
         margin-right: 0;

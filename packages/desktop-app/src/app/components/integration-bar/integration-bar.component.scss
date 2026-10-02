@@ -52,7 +52,7 @@ b.moon-More {
   top: 8px;
 }
 
-.mat-list-item:hover {
+.mat-mdc-list-item:hover {
   b.moon-More {
     display: inline-block;
     color: $text-color;
@@ -64,7 +64,7 @@ b.moon-More {
   }
 }
 
-.mat-list-item.disabled {
+.mat-mdc-list-item.disabled {
   opacity: 0.7;
 }
 
@@ -152,18 +152,18 @@ img {
 }
 
 ::ng-deep {
-  .mat-list-item.selected-integration:hover {
+  .mat-mdc-list-item.selected-integration:hover {
     background-color: $silver-25 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
   .selected-integration .mat-list-item-content {
     padding: 0 6px 0 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
   .selected-integration:hover .mat-list-item-content {
     padding: 0 6px 0 !important;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version. */
   .selected-integration:hover .mat-list-item-content .mat-list-text .mat-line {
     section.status {
       left: 18px !important;
