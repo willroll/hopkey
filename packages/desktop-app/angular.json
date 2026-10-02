@@ -92,21 +92,21 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "hopkey-client:build"
+            "buildTarget": "hopkey-client:build"
           },
           "configurations": {
             "staging": {
-              "browserTarget": "hopkey-client:build:staging"
+              "buildTarget": "hopkey-client:build:staging"
             },
             "production": {
-              "browserTarget": "hopkey-client:build:production"
+              "buildTarget": "hopkey-client:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "hopkey-client:build"
+            "buildTarget": "hopkey-client:build"
           }
         },
         "test": {

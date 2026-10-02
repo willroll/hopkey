@@ -10,7 +10,7 @@
       <label>Agent Name</label>
       <input spellcheck="false" formControlName="agentName" type="text" class="form-control" placeholder="Agent Name, e.g. claude *" />
       <small class="text-error" *ngIf="(form.controls['agentName'].dirty || form.controls['agentName'].touched) && (form.controls['agentName'].errors || !form.controls['agentName'].value)">
-        Use up to 58 letters, digits and _+=,.@- characters, starting with a letter or a digit</small>
+        Use up to 58 letters, digits and _+=,.&#64;- characters, starting with a letter or a digit</small>
       <small class="agent-hint">CloudTrail shows the agent's calls as <code>agent-{{agentName}}</code>.</small>
     </div>
 
