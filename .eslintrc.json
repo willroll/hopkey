@@ -12,7 +12,6 @@
     "packages/desktop-app/coverage/**/*",
     "packages/desktop-app/dist/**/*",
     "packages/desktop-app/electron/**/*",
-    "packages/desktop-app/e2e/**/*",
     "packages/desktop-app/gushio",
     "packages/desktop-app/scripts/notarize.js",
     "packages/desktop-app/scripts/windows-sign.js",

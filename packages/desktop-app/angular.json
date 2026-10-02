@@ -1,10 +1,7 @@
 {
   "$schema": "../node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": false,
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ]
+    "analytics": false
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -127,34 +124,6 @@
               "src/styles.scss"
             ],
             "scripts": []
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "hopkey-client:serve"
-          },
-          "configurations": {
-            "staging": {
-              "devServerTarget": "hopkey-client:serve:staging"
-            },
-            "production": {
-              "devServerTarget": "hopkey-client:serve:production"
-            }
           }
         }
       }
