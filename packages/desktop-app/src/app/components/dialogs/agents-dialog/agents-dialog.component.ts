@@ -13,6 +13,7 @@ import { WindowService } from "../../../services/window.service";
   templateUrl: "./agents-dialog.component.html",
   styleUrls: ["./agents-dialog.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  standalone: false,
 })
 export class AgentsDialogComponent implements OnInit, OnDestroy {
   static readonly historyLength = 200;

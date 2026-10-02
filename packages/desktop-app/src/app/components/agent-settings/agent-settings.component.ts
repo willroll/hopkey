@@ -10,6 +10,7 @@ import { agentDurationOptions, agentPermissionsOptions } from "./agent-form";
   selector: "app-agent-settings",
   templateUrl: "./agent-settings.component.html",
   styleUrls: ["./agent-settings.component.scss"],
+  standalone: false,
 })
 export class AgentSettingsComponent {
   @Input() form: FormGroup;

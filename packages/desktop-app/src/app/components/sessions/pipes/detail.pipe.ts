@@ -8,6 +8,7 @@ import { AwsIamRoleChainedSession } from "@hopkey/core/models/aws/aws-iam-role-c
 
 @Pipe({
   name: "detail",
+  standalone: false,
 })
 export class DetailPipe implements PipeTransform {
   transform(session: Session): string {

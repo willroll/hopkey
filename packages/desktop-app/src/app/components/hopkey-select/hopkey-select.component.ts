@@ -9,6 +9,7 @@ import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
   selector: "app-hopkey-select",
   templateUrl: "./hopkey-select.component.html",
   styleUrls: ["./hopkey-select.component.scss"],
+  standalone: false,
 })
 export class HopkeySelectComponent implements AfterViewInit {
   @ViewChild("ngSelectComponent")

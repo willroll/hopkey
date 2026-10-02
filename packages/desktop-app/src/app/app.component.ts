@@ -36,6 +36,7 @@ import { legacyApp } from "@hopkey/core/services/legacy-import-service";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   fetchingState: string | undefined;

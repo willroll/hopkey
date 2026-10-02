@@ -19,6 +19,7 @@ import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session"
   selector: "app-contextual-menu",
   templateUrl: "./contextual-menu.component.html",
   styleUrls: ["./contextual-menu.component.scss"],
+  standalone: false,
 })
 export class ContextualMenuComponent implements OnInit, OnDestroy {
   @ViewChild("menuTrigger", { static: false })
