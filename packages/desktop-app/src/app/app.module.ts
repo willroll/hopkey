@@ -12,6 +12,7 @@ import { TooltipModule } from "ngx-bootstrap/tooltip";
 import { ModalModule } from "ngx-bootstrap/modal";
 import { ErrorService } from "./services/middleware/error.service";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MAT_TABS_CONFIG } from "@angular/material/tabs";
 import { ComponentsModule } from "./components/components.module";
 
 @NgModule({
@@ -30,6 +31,11 @@ import { ComponentsModule } from "./components/components.module";
     TooltipModule,
     ModalModule,
   ],
-  providers: [{ provide: ErrorHandler, useClass: ErrorService }, provideHttpClient(withXhr(), withInterceptorsFromDi())],
+  providers: [
+    { provide: ErrorHandler, useClass: ErrorService },
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    // Tabs as wide as their labels, as they were before Material moved to its MDC-based tabs
+    { provide: MAT_TABS_CONFIG, useValue: { stretchTabs: false } },
+  ],
 })
 export class AppModule {}

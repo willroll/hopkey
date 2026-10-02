@@ -69,13 +69,10 @@ html, body {
       background-color: white !important;
     }
     
-    .mat-mdc-menu-item,
-    .mat-legacy-menu-item {
+    .mat-mdc-menu-item {
       background-color: white !important;
-      /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version.*/
       &:hover,
-      &.mat-menu-item-highlighted,
-      &.mat-legacy-menu-item-highlighted,
+      &.mat-mdc-menu-item-highlighted,
       &:focus {
         background-color: white !important;
       }
@@ -97,9 +94,9 @@ html, body {
   }
 
   .mat-mdc-menu-item:hover:not([disabled]),
-  .mat-menu-item.cdk-program-focused:not([disabled]),
-  .mat-menu-item.cdk-keyboard-focused:not([disabled]),
-  .mat-menu-item-highlighted:not([disabled]) {
+  .mat-mdc-menu-item.cdk-program-focused:not([disabled]),
+  .mat-mdc-menu-item.cdk-keyboard-focused:not([disabled]),
+  .mat-mdc-menu-item-highlighted:not([disabled]) {
     background: $white-text-color;
 
     &::after {
@@ -114,8 +111,7 @@ html, body {
       cursor: pointer;
     }
   }
-  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-  .mat-tab-body-wrapper {
+  .mat-mdc-tab-body-wrapper {
     padding: 0 19px;
     min-height: 386px;
   }
@@ -432,8 +428,7 @@ small.text-error {
   border: none;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-.mat-tab-labels {
+.mat-mdc-tab-labels {
   display: flex;
   justify-content: center;
 }
@@ -444,8 +439,7 @@ small.text-error {
 }
 
 /* Styles for tab labels */
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-.mat-tab-label {
+.mat-mdc-tab {
   min-width: 25px !important;
   background-color: #ffffff;
   text-align: center !important;
@@ -457,29 +451,25 @@ small.text-error {
 }
 
 /* Styles for the active tab label */
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-.mat-tab-label.mat-tab-label-active {
+.mat-mdc-tab.mdc-tab--active {
   min-width: 25px !important;
   text-align: center !important;
   font-weight: normal;
   text-transform: capitalize;
   color: $black;
   opacity: 1;
-  /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-  .mat-tab-label-content {
+  .mdc-tab__content {
     background-color: $silver-30;
     border-radius: $border-radius;
   }
 }
 
 /* Styles for the ink bar */
-.mat-mdc-tab-group.mat-primary .mat-ink-bar, .mat-mdc-tab-nav-bar.mat-primary .mat-ink-bar {
-  height: 0;
+.mat-mdc-tab .mdc-tab-indicator {
+  display: none;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-.mat-tab-label, .mat-tab-label-content {
+.mat-mdc-tab, .mat-mdc-tab .mdc-tab__content {
   display: inline-flex !important;
   flex-direction: column !important;
   text-align: center;
@@ -488,14 +478,12 @@ small.text-error {
   width: 80px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
 .mat-tab-icon, .mat-tab-label-text {
   display: block !important;
   text-align: center;
   font-size: 25px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
 .mat-tab-label-text {
   font-size: 12px;
 }
@@ -515,11 +503,7 @@ small.text-error {
   margin-left: -10px;
 }
 
-.mat-mdc-list-base .mat-mdc-list-item,
-.mat-list-base .mat-list-item.mat-list-item-with-avatar,
-.mat-list-base .mat-list-option.mat-list-item-with-avatar,
-.mat-list-base .mat-list-item.mat-list-item-with-avatar,
-.mat-list-base .mat-list-option.mat-list-item-with-avatar {
+.mat-mdc-list-base .mat-mdc-list-item {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   height: 35px !important;
   font-size: 14px;
@@ -529,8 +513,7 @@ small.text-error {
     border-radius: 6px;
     margin-left: 10px !important;
     width: 218px !important;
-    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
-    .mat-list-item-content .mat-list-text {
+    .mdc-list-item__content {
       margin-left: -10px;
     }
   }
@@ -584,26 +567,20 @@ small.text-error {
   margin-left: 10px !important;
   width: 218px !important;
   transition: all 0.2s ease;
-  /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
-  .mat-list-item-content {
-    padding: 0 6px !important;
+  padding: 0 6px !important;
 
-    .status {
-      left: 19px;
-    }
+  .status {
+    left: 19px;
   }
 
   &:hover {
-    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
-    .mat-list-item-content {
-      left: 1px;
+    left: 1px;
 
-      .status {
-        left: 20px;
-      }
+    .status {
+      left: 20px;
     }
 
-    .mat-line {
+    [mat-line] {
       padding: 0 9px !important;
     }
   }

@@ -86,7 +86,7 @@ form {
   .form-field {
     margin-bottom: 7px;
     position: relative;
-    label:not(.mat-checkbox-layout) {
+    label:not(.mat-internal-form-field) {
       display: inline-flex;
       font-weight: 500;
       font-size: 13px;
@@ -152,7 +152,6 @@ form {
     }
   }
 
-  /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version. */
   .mat-button-disabled {
     background: $silver-dark;
   }

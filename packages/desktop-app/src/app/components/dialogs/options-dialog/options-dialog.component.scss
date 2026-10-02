@@ -311,13 +311,11 @@
   height: calc(100vh - 235px);
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-.mat-tab-body-content {
+.mat-mdc-tab-body-content {
   padding: 0 19px;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
-.mat-tab-body-wrapper {
+.mat-mdc-tab-body-wrapper {
   padding: 0 !important;
 }
 

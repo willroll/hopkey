@@ -112,8 +112,7 @@ body.dark-theme {
     .mat-mdc-menu-content {
       background-color: $dark-modal-background !important;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version.*/
-    i, span, .mat-menu-submenu-item, polygon {
+    i, span, .mat-mdc-menu-item-submenu-trigger, polygon {
       color: $dark-main-text-color;
     }
 
@@ -121,14 +120,11 @@ body.dark-theme {
       background-color: $dark-session-card-border;
     }
 
-    .mat-mdc-menu-item,
-    .mat-legacy-menu-item {
+    .mat-mdc-menu-item {
       background-color: $dark-modal-background !important;
       color: $dark-main-text-color !important;
-      /* TODO(mdc-migration): The following rule targets internal classes of menu that may no longer apply for the MDC version.*/
       &:hover,
-      &.mat-menu-item-highlighted,
-      &.mat-legacy-menu-item-highlighted,
+      &.mat-mdc-menu-item-highlighted,
       &:focus {
         background-color: $dark-modal-background !important;
         color: $dark-main-text-color !important;
@@ -191,7 +187,7 @@ body.dark-theme {
   }
 
   ///* SideBar Style *///
-  .mat-mdc-list-base .mat-mdc-list-item:hover, .mat-list-item.selected-integration {
+  .mat-mdc-list-base .mat-mdc-list-item:hover, .mat-mdc-list-item.selected-integration {
     background-color: $dark-hover-sidebar!important;
     .moon-More, .moon-Close {
       color: $dark-main-text-color!important;
@@ -277,8 +273,7 @@ body.dark-theme {
       border-right: none;
       border-left: none;
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version.*/
-    div.mat-tab-label {
+    div.mat-mdc-tab {
       background-color: $dark-modal-background;
       color: $dark-main-text-color;
     }
@@ -305,7 +300,6 @@ body.dark-theme {
         color: #949494;
       }
     }
-    /* TODO(mdc-migration): The following rule targets internal classes of button that may no longer apply for the MDC version.*/
     button.mat-button-disabled {
       background-color: #848484;
       color: #4F4F4F;
