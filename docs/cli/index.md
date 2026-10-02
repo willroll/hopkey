@@ -32,9 +32,6 @@ USAGE
 * [`hopkey profile`](scopes/profile.md) - Hopkey AWS Multi-profile management
 * [`hopkey region`](scopes/region.md) - Hopkey regions management
 * [`hopkey session`](scopes/session.md) - Sessions management
-* [`hopkey set-workspace`](scopes/set-workspace.md) - Set the current Hopkey workspace
-* [`hopkey team`](scopes/team.md) - Login to your Team account
 * [`hopkey version`](scopes/version.md) - Displays the Cli and Core versions
-* [`hopkey workspace`](scopes/workspace.md) - Show the current workspace
 
 <!-- commandsstop -->
