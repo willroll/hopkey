@@ -2,16 +2,17 @@
   "compileOnSave": false,
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictTemplates": false
   },
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./",
     "declaration": false,
     "experimentalDecorators": true,
     "module": "ES2020",
     "moduleResolution": "bundler",
     "sourceMap": true,
+    "strict": false,
     "target": "ES2019",
     "typeRoots": ["node_modules/@types"],
     "paths": {

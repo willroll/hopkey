@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { SessionType } from "@hopkey/core/models/session-type";
 import { Session } from "@hopkey/core/models/session";
 import { SessionStatus } from "@hopkey/core/models/session-status";
@@ -11,6 +11,7 @@ import { AnalyticsService } from "../../services/analytics.service";
   selector: "app-bottom-bar",
   templateUrl: "./bottom-bar.component.html",
   styleUrls: ["./bottom-bar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class BottomBarComponent implements OnInit {

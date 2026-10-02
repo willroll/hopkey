@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from "@angular/core";
+import { Component, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ChangeDetectionStrategy } from "@angular/core";
 import { globalFilterGroup } from "../command-bar/command-bar.component";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -37,6 +37,7 @@ export const integrationHighlight = new BehaviorSubject<number>(-1);
   selector: "app-integration-bar",
   templateUrl: "./integration-bar.component.html",
   styleUrls: ["./integration-bar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class IntegrationBarComponent implements OnInit, OnDestroy {

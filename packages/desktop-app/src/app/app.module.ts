@@ -3,7 +3,7 @@ import { ErrorHandler, NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { LayoutModule } from "./layout/layout.module";
-import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgSelectModule } from "@ng-select/ng-select";
@@ -30,6 +30,6 @@ import { ComponentsModule } from "./components/components.module";
     TooltipModule,
     ModalModule,
   ],
-  providers: [{ provide: ErrorHandler, useClass: ErrorService }, provideHttpClient(withInterceptorsFromDi())],
+  providers: [{ provide: ErrorHandler, useClass: ErrorService }, provideHttpClient(withXhr(), withInterceptorsFromDi())],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Component, Inject, NgZone, OnInit } from "@angular/core";
+import { Component, Inject, NgZone, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { MAT_SNACK_BAR_DATA, MatSnackBar } from "@angular/material/snack-bar";
 import { AppProviderService } from "../../services/app-provider.service";
 
@@ -6,6 +6,7 @@ import { AppProviderService } from "../../services/app-provider.service";
   selector: "app-snackbar",
   templateUrl: "./snackbar.component.html",
   styleUrls: ["./snackbar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SnackbarComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterContentChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { BsModalService } from "ngx-bootstrap/modal";
 import { OptionsDialogComponent } from "../dialogs/options-dialog/options-dialog.component";
 import { CreateDialogComponent } from "../dialogs/create-dialog/create-dialog.component";
@@ -47,6 +47,7 @@ export const globalColumnsCount = new BehaviorSubject<number>(null);
   selector: "app-command-bar",
   templateUrl: "./command-bar.component.html",
   styleUrls: ["./command-bar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CommandBarComponent implements OnInit, OnDestroy, AfterContentChecked {

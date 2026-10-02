@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { Session } from "@hopkey/core/models/session";
 import { AppService } from "../../services/app.service";
 import { MatMenuTrigger } from "@angular/material/menu";
@@ -19,6 +19,7 @@ import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session"
   selector: "app-contextual-menu",
   templateUrl: "./contextual-menu.component.html",
   styleUrls: ["./contextual-menu.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class ContextualMenuComponent implements OnInit, OnDestroy {

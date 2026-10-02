@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { Subscription } from "rxjs";
 import { AgentService, AgentSummary } from "@hopkey/core/services/agent-service";
@@ -13,6 +13,7 @@ import { WindowService } from "../../../services/window.service";
   templateUrl: "./agents-dialog.component.html",
   styleUrls: ["./agents-dialog.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class AgentsDialogComponent implements OnInit, OnDestroy {

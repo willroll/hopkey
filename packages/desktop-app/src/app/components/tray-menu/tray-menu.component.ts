@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { AppService } from "../../services/app.service";
 import { environment } from "../../../environments/environment";
 import { UpdaterService } from "../../services/updater.service";
@@ -22,6 +22,7 @@ import { constants } from "@hopkey/core/models/constants";
   selector: "app-tray-menu",
   templateUrl: "./tray-menu.component.html",
   styleUrls: ["./tray-menu.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class TrayMenuComponent implements OnInit, OnDestroy {

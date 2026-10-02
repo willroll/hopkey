@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, Input, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { BsModalRef } from "ngx-bootstrap/modal";
 import { constants } from "@hopkey/core/models/constants";
 
@@ -7,6 +7,7 @@ import { constants } from "@hopkey/core/models/constants";
   templateUrl: "./update-dialog.component.html",
   styleUrls: ["./update-dialog.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class UpdateDialogComponent implements OnInit {

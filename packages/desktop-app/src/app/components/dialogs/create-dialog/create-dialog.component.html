@@ -96,7 +96,7 @@
           [uppercased]="false"
           (selected)="profiles = $event.items; selectedProfile = $event.item"
         ></app-hopkey-select>
-        @if ((form.controls['awsProfile'].dirty || form.controls['awsProfile'].touched) && form.get('awsProfile')?.value === undefined) {
+        @if ((form.controls['awsProfile'].dirty || form.controls['awsProfile'].touched) && form.get('awsProfile').value === undefined) {
         <small class="text-error">Insert the Named Profile</small>
         }
       </div>
@@ -160,7 +160,7 @@
         [uppercased]="false"
         (selected)="selectedIdpUrlEvent($event)"
       ></app-hopkey-select>
-      @if ((form.controls['federationUrl'].dirty || form.controls['federationUrl'].touched) && form.get('federationUrl')?.value === undefined) {
+      @if ((form.controls['federationUrl'].dirty || form.controls['federationUrl'].touched) && form.get('federationUrl').value === undefined) {
       <small class="text-error">Insert the SAML 2.0 Url</small>
       }
     </div>

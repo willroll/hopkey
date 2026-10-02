@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, Input, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AppService } from "../../../services/app.service";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -29,6 +29,7 @@ import { agentFormControls, agentSettingsFromForm, isAgentFormValid } from "../.
   selector: "app-create-dialog",
   templateUrl: "./create-dialog.component.html",
   styleUrls: ["./create-dialog.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class CreateDialogComponent implements OnInit {

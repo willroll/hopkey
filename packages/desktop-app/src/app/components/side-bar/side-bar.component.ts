@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import {
   globalFilteredSessions,
   globalFilterGroup,
@@ -35,6 +35,7 @@ export const sidebarHighlight = new BehaviorSubject<HighlightSettings>({ showAll
   selector: "app-side-bar",
   templateUrl: "./side-bar.component.html",
   styleUrls: ["./side-bar.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false,
 })
 export class SideBarComponent implements OnInit, OnDestroy {
