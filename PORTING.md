@@ -53,5 +53,6 @@ These need the repository owner and can't be done from the code:
   Fork them before they disappear. Plugin signature checks (disabled) still point at Noovolari's plugin service.
 - **Docs** still show Leapp screenshots and GIFs; the CLI reference in `docs/cli` should be regenerated with the first
   CLI release.
-- **Aging stack**: Angular 15 is out of support, and `keytar` is archived (Electron's `safeStorage` is a candidate
-  replacement). Electron and Node.js are on supported releases (44 and 24).
+- **Aging stack**: `keytar` is archived (Electron's `safeStorage` is a candidate replacement), and the desktop app
+  builds with Angular's Webpack-based builder, deprecated in favor of `@angular/build`. Electron, Node.js and Angular
+  are on supported releases (44, 24 and 22).
