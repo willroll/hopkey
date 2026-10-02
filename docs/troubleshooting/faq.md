@@ -1,15 +1,9 @@
-## I'm using the open-source app, do you store my data online?
+## Do you store my data online?
 **NO.**
 
-The open-source software doesn't transfer, persist, or share anything with other services. All your data is secured and encrypted on your workstation.
+Hopkey doesn't transfer, persist, or share anything with other services. All your data is secured and encrypted on your workstation.
 
 **Nobody can access it, not even ourselves.**
-
-## I've got a paid tier, how do you manage my data? Can you access it?
-
-**We can't and don't want to see any of your access data.**
-
-We need to store your data online to enable some features (syncing, managing other users, etc.) but we implement a [Zero-Knowledge](../../security/zero-knowledge/){: target='_blank'} encryption system that prevents even ourselves to access your data.
 
 ## I don't feel secure using a built-in window for authentication, can't you use the default browser?
 

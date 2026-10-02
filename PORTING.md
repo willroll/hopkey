@@ -15,6 +15,8 @@ tracks where the port stands: what changed, what the maintainers still have to d
 - **No more Noovolari services.** No PostHog analytics, no Google Analytics on the docs, no update feed from
   asset.noovolari.com (updates come from this repository's releases), no Noovolari shutdown popup, no Font Awesome Pro
   kit (icons are bundled), no Noovolari Slack, S3, CloudFront or Homebrew tap in CI and scripts.
+- **No Pro or Team.** Their code is removed: remote workspaces, the lock screen options, the Pro checkout and the
+  `team`, `workspace` and `set-workspace` CLI commands. They needed Noovolari's servers.
 - **Branding.** Leapp's and Noovolari's logos are replaced by a placeholder mark generated from
   [tools/brand](tools/brand) (`node tools/brand/generate-icons.js`, needs `rsvg-convert` and ImageMagick).
 - **Fixed on the way.** The CLI could not run any command (inquirer 9 is ESM-only), the CLI lockfile was out of sync,
@@ -44,16 +46,12 @@ These need the repository owner and can't be done from the code:
 
 ## Known gaps
 
-- **Leapp Pro and Team** code is still in the tree, unreachable or stubbed (team services, workspace login dialogs,
-  the Pro checkout dialog, the commented-out Plans tab, the `hopkey team` CLI commands): remove it.
 - **Upstream assets still in use**: the multi-console browser extension (Firefox add-on and Chromium zip published by
   Noovolari), the [plugin template](https://github.com/Noovolari/leapp-plugin-template) and `@noovolari/dpapi-addon`.
   Fork them before they disappear. Plugin signature checks (disabled) still point at Noovolari's plugin service.
-- **Docs** still show Leapp screenshots and GIFs and describe Team and Pro features; the CLI reference in `docs/cli`
-  should be regenerated with the first CLI release.
+- **Docs** still show Leapp screenshots and GIFs; the CLI reference in `docs/cli` should be regenerated with the first
+  CLI release.
 - **Aging stack**: Node 18 and Electron 22 are out of support, and `keytar` is archived; plan the upgrades (Electron's
   `safeStorage` is a candidate replacement for `keytar`).
-- The CLI imports `puppeteer` (for SAML and IAM Identity Center logins) but lists it as a dev dependency: check the
-  published package before the first npm release.
 - The proxy settings in the options are saved (the password in the keychain) but no connection uses them: apply them
   or remove them.

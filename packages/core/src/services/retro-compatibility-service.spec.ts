@@ -512,11 +512,8 @@ describe("RetroCompatibilityService", () => {
   });
 
   test("migration6, migrate to version 6", () => {
-    const workspace = { notifications: [{ uuid: "uuid" }, { uuid: "not-a-survey-uuid" }] };
-    const repository = {
-      reloadWorkspace: jest.fn(),
-      getNotifications: jest.fn(() => workspace.notifications),
-    } as any;
+    const workspace = {};
+    const repository = { reloadWorkspace: jest.fn() } as any;
     service = new RetroCompatibilityService(null, null, repository, null);
     (service as any).getWorkspace = jest.fn(() => workspace);
     (service as any).persists = jest.fn();
@@ -527,8 +524,7 @@ describe("RetroCompatibilityService", () => {
     expect((service as any).getWorkspace).toHaveBeenCalled();
     expect((service as any).checkMigration).toHaveBeenCalledWith(workspace, 5, 6);
     expect((service as any).persists).toHaveBeenCalledWith(workspace);
-    expect((workspace as any).requirePassword).toBe(constants.requirePasswordEveryTwoWeeks.value);
-    expect((workspace as any).touchIdEnabled).toBe(constants.touchIdEnabled);
+    expect(workspace).toEqual({});
     expect(repository.reloadWorkspace).toHaveBeenCalled();
   });
 
@@ -558,7 +554,7 @@ describe("RetroCompatibilityService", () => {
     expect((service as any).getWorkspace).toHaveBeenCalled();
     expect((service as any).checkMigration).toHaveBeenCalledWith(workspace, 6, 7);
     expect((service as any).persists).toHaveBeenCalledWith(workspace);
-    expect((workspace as any).remoteWorkspacesSettingsMap).toEqual({});
+    expect(workspace).toEqual({});
     expect(repository.reloadWorkspace).toHaveBeenCalled();
   });
 

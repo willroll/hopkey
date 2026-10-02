@@ -14,7 +14,6 @@ import { ExtensionWebsocketService, FetchingState } from "../../services/extensi
 import { Subscription } from "rxjs";
 import { AnalyticsService } from "../../services/analytics.service";
 import { AwsSsoRoleSession } from "@hopkey/core/models/aws/aws-sso-role-session";
-import { Role } from "../../services/team-service";
 
 @Component({
   selector: "app-contextual-menu",
@@ -43,17 +42,6 @@ export class ContextualMenuComponent implements OnInit, OnDestroy {
     private extensionWebsocketService: ExtensionWebsocketService,
     private readonly analyticsService: AnalyticsService
   ) {}
-
-  get isHopkeyTeamUser(): boolean {
-    const localWorkspace = this.appProviderService.teamService.workspacesState
-      .getValue()
-      .find((workspace) => workspace.name === constants.localWorkspaceName);
-    return (
-      (this.appProviderService.teamService.signedInUserState?.getValue()?.role === Role.manager ||
-        this.appProviderService.teamService.signedInUserState?.getValue()?.role === Role.user) &&
-      localWorkspace.selected === false
-    );
-  }
 
   ngOnInit(): void {
     this.sessionSelectionsSubscription = this.appProviderService.behaviouralSubjectService.sessionSelections$.subscribe(

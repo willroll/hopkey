@@ -46,8 +46,6 @@ import { AzureIntegrationService } from "@hopkey/core/services/integration/azure
 import { CliRpcKeychainService } from "./cli-rpc-keychain-service";
 import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
 import { WorkspaceConsistencyService } from "@hopkey/core/services/workspace-consistency-service";
-import * as crypto from "crypto";
-import { TeamService } from "./team-service";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 import { AgentActivityService } from "@hopkey/core/services/agent-activity-service";
@@ -97,7 +95,6 @@ export class CliProviderService {
   private pluginManagerServiceInstance: PluginManagerService;
   private integrationFactoryInstance: IntegrationFactory;
   private azureIntegrationServiceInstance: AzureIntegrationService;
-  private teamServiceInstance: TeamService;
   private localstackSessionServiceInstance: LocalstackSessionService;
   private agentActivityServiceInstance: AgentActivityService;
   private agentServiceInstance: AgentService;
@@ -456,28 +453,6 @@ export class CliProviderService {
       this.ssmServiceInstance = new SsmService(this.logService, this.executeService, this.cliNativeService, this.fileService);
     }
     return this.ssmServiceInstance;
-  }
-
-  get teamService(): TeamService {
-    if (!this.teamServiceInstance) {
-      this.teamServiceInstance = new TeamService(
-        this.sessionFactory,
-        this.namedProfilesService,
-        this.sessionManagementService,
-        this.awsSsoIntegrationService,
-        this.azureIntegrationService,
-        this.idpUrlsService,
-        this.keyChainService,
-        this.cliNativeService,
-        this.fileService,
-        (crypto as any).webcrypto,
-        this.workspaceService,
-        this.integrationFactory,
-        this.logService,
-        this.behaviouralSubjectService
-      );
-    }
-    return this.teamServiceInstance;
   }
 
   get inquirer(): CliInquirer.Inquirer {

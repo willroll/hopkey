@@ -12,10 +12,6 @@ describe("HopkeyCommand", () => {
       remoteProceduresClient: {
         isDesktopAppRunning: jest.fn(async () => true),
       },
-      teamService: {
-        setCurrentWorkspace: jest.fn(),
-        getKeychainCurrentWorkspace: async () => Promise.resolve("remoteWorkspace"),
-      },
     };
 
     const hopkeyCommand = new (HopkeyCommand as any)(null, null, cliProviderService);
@@ -23,7 +19,6 @@ describe("HopkeyCommand", () => {
 
     expect(cliProviderService.awsSsoRoleService.setAwsIntegrationDelegate).toHaveBeenCalledWith(cliProviderService.awsSsoIntegrationService);
     expect(cliProviderService.remoteProceduresClient.isDesktopAppRunning).toHaveBeenCalled();
-    expect(cliProviderService.teamService.setCurrentWorkspace).toHaveBeenCalledWith(true);
   });
 
   test("init - desktop app not running", async () => {
@@ -34,10 +29,6 @@ describe("HopkeyCommand", () => {
       awsSsoIntegrationService: "integrationService",
       remoteProceduresClient: {
         isDesktopAppRunning: jest.fn(async () => false),
-      },
-      teamService: {
-        setCurrentWorkspace: jest.fn(),
-        getKeychainCurrentWorkspace: async () => Promise.resolve("remoteWorkspace"),
       },
     };
 
@@ -50,7 +41,6 @@ describe("HopkeyCommand", () => {
     expect(hopkeyCommand.error).toHaveBeenCalledWith(
       "Hopkey app must be running to use this CLI. You can download it here: https://github.com/willroll/hopkey/releases"
     );
-    expect(cliProviderService.teamService.setCurrentWorkspace).not.toHaveBeenCalled();
   });
 
   test("unsupportedAzureSession - azure session should throw an error", async () => {

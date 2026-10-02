@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, Input, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { AppService } from "../../../services/app.service";
 import { Router } from "@angular/router";
@@ -17,19 +17,8 @@ import { SessionStatus } from "@hopkey/core/models/session-status";
 import { OperatingSystem } from "@hopkey/core/models/operating-system";
 import { AppNativeService } from "../../../services/app-native.service";
 import { PluginContainer } from "@hopkey/core/plugin-sdk/plugin-manager-service";
-import { BillingPeriod, HopkeyProPreCheckoutDialogComponent } from "../hopkey-pro-pre-checkout-dialog/hopkey-pro-pre-checkout-dialog.component";
-import { BehaviorSubject, Subscription } from "rxjs";
 import { colorThemeSubject } from "../../check-icon-svg/check-icon-svg.component";
 import { ExtensionWebsocketService } from "../../../services/extension-websocket.service";
-
-export enum HopkeyPlanStatus {
-  free = "free",
-  proPending = "proPending",
-  proEnabled = "proEnabled",
-  enterprise = "enterprise",
-}
-
-export const globalHopkeyProPlanStatus = new BehaviorSubject<HopkeyPlanStatus>(HopkeyPlanStatus.free);
 
 @Component({
   selector: "app-options-dialog",
@@ -37,7 +26,7 @@ export const globalHopkeyProPlanStatus = new BehaviorSubject<HopkeyPlanStatus>(H
   styleUrls: ["./options-dialog.component.scss"],
   encapsulation: ViewEncapsulation.None,
 })
-export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OptionsDialogComponent implements OnInit, AfterViewInit {
   @Input()
   selectedIndex;
 
@@ -46,7 +35,6 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
   eConstants = constants;
   eOperatingSystem = OperatingSystem;
-  eBillingPeriod = BillingPeriod;
 
   awsProfileValue: { id: string; name: string };
   idpUrlValue;
@@ -64,8 +52,6 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   regions: { region: string }[];
   selectedLocation: string;
   selectedRegion: string;
-  selectedRequirePassword: number;
-  selectedTouchIdEnabled: boolean;
   selectedBrowserOpening = constants.inApp.toString();
   selectedTerminal;
 
@@ -76,7 +62,6 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
   fetchingPlugins: boolean;
 
   selectedSsmRegionBehaviour: string;
-  selectedPeriod: BillingPeriod = BillingPeriod.yearly;
 
   form = new FormGroup({
     idpUrl: new FormControl(""),
@@ -96,22 +81,12 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     sessionDuration: new FormControl(""),
     pluginDeepLink: new FormControl(""),
     ssmRegionBehaviourSelect: new FormControl(""),
-    requirePasswordSelect: new FormControl(""),
-    touchIdEnableSelect: new FormControl(""),
   });
 
   selectedCredentialMethod: string;
   webConsoleSessionDuration: number;
 
   extensionEnabled: boolean;
-
-  eEnabledHopkeyPlanStatus = HopkeyPlanStatus;
-  hopkeyStatusSubscription: Subscription;
-  hopkeyPlanStatus;
-
-  exporting: boolean;
-  isUserSignedIn: boolean;
-  signedInUserStateSubscription: Subscription;
 
   /* Simple profile page: shows the Idp Url and the workspace json */
   private sessionService: SessionService;
@@ -136,20 +111,7 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.selectedSsmRegionBehaviour = this.optionsService.ssmRegionBehaviour || constants.ssmRegionNo;
 
-    this.selectedRequirePassword = this.optionsService.requirePassword || constants.requirePasswordEveryTwoWeeks.value;
-
-    this.selectedTouchIdEnabled = this.optionsService.touchIdEnabled ?? constants.touchIdEnabled;
-
     this.extensionEnabled = this.optionsService.extensionEnabled || false;
-
-    this.exporting = false;
-
-    this.isUserSignedIn = false;
-  }
-
-  ngOnDestroy(): void {
-    this.hopkeyStatusSubscription?.unsubscribe();
-    this.signedInUserStateSubscription?.unsubscribe();
   }
 
   async ngOnInit(): Promise<void> {
@@ -187,22 +149,6 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     this.pluginList = this.appProviderService.pluginManagerService.pluginContainers;
 
     this.selectedSsmRegionBehaviour = this.optionsService.ssmRegionBehaviour || constants.ssmRegionNo;
-
-    this.hopkeyStatusSubscription = globalHopkeyProPlanStatus.subscribe((value) => (this.hopkeyPlanStatus = value));
-
-    try {
-      const plan = await this.appProviderService.keychainService.getSecret("Hopkey", "hopkey-enabled-plan");
-      if (plan) {
-        globalHopkeyProPlanStatus.next(plan as unknown as HopkeyPlanStatus);
-      } else {
-        globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
-      }
-    } catch (err) {
-      globalHopkeyProPlanStatus.next(HopkeyPlanStatus.free);
-    }
-
-    const selectedWorkspace = this.appProviderService.teamService.workspacesState.getValue().find((workspaceState) => workspaceState.selected);
-    this.isUserSignedIn = selectedWorkspace.name !== constants.localWorkspaceName;
   }
 
   ngAfterViewInit(): void {
@@ -244,23 +190,6 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
       this.optionsService.defaultLocation = this.selectedLocation;
       this.optionsService.macOsTerminal = this.selectedTerminal;
       this.optionsService.samlRoleSessionDuration = parseInt(this.form.controls["sessionDuration"].value, 10);
-
-      const previousRequirePassword = this.optionsService.requirePassword;
-      if (previousRequirePassword !== this.selectedRequirePassword) {
-        const keychainItem = await this.appProviderService.keychainService.getSecret(constants.appName, constants.touchIdKeychainItemName);
-        if (keychainItem) {
-          const updatedRequirePassword = JSON.parse(keychainItem);
-          updatedRequirePassword.nextExpiration = new Date().setDate(new Date().getDate() + this.selectedRequirePassword);
-          await this.appProviderService.keychainService.saveSecret(
-            constants.appName,
-            constants.touchIdKeychainItemName,
-            JSON.stringify(updatedRequirePassword)
-          );
-        }
-      }
-
-      this.optionsService.requirePassword = this.selectedRequirePassword;
-      this.optionsService.touchIdEnabled = (this.form.controls["touchIdEnableSelect"].value as any) === true;
 
       this.optionsService.ssmRegionBehaviour = this.selectedSsmRegionBehaviour;
 
@@ -589,36 +518,5 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit, OnDestroy 
     } else {
       this.extensionWebsocketService.stop();
     }
-  }
-
-  openHopkeyProPreCheckoutDialog(): void {
-    this.modalService.show(HopkeyProPreCheckoutDialogComponent, {
-      animated: false,
-      class: "pre-checkout-modal",
-      backdrop: "static",
-      keyboard: false,
-    });
-  }
-
-  setBillingPeriod(): void {
-    this.selectedPeriod = this.selectedPeriod === BillingPeriod.yearly ? BillingPeriod.monthly : BillingPeriod.yearly;
-  }
-
-  async contactSupport(): Promise<void> {
-    const email = await this.appProviderService.keychainService.getSecret("Hopkey", "hopkey-enabled-plan-email");
-    this.windowService.openExternalUrl(`mailto:support@noovolari.com?subject=Hopkey%20Sign-up%20support%20request%20${email}`);
-  }
-
-  contactSales(): void {
-    this.windowService.openExternalUrl("https://www.leapp.cloud/solutions/business");
-  }
-
-  async exportProWorkspace(): Promise<void> {
-    this.exporting = true;
-    await this.appProviderService.teamService.exportProWorkspace();
-    await new Promise((resolve, _reject) => {
-      setTimeout(resolve, 2000);
-    });
-    this.exporting = false;
   }
 }

@@ -11,7 +11,6 @@ import { AwsSsoIntegration } from "./aws/aws-sso-integration";
 import { AzureIntegration } from "./azure/azure-integration";
 import PluginStatus from "./plugin-status";
 import { HopkeyNotification } from "./notification";
-import { RemoteWorkspacesSettingsMap } from "./remote-workspace-settings-map";
 
 export class Workspace {
   /* istanbul ignore next */
@@ -26,7 +25,6 @@ export class Workspace {
   private _macOsTerminal: string;
   private _idpUrls: IdpUrl[];
   private _profiles: AwsNamedProfile[];
-  private _remoteWorkspacesSettingsMap: RemoteWorkspacesSettingsMap;
 
   private _notifications: HopkeyNotification[];
 
@@ -38,9 +36,6 @@ export class Workspace {
 
   private _colorTheme: string;
   private _extensionEnabled: boolean;
-
-  private _requirePassword: number;
-  private _touchIdEnabled: boolean;
 
   private _proxyConfiguration: {
     proxyProtocol: string;
@@ -67,7 +62,6 @@ export class Workspace {
     this._macOsTerminal = constants.macOsTerminal;
     this._idpUrls = [];
     this._profiles = [{ id: uuid.v4(), name: constants.defaultAwsProfileName }];
-    this._remoteWorkspacesSettingsMap = {};
     this._pluginsStatus = [];
     this._extensionEnabled = false;
 
@@ -120,14 +114,6 @@ export class Workspace {
 
   set profiles(value: AwsNamedProfile[]) {
     this._profiles = value;
-  }
-
-  get remoteWorkspacesSettingsMap(): RemoteWorkspacesSettingsMap {
-    return this._remoteWorkspacesSettingsMap;
-  }
-
-  set remoteWorkspacesSettingsMap(value: RemoteWorkspacesSettingsMap) {
-    this._remoteWorkspacesSettingsMap = value;
   }
 
   get sessions(): Session[] {
@@ -256,21 +242,5 @@ export class Workspace {
 
   set notifications(notifications: HopkeyNotification[]) {
     this._notifications = notifications;
-  }
-
-  get requirePassword(): number {
-    return this._requirePassword;
-  }
-
-  set requirePassword(value: number) {
-    this._requirePassword = value;
-  }
-
-  get touchIdEnabled(): boolean {
-    return this._touchIdEnabled;
-  }
-
-  set touchIdEnabled(value: boolean) {
-    this._touchIdEnabled = value;
   }
 }

@@ -99,10 +99,10 @@ npm run clean-and-bootstrap
 ```
 
 > [!NOTE]
-> **Checkouts from before the rename.** The build copies `team-service-stub.ts` to the git-ignored `team-service.ts`
-> files of the CLI and Desktop App only when they are missing, so a checkout built before the project was renamed keeps
-> copies that import packages that no longer exist. Delete `packages/cli/src/service/team-service.ts` and
-> `packages/desktop-app/src/app/services/team-service.ts` before bootstrapping.
+> **Older checkouts.** Until the Pro and Team code was removed, the build copied `team-service-stub.ts` to a
+> git-ignored `team-service.ts` in the CLI and Desktop App. Those copies no longer compile: delete
+> `packages/cli/src/service/team-service.ts` and `packages/desktop-app/src/app/services/team-service.ts` if you have
+> them.
 
 This _clean-and-bootstrap_ script takes as input one or more of the following packages: _core_, _cli_, or _desktop-app_.
 

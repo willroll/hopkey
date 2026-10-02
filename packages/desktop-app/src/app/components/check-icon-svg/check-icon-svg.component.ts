@@ -21,9 +21,8 @@ export class CheckIconSvgComponent implements OnInit, OnDestroy {
     this.subscription = colorThemeSubject.subscribe((value) => {
       if (value) {
         if (
-          this.appProviderService.workspaceService.extractGlobalSettings().colorTheme === constants.darkTheme ||
-          (this.appProviderService.workspaceService.extractGlobalSettings().colorTheme === constants.systemDefaultTheme &&
-            this.appService.isDarkMode())
+          this.appProviderService.repository.getColorTheme() === constants.darkTheme ||
+          (this.appProviderService.repository.getColorTheme() === constants.systemDefaultTheme && this.appService.isDarkMode())
         ) {
           this.color = "#ffffff";
         }
@@ -35,8 +34,8 @@ export class CheckIconSvgComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (
-      this.appProviderService.workspaceService.extractGlobalSettings().colorTheme === constants.darkTheme ||
-      (this.appProviderService.workspaceService.extractGlobalSettings().colorTheme === constants.systemDefaultTheme && this.appService.isDarkMode())
+      this.appProviderService.repository.getColorTheme() === constants.darkTheme ||
+      (this.appProviderService.repository.getColorTheme() === constants.systemDefaultTheme && this.appService.isDarkMode())
     ) {
       this.color = "#ffffff";
     }

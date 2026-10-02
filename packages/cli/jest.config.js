@@ -3,10 +3,7 @@ module.exports = {
   testTimeout: 10000,
   collectCoverageFrom: [
     "src/**/*.ts",
-    "!src/**/cli-native-service.ts",
-    "!src/**/team-service.ts",
-    "!src/**/team-service-stub.ts",
-    "!src/**/hopkey-team-core/**"
+    "!src/**/cli-native-service.ts"
   ],
   coverageReporters: [
     "lcov",

@@ -1,16 +1,11 @@
 export const constants = {
   //General
   appName: "Hopkey",
-  rsaBinFileDestination: ".hopkey/rsa.bin",
   lockFileDestination: ".hopkey/hopkey-lock.json",
   lockFileBackupPath: ".hopkey/hopkey-lock.backup.bin",
   latestUrl: "https://github.com/willroll/hopkey/releases/latest",
   workspaceLastVersion: 7,
   communityUrl: "https://github.com/willroll/hopkey/discussions",
-  localWorkspaceName: "Local workspace",
-  localWorkspaceDescription: "Community Edition",
-  currentWorkspaceKeychainKey: "current-workspace",
-  localWorkspaceKeychainValue: "local",
 
   //Aws
   samlRoleSessionDuration: 3600, // 1h
@@ -84,11 +79,4 @@ export const constants = {
     "yP6Ekgn8yeDmON1JoX0E0Tdm6dfXVY5v2K8KaT2/XtsqRlwCCU+pXRsQwJfQcknZ\n" +
     "aNqnY3aBtCwmaesTlrc5bR8CAwEAAQ==\n" +
     "-----END PUBLIC KEY-----",
-
-  touchIdKeychainItemName: "touch-id-lock",
-  touchIdEnabled: true,
-  requirePasswordEveryWeek: { key: "Every week", value: 7 },
-  requirePasswordEveryTwoWeeks: { key: "Every 2 weeks", value: 14 },
-  requirePasswordEveryMonth: { key: "Every month", value: 30 },
-  requirePasswordNever: { key: "Never", value: 999999 },
 };

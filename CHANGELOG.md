@@ -15,6 +15,8 @@ Leapp's.
   [Hopkey releases](https://github.com/willroll/hopkey/releases).
 * `hopkey session generate` only hands out credentials for sessions that are started, like the `credential_process`
   entries it serves.
+* removed the Leapp Pro and Team features, which needed Noovolari's servers: remote workspaces, the lock screen options
+  and the `hopkey team`, `hopkey workspace` and `hopkey set-workspace` commands.
 
 ### Features
 
@@ -23,6 +25,7 @@ Leapp's.
 * import an existing Leapp workspace, its plugins and its system vault secrets on first launch
 * load plugins published for Leapp
 * bundle the icons instead of loading them from a remote Font Awesome kit
+* the CLI no longer installs puppeteer, which downloaded a copy of Chrome for login code that nothing used
 
 ### Security
 

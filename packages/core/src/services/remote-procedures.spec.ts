@@ -49,12 +49,12 @@ describe("RemoteProcedures", () => {
   });
 
   const startServer = () => {
-    server = new RemoteProceduresServer(null, nativeService as any, null, null, null, null, null, null, null, null, (f) => f(), testId);
+    server = new RemoteProceduresServer(null, nativeService as any, null, null, null, null, null, null, (f) => f(), testId);
     server.startServer();
   };
 
   test("server default id", async () => {
-    const server2 = new RemoteProceduresServer(null, null, null, null, null, null, null, null, null, null, null);
+    const server2 = new RemoteProceduresServer(null, null, null, null, null, null, null, null, null);
     expect((server2 as any).serverId).toBe(constants.ipcServerId);
   });
 
@@ -500,41 +500,5 @@ describe("RemoteProcedures", () => {
     expect(keychainService.getSecret).not.toHaveBeenCalled();
     expect(keychainService.saveSecret).not.toHaveBeenCalled();
     expect(keychainService.deleteSecret).not.toHaveBeenCalled();
-  });
-
-  test("refreshWorkspaceState, server not running", async () => {
-    await expect(client.refreshWorkspaceState()).rejects.toEqual("unable to connect with desktop app");
-  });
-
-  test("refreshWorkspaceState, server running", async () => {
-    const workspaceService = {
-      reloadWorkspace: jest.fn(),
-    };
-    const teamService = {
-      refreshWorkspaceState: jest.fn(async (callback: () => Promise<void>) => {
-        await callback();
-      }),
-    };
-
-    startServer();
-    (server as any).workspaceService = workspaceService;
-    (server as any).teamService = teamService;
-
-    await retry(async () => {
-      await client.refreshWorkspaceState();
-      expect(workspaceService.reloadWorkspace).toHaveBeenCalled();
-      expect(teamService.refreshWorkspaceState).toHaveBeenCalled();
-    });
-  });
-
-  test("refreshWorkspaceState, server throwing", async () => {
-    startServer();
-    (server as any).uiSafeFn = () => {
-      throw new Error("unexpected error");
-    };
-
-    await retry(async () => {
-      await expect(client.refreshWorkspaceState()).rejects.toEqual("unexpected error");
-    });
   });
 });

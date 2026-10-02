@@ -69,7 +69,6 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
 
   filterExtended: boolean;
   compactMode: boolean;
-  isHopkeyTeamWorkspace: boolean;
 
   eConstants = constants;
 
@@ -82,7 +81,6 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
   private subscription4;
   private subscription5;
   private subscription6;
-  private workspaceStateSubscription;
 
   private behaviouralSubjectService: BehaviouralSubjectService;
 
@@ -195,10 +193,6 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     this.subscription6 = globalOrderingFilter.subscribe((sessions: Session[]) => {
       globalFilteredSessions.next(sessions);
     });
-
-    this.workspaceStateSubscription = this.appProviderService.teamService.workspacesState.subscribe((workspacesState) => {
-      this.isHopkeyTeamWorkspace = !!workspacesState.find((workspace) => workspace.type === "team" && workspace.selected);
-    });
   }
 
   ngOnDestroy(): void {
@@ -209,7 +203,6 @@ export class CommandBarComponent implements OnInit, OnDestroy, AfterContentCheck
     this.subscription4?.unsubscribe();
     this.subscription5?.unsubscribe();
     this.subscription6?.unsubscribe();
-    this.workspaceStateSubscription?.unsubscribe();
   }
 
   ngAfterContentChecked(): void {

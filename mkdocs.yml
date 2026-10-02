@@ -15,7 +15,7 @@ nav:
       - 'Concepts':
           - Sessions: 'sessions.md'
           - Integrations: 'integrations.md'
-          - Workspaces: 'workspaces.md'
+          - Workspace: 'workspaces.md'
   - 'CLI':
       - Index: 'cli/index.md'
       - Usage:
@@ -26,9 +26,6 @@ nav:
           - Profile: 'cli/scopes/profile.md'
           - Region: 'cli/scopes/region.md'
           - 'Idp Url': 'cli/scopes/idp-url.md'
-          - 'Set Workspace': 'cli/scopes/set-workspace.md'
-          - 'Workspace': 'cli/scopes/workspace.md'
-          - 'Team': 'cli/scopes/team.md'
           - 'Version': 'cli/scopes/version.md'
   - 'Configuration':
       - 'Add your first configuration': 'configuration.md'
@@ -50,7 +47,6 @@ nav:
             - 'Credential Process': 'security/credential-process.md'
           - Azure: 'security/credentials-generation/azure.md'
       - 'System Vault': 'security/system-vault.md'
-      - 'Zero Knowledge':  'security/zero-knowledge.md'
   - 'Built-in features':
       - 'EC2 connect through AWS SSM': 'built-in-features/aws-ec2-connect.md'
       - 'AWS Multi-profile management': 'built-in-features/aws-named-profiles.md'

@@ -22,22 +22,6 @@
 ::ng-deep {
   .mat-list.mat-list-base {
     user-select: none;
-
-    .mat-list-item.workspace-menu {
-      height: 55px !important;
-    }
-  }
-
-  .mat-menu-content {
-    .mat-menu-item.workspace-select-item {
-      display: flex;
-      height: 50px !important;
-      padding: 0 10px;
-      margin-bottom: 5px;
-      margin-left: 5px;
-      margin-top: 5px;
-      align-items: center;
-    }
   }
 
   .mat-line {
@@ -179,91 +163,6 @@ i.moon-Caret-down {
   }
 }
 
-.mat-list-base .mat-list-item .workspace-menu:hover {
-  background: #f9f9f9;
-  border-radius: 6px;
-  margin-left: 10px !important;
-  width: initial !important;
-  margin-right: 12px;
-  padding: 0;
-}
-
-.workspace-menu, .workspace-select-item {
-  .workspace-name {
-    padding-left: 10px;
-    margin-top: auto;
-    margin-bottom: auto;
-    flex-grow: 1;
-    font-size: 15px;
-  }
-
-  .workspace-name-container {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-
-    span {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      width: 180px;
-    }
-
-    span:nth-child(1) {
-      font-size: 15px;
-      line-height: initial;
-      padding-left: 10px;
-    }
-
-    span:nth-child(2) {
-      font-size: 12px;
-      color: $table-text;
-      line-height: initial;
-      padding-left: 10px;
-      padding-top: 2px;
-    }
-  }
-
-  .workspace-menu-line {
-    display: flex;
-  }
-
-  & .moon-Caret-down {
-    margin: auto;
-    position: initial;
-  }
-
-  .workspace-icon-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 40px;
-    height: 40px;
-    border: solid $silver-50 1px;
-    border-radius: 5px;
-
-    &.local {
-      background-color: $local-workspace-blu;
-    }
-
-    &.remote {
-      background-color: $remote-workspace-purple;
-
-      span {
-        color: $white-text-color;
-        font-size: 16px;
-      }
-    }
-
-    i {
-      position: relative;
-      top: 0;
-      color: $white-text-color;
-    }
-  }
-}
-
 .segment-row {
   i.moon-Close {
     position: absolute!important;
@@ -273,13 +172,6 @@ i.moon-Caret-down {
 }
 
 ::ng-deep {
-  .mat-list .workspace-menu {
-    .mat-list-item-content {
-      padding-left: 10px !important;
-      padding-bottom: 15px !important;
-    }
-  }
-
   .mat-menu-panel .mat-menu-content {
     .mat-menu-item {
       img {
@@ -289,13 +181,4 @@ i.moon-Caret-down {
       }
     }
   }
-}
-
-.mat-list-base .mat-list-item.workspace-menu:hover {
-  background: none !important;
-  width: unset !important;
-}
-
-app-sync-pro-widget {
-  width: 100%;
 }

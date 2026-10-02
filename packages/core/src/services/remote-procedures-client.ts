@@ -136,14 +136,6 @@ export class RemoteProceduresClient {
     );
   }
 
-  async refreshWorkspaceState(): Promise<void> {
-    return this.remoteProcedureCall(
-      { method: "refreshWorkspaceState", params: {} },
-      (data, resolve, reject) => (data.error ? reject(data.error) : resolve(data.result)),
-      (_, reject) => reject(connectionError)
-    );
-  }
-
   async remoteProcedureCall(
     rpcRequest: RpcRequest,
     onReturn: (data: RpcResponse, resolve: (value: unknown) => void, reject: (reason?: any) => void) => void,
