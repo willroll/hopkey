@@ -1,4 +1,5 @@
-import { OptionsService, proxyPasswordKeychainItemName } from "./options.service";
+import { OptionsService } from "./options.service";
+import { proxyPasswordKeychainItemName } from "@hopkey/core/services/proxy-service";
 import { Workspace } from "@hopkey/core/models/workspace";
 import { constants } from "@hopkey/core/models/constants";
 
@@ -21,7 +22,7 @@ describe("OptionsService", () => {
       saveSecret: jasmine.createSpy("saveSecret").and.callFake(async (_service, account, secret) => keychain.set(account, secret)),
       deleteSecret: jasmine.createSpy("deleteSecret").and.callFake(async (_service, account) => keychain.delete(account)),
     };
-    service = new OptionsService({ workspaceService, keychainService } as any);
+    service = new OptionsService({ workspaceService, keychainService } as any, null);
   });
 
   it("keeps the proxy password in the keychain, and the rest of the proxy configuration in the workspace", async () => {
@@ -71,5 +72,38 @@ describe("OptionsService", () => {
     await expectAsync(service.moveProxyPasswordToKeychain()).toBeRejectedWithError("the keychain is locked");
     expect(workspace.proxyConfiguration.password).toBe("old");
     expect(workspaceService.persistWorkspace).not.toHaveBeenCalled();
+  });
+
+  describe("applyProxy", () => {
+    let proxyService: any;
+    let ipcRenderer: any;
+
+    beforeEach(() => {
+      proxyService = { load: jasmine.createSpy("load").and.resolveTo(), url: undefined };
+      ipcRenderer = { invoke: jasmine.createSpy("invoke").and.resolveTo() };
+      service = new OptionsService({ workspaceService, keychainService, proxyService } as any, { ipcRenderer } as any);
+    });
+
+    it("sends the proxy from the options, and its credentials, to the Electron sessions", async () => {
+      proxyService.load.and.callFake(async () => (proxyService.url = "http://me%40corp:p%40ss@proxy.example.com:3128"));
+
+      await service.applyProxy();
+
+      expect(ipcRenderer.invoke).toHaveBeenCalledWith("SET_PROXY", { rules: "http://proxy.example.com:3128", username: "me@corp", password: "p@ss" });
+    });
+
+    it("goes back to the system's proxy settings when the options have none", async () => {
+      await service.applyProxy();
+
+      expect(proxyService.load).toHaveBeenCalled();
+      expect(ipcRenderer.invoke).toHaveBeenCalledWith("SET_PROXY", undefined);
+    });
+
+    it("leaves the sessions alone when the proxy in the options can't be used", async () => {
+      proxyService.load.and.rejectWith(new Error("Hopkey can't use the proxy in the options: it supports HTTP and HTTPS proxies, not socks5"));
+
+      await expectAsync(service.applyProxy()).toBeRejectedWithError(/not socks5/);
+      expect(ipcRenderer.invoke).not.toHaveBeenCalled();
+    });
   });
 });

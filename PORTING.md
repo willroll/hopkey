@@ -55,5 +55,3 @@ These need the repository owner and can't be done from the code:
   CLI release.
 - **Aging stack**: Node 18 and Electron 22 are out of support, and `keytar` is archived; plan the upgrades (Electron's
   `safeStorage` is a candidate replacement for `keytar`).
-- The proxy settings in the options are saved (the password in the keychain) but no connection uses them: apply them
-  or remove them.

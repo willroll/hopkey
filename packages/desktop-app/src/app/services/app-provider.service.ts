@@ -11,6 +11,7 @@ import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-s
 import { AppNativeService } from "./app-native.service";
 import { AppMfaCodePromptService } from "./app-mfa-code-prompt.service";
 import { ExecuteService } from "@hopkey/core/services/execute-service";
+import { ProxyService } from "@hopkey/core/services/proxy-service";
 import { RetroCompatibilityService } from "@hopkey/core/services/retro-compatibility-service";
 import { AppAwsAuthenticationService } from "./app-aws-authentication.service";
 import { AwsParentSessionFactory } from "@hopkey/core/services/session/aws/aws-parent-session.factory";
@@ -86,6 +87,7 @@ export class AppProviderService {
   private logServiceInstance: LogService;
   private timerServiceInstance: TimerService;
   private executeServiceInstance: ExecuteService;
+  private proxyServiceInstance: ProxyService;
   private rotationServiceInstance: RotationService;
   private retroCompatibilityServiceInstance: RetroCompatibilityService;
   private azureCoreServiceInstance: AzureCoreService;
@@ -443,9 +445,16 @@ export class AppProviderService {
     return this.timerServiceInstance;
   }
 
+  public get proxyService(): ProxyService {
+    if (!this.proxyServiceInstance) {
+      this.proxyServiceInstance = new ProxyService(this.repository, this.keychainService);
+    }
+    return this.proxyServiceInstance;
+  }
+
   public get executeService(): ExecuteService {
     if (!this.executeServiceInstance) {
-      this.executeServiceInstance = new ExecuteService(this.appNativeService, this.repository, this.logService);
+      this.executeServiceInstance = new ExecuteService(this.appNativeService, this.repository, this.logService, this.proxyService);
     }
     return this.executeServiceInstance;
   }

@@ -53,7 +53,7 @@ export class AppVerificationWindowService implements IAwsSsoOidcVerificationWind
       parentWindowPosition[1] + 50
     );
 
-    verificationWindow.loadURL(startDeviceAuthorizationResponse.verificationUriComplete);
+    this.windowService.loadUrl(verificationWindow, startDeviceAuthorizationResponse.verificationUriComplete);
     verificationWindow.on("close", (e) => {
       e.preventDefault();
       onWindowClose();

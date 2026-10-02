@@ -19,6 +19,7 @@ import { AppNativeService } from "../../../services/app-native.service";
 import { PluginContainer } from "@hopkey/core/plugin-sdk/plugin-manager-service";
 import { colorThemeSubject } from "../../check-icon-svg/check-icon-svg.component";
 import { ExtensionWebsocketService } from "../../../services/extension-websocket.service";
+import { proxyUrl } from "@hopkey/core/services/proxy-service";
 
 @Component({
   selector: "app-options-dialog",
@@ -174,17 +175,27 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Save the idp-url again
+   * Save the options, and apply the proxy if it changed
    */
   async saveOptions(): Promise<void> {
     if (this.form.valid) {
-      await this.optionsService.updateProxyConfiguration({
+      const proxyConfiguration = {
         proxyUrl: this.form.controls["proxyUrl"].value,
         proxyProtocol: this.form.controls["proxyProtocol"].value,
         proxyPort: this.form.controls["proxyPort"].value,
-        username: this.form.controls["proxyUsername"].value,
-        password: this.form.controls["proxyPassword"].value,
-      });
+        username: this.showProxyAuthentication ? this.form.controls["proxyUsername"].value : "",
+        password: this.showProxyAuthentication ? this.form.controls["proxyPassword"].value : "",
+      };
+      try {
+        proxyUrl(proxyConfiguration, proxyConfiguration.password);
+      } catch (error) {
+        this.toasterService.toast(error.message, ToastLevel.warn, "Options");
+        return;
+      }
+      const proxyChanged = ["proxyUrl", "proxyProtocol", "proxyPort", "proxyUsername", "proxyPassword", "showAuthCheckbox"].some(
+        (control) => this.form.controls[control].dirty
+      );
+      await this.optionsService.updateProxyConfiguration(proxyConfiguration);
 
       this.optionsService.defaultRegion = this.selectedRegion;
       this.optionsService.defaultLocation = this.selectedLocation;
@@ -193,45 +204,15 @@ export class OptionsDialogComponent implements OnInit, AfterViewInit {
 
       this.optionsService.ssmRegionBehaviour = this.selectedSsmRegionBehaviour;
 
-      if (this.checkIfNeedDialogBox()) {
-        // eslint-disable-next-line max-len
-        this.windowService.confirmDialog(
-          "You've set a proxy url: the app must be restarted to update the configuration.",
-          (res) => {
-            if (res !== constants.confirmClosed) {
-              // eslint-disable-next-line max-len
-              this.appProviderService.logService.log(
-                new LoggedEntry("User have set a proxy url: the app must be restarted to update the configuration.", this, LogLevel.info)
-              );
-              this.appService.restart();
-            }
-          },
-          "Restart",
-          "Cancel"
-        );
-      } else {
-        this.appService.closeModal();
-        this.appProviderService.logService.log(
-          new LoggedEntry("Option saved.", this, LogLevel.info, false, JSON.stringify(this.form.getRawValue(), null, 3))
-        );
-        this.toasterService.toast("Option saved.", ToastLevel.info, "Options");
+      if (proxyChanged) {
+        await this.optionsService.applyProxy();
       }
-    }
-  }
 
-  /**
-   * Check if we need a dialog box to request restarting the application
-   */
-  checkIfNeedDialogBox(): boolean {
-    return (
-      this.form.controls["proxyUrl"].value !== undefined &&
-      this.form.controls["proxyUrl"].value !== null &&
-      (this.form.controls["proxyUrl"].dirty ||
-        this.form.controls["proxyProtocol"].dirty ||
-        this.form.controls["proxyPort"].dirty ||
-        this.form.controls["proxyUsername"].dirty ||
-        this.form.controls["proxyPassword"].dirty)
-    );
+      this.appService.closeModal();
+      const { proxyPassword: _, ...savedOptions } = this.form.getRawValue();
+      this.appProviderService.logService.log(new LoggedEntry("Option saved.", this, LogLevel.info, false, JSON.stringify(savedOptions, null, 3)));
+      this.toasterService.toast("Option saved.", ToastLevel.info, "Options");
+    }
   }
 
   /**

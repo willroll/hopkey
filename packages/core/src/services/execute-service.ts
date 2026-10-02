@@ -2,9 +2,15 @@ import { INativeService } from "../interfaces/i-native-service";
 import { constants } from "../models/constants";
 import { Repository } from "./repository";
 import { LoggedEntry, LogLevel, LogService } from "./log-service";
+import { ProxyService } from "./proxy-service";
 
 export class ExecuteService {
-  constructor(private nativeService: INativeService, private repository: Repository, private logService: LogService) {}
+  constructor(
+    private nativeService: INativeService,
+    private repository: Repository,
+    private logService: LogService,
+    private proxyService?: ProxyService
+  ) {}
 
   getQuote(): string {
     return this.nativeService.process.platform === "darwin" ? "'" : "";
@@ -21,6 +27,12 @@ export class ExecuteService {
    * @returns an {Promise<string>} stdout or stderr
    */
   async execute(command: string, env?: any, maskOutputLog?: boolean): Promise<string> {
+    // The programs Hopkey starts, such as the Azure CLI, go through the proxy set in the options. Not under sudo, whose
+    // prompt refuses environments with unusual variables.
+    const proxyEnvironment = this.proxyService?.environment ?? {};
+    if (!command.startsWith("sudo") && Object.keys(proxyEnvironment).length > 0) {
+      env = { ...(env ?? this.nativeService.process.env), ...proxyEnvironment };
+    }
     let exec = this.nativeService.exec;
     if (command.startsWith("sudo")) {
       exec = this.nativeService.sudo.exec;

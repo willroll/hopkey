@@ -4,23 +4,14 @@ import { AppProviderService } from "./app-provider.service";
 import { WorkspaceService } from "@hopkey/core/services/workspace-service";
 import { Session } from "@hopkey/core/models/session";
 import { constants } from "@hopkey/core/models/constants";
-
-interface ProxyConfiguration {
-  proxyProtocol: string;
-  proxyUrl?: string;
-  proxyPort: string;
-  username?: string;
-  password?: string;
-}
-
-// The proxy password is a secret: it's kept in the keychain, not in the workspace file
-export const proxyPasswordKeychainItemName = "proxy-password";
+import { ProxyConfiguration, proxyPasswordKeychainItemName } from "@hopkey/core/services/proxy-service";
+import { AppNativeService } from "./app-native.service";
 
 @Injectable({ providedIn: "root" })
 export class OptionsService {
   workspaceService: WorkspaceService;
 
-  constructor(private appProviderService: AppProviderService) {
+  constructor(private appProviderService: AppProviderService, private appNativeService: AppNativeService) {
     this.workspaceService = this.appProviderService.workspaceService;
   }
 
@@ -49,6 +40,23 @@ export class OptionsService {
     const workspace = this.workspaceService.getWorkspace();
     workspace.proxyConfiguration = configuration;
     this.workspaceService.persistWorkspace(workspace);
+  }
+
+  /**
+   * Sends the app's connections through the proxy in the options, or directly when there's none. The Electron
+   * sessions carry the window's requests, which include the AWS calls, the sign-in windows and the update check, and
+   * the programs the app starts, such as the Azure CLI, get the proxy in their environment.
+   */
+  async applyProxy(): Promise<void> {
+    const proxyService = this.appProviderService.proxyService;
+    await proxyService.load();
+    const url = proxyService.url ? new URL(proxyService.url) : undefined;
+    const proxy = url && {
+      rules: `${url.protocol}//${url.host}`,
+      username: decodeURIComponent(url.username),
+      password: decodeURIComponent(url.password),
+    };
+    await this.appNativeService.ipcRenderer.invoke("SET_PROXY", proxy);
   }
 
   /**

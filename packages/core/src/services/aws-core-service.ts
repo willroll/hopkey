@@ -41,7 +41,7 @@ export class AwsCoreService {
     ["us-west-2", "https://sts.us-west-2.amazonaws.com"],
   ]);
 
-  constructor(private httpHandler: HttpHandler, private nativeService: INativeService, private logService: LogService) {}
+  constructor(readonly httpHandler: HttpHandler, private nativeService: INativeService, private logService: LogService) {}
 
   awsCredentialPath(): string {
     return this.nativeService.path.join(this.nativeService.os.homedir(), ".aws", "credentials");
@@ -77,6 +77,7 @@ export class AwsCoreService {
       options = {
         maxRetries: 0,
         httpOptions: { timeout: constants.timeout },
+        requestHandler: this.httpHandler,
       };
 
       if (session.region) {

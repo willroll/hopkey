@@ -61,7 +61,7 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
         });
       });
       // Start the process
-      idpWindow.loadURL(sanitizedField);
+      this.windowService.loadUrl(idpWindow, sanitizedField);
     });
   }
 
@@ -106,7 +106,7 @@ export class AppAwsAuthenticationService implements IAwsSamlAuthenticationServic
         }
       });
       // 4. Navigate to idpUrl
-      idpWindow.loadURL(sanitizedField);
+      this.windowService.loadUrl(idpWindow, sanitizedField);
     });
   }
 

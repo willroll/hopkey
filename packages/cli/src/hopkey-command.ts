@@ -23,16 +23,27 @@ export abstract class HopkeyCommand extends Command {
   }
 
   async init(): Promise<void> {
-    this.cliProviderService.awsSsoRoleService.setAwsIntegrationDelegate(this.cliProviderService.awsSsoIntegrationService);
     const isDesktopAppRunning = await this.cliProviderService.remoteProceduresClient.isDesktopAppRunning();
     if (!isDesktopAppRunning) {
       this.error("Hopkey app must be running to use this CLI. You can download it here: https://github.com/willroll/hopkey/releases");
     }
+    // Before the first AWS client is created: they all take the proxy from the native service
+    await this.useProxy();
+    this.cliProviderService.awsSsoRoleService.setAwsIntegrationDelegate(this.cliProviderService.awsSsoIntegrationService);
   }
 
   unsupportedAzureSession(session: Session): void {
     if (session && session.type === SessionType.azure) {
       throw new Error("Azure sessions not supported for this command");
     }
+  }
+
+  private async useProxy(): Promise<void> {
+    try {
+      await this.cliProviderService.proxyService.load();
+    } catch (error: any) {
+      this.error(error.message);
+    }
+    this.cliProviderService.cliNativeService.useProxy(this.cliProviderService.proxyService.url);
   }
 }

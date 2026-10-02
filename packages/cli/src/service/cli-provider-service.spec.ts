@@ -39,4 +39,18 @@ describe("CliProviderService", () => {
     expect(cliNativeService.msalEncryptionService.protectData).not.toBeFalsy();
     expect(cliNativeService.msalEncryptionService.unprotectData).not.toBeFalsy();
   });
+
+  test("the AWS clients and the programs it starts go through the proxy loaded at startup", async () => {
+    const cliProviderService = new CliProviderService();
+    cliProviderService.cliNativeService.useProxy("http://me:secret@proxy.example.com:3128");
+
+    const httpHandler = cliProviderService.awsCoreService.httpHandler as any;
+    const config = await httpHandler.configProvider;
+    expect(config.httpAgent).toBe(cliProviderService.cliNativeService.proxyAgents.httpAgent);
+    expect(config.httpsAgent).toBe(cliProviderService.cliNativeService.proxyAgents.httpsAgent);
+    expect((cliProviderService.awsSsoOidcService as any).httpHandler).toBe(httpHandler);
+    expect((cliProviderService.awsSsoIntegrationService as any).httpHandler).toBe(httpHandler);
+    expect((cliProviderService.ssmService as any).httpHandler).toBe(httpHandler);
+    expect((cliProviderService.executeService as any).proxyService).toBe(cliProviderService.proxyService);
+  });
 });
