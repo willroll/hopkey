@@ -15,7 +15,6 @@ import { ModalModule } from "ngx-bootstrap/modal";
 import { ErrorService } from "./services/middleware/error.service";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ComponentsModule } from "./components/components.module";
-import { ToastrModule } from "ngx-toastr";
 
 @NgModule({
   declarations: [AppComponent, TrayMenuComponent],
@@ -32,7 +31,6 @@ import { ToastrModule } from "ngx-toastr";
     LayoutModule,
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    ToastrModule.forRoot(),
   ],
   entryComponents: [ConfirmationDialogComponent, InputDialogComponent],
   providers: [{ provide: ErrorHandler, useClass: ErrorService }],

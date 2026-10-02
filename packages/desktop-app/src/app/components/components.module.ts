@@ -9,7 +9,6 @@ import { InputDialogComponent } from "./dialogs/input-dialog/input-dialog.compon
 import { SnackbarComponent } from "./snackbar/snackbar.component";
 import { UpdateDialogComponent } from "./dialogs/update-dialog/update-dialog.component";
 import { ModalModule } from "ngx-bootstrap/modal";
-import { NgxJsonViewerModule } from "ngx-json-viewer";
 //import { MatTabsModule } from "@angular/material/tabs";
 import { MatLegacyTabsModule } from "@angular/material/legacy-tabs";
 import { MatIconModule } from "@angular/material/icon";
@@ -104,7 +103,6 @@ import { AgentSettingsComponent } from "./agent-settings/agent-settings.componen
     ReactiveFormsModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
-    NgxJsonViewerModule,
     //MatTabsModule,
     MatIconModule,
     MatCheckboxModule,
