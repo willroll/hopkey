@@ -40,13 +40,10 @@ describe("AppComponent", () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
 
-    // check for deep link at app start
+    // A deep link left by a launch while the app was closed
     (app as any).fileService = {};
-    (app as any).fileService.readFileSync = jasmine
-      .createSpy()
-      .and.returnValue("hopkey://01255ef8-open-hopkey?email=test&firstName=n&lastName=g&teamName=t");
+    (app as any).fileService.readFileSync = jasmine.createSpy().and.returnValue("hopkey://hopkey-plugin-example");
     (app as any).fileService.existsSync = jasmine.createSpy().and.returnValue(true);
-    (app as any).isOpenHopkeyDeepLink = jasmine.createSpy().and.returnValue(true);
     (app as any).awsSsoRoleService = { setAwsIntegrationDelegate: () => {} };
     (app as any).windowService = { blockDevToolInProductionMode: () => {} };
     (app as any).updaterService = { createFoldersIfMissing: () => {} };
@@ -55,11 +52,6 @@ describe("AppComponent", () => {
     (app as any).manageAutoUpdate = () => {};
     (app as any).timerService = { start: () => {} };
     (app as any).loggingService = { log: () => {} };
-    (app as any).teamService = {
-      syncingWorkspaceState: { subscribe: () => {} },
-      setCurrentWorkspace: () => {},
-      signedInUserState: { getValue: () => {} },
-    };
     (app as any).behaviouralSubjectService = { fetchingIntegrationState$: { subscribe: () => {} } };
     (app as any).behaviouralSubjectService.sessions = [];
     (app as any).extensionWebsocketService = { bootstrap: () => {} };
@@ -75,111 +67,54 @@ describe("AppComponent", () => {
         join: () => "",
       },
       ipcRenderer: { on: (_string, _callback) => {} },
-      fs: { removeSync: () => {} },
+      fs: { removeSync: jasmine.createSpy("removeSync") },
     };
 
     await app.ngOnInit();
     expect((app as any).fileService.existsSync).toHaveBeenCalled();
-    expect((app as any).router.navigate).toHaveBeenCalledWith(["/lock"], {
-      queryParams: {
-        teamMemberEmail: "test",
-        teamMemberFirstName: "n",
-        teamMemberLastName: "g",
-        teamMemberTeamName: "t",
-      },
-    });
+    expect((app as any).appNativeService.fs.removeSync).toHaveBeenCalled();
+    expect((app as any).router.navigate).toHaveBeenCalledWith(["/dashboard"]);
   });
 
-  it("Should listen for deep links", () => {
+  it("manageAutoUpdate uses the current version when the saved one can't be read", () => {
     const fixture = TestBed.createComponent(AppComponent);
-    let app = fixture.debugElement.componentInstance;
-
+    const app = fixture.debugElement.componentInstance;
     (app as any).updaterService.getSavedAppVersion = jasmine.createSpy().and.throwError("error");
     (app as any).updaterService.getCurrentAppVersion = jasmine.createSpy().and.returnValue("0.0.0");
 
-    // First try error
     expect(() => (app as any).manageAutoUpdate()).toThrowError("this.electronService.fs.writeFileSync is not a function");
     expect((app as any).updaterService.getCurrentAppVersion).toHaveBeenCalled();
-
-    app = fixture.debugElement.componentInstance;
-    (app as any).behaviouralSubjectService = { sessions: [] };
-    (app as any).isOpenHopkeyDeepLink = jasmine.createSpy().and.returnValue(true);
-    (app as any).router.navigate = jasmine.createSpy().and.callFake(() => {});
-    (app as any).pluginManagerService = { installPlugin: jasmine.createSpy().and.returnValue("") };
-
-    (app as any).appProviderService = {};
-    (app as any).appProviderService.sessionManagementService = {};
-    (app as any).updaterService = {};
-    (app as any).appNativeService = {};
-
-    (app as any).appProviderService.sessionManagementService.updateSessions = jasmine.createSpy().and.returnValue("");
-    (app as any).updaterService.getSavedAppVersion = jasmine.createSpy().and.returnValue("0.0.1");
-    (app as any).updaterService.getCurrentAppVersion = jasmine.createSpy().and.returnValue("0.0.0");
-    (app as any).updaterService.getReleaseNote = jasmine.createSpy().and.returnValue("release-note");
-    (app as any).updaterService.setUpdateInfo = jasmine.createSpy().and.returnValue("");
-    (app as any).updaterService.updateVersionJson = jasmine.createSpy().and.returnValue("");
-    (app as any).updaterService.isUpdateNeeded = jasmine.createSpy().and.returnValue(true);
-    (app as any).updaterService.updateDialog = jasmine.createSpy().and.returnValue("");
-
-    const mockedCallback1 = () => {
-      const releaseNote = (app as any).updaterService.getReleaseNote();
-      (app as any).updaterService.setUpdateInfo("1", "2", "3", releaseNote);
-      if ((app as any).updaterService.isUpdateNeeded()) {
-        (app as any).updaterService.updateDialog();
-        (app as any).behaviouralSubjectService.sessions = [...(app as any).behaviouralSubjectService.sessions];
-        (app as any).appProviderService.sessionManagementService.updateSessions((app as any).behaviouralSubjectService.sessions);
-      }
-    };
-    const mockedCallback2 = (url) => {
-      if ((app as any).isOpenHopkeyDeepLink(url)) {
-        const afterQuestionMark = url.split("?")[1];
-        const splitByAmpersand = afterQuestionMark?.split("&");
-        const teamMemberEmail = splitByAmpersand[0]?.split("=")[1];
-        const teamMemberFirstName = splitByAmpersand[1]?.split("=")[1];
-        const teamMemberLastName = splitByAmpersand[2]?.split("=")[1];
-        const teamMemberTeamName = splitByAmpersand[3]?.split("=")[1];
-        if (teamMemberEmail) {
-          (app as any).router.navigate(["/lock"], { queryParams: { teamMemberEmail, teamMemberFirstName, teamMemberLastName, teamMemberTeamName } });
-        }
-      } else if (!constants.disablePluginSystem) {
-        (app as any).pluginManagerService.installPlugin(url);
-      }
-    };
-
-    (app as any).appNativeService.ipcRenderer = {
-      on: (_string, _callback) => {
-        if (_string === "UPDATE_AVAILABLE") {
-          mockedCallback1();
-        } else {
-          mockedCallback2("https://fake-url?email=a");
-        }
-      },
-    };
-
-    (app as any).manageAutoUpdate();
-    expect((app as any).updaterService.getCurrentAppVersion).toHaveBeenCalled();
-
-    const ipcRenderer = (app as any).appNativeService.ipcRenderer;
-    ipcRenderer.on("UPDATE_AVAILABLE", null);
-    expect((app as any).updaterService.getReleaseNote).toHaveBeenCalled();
-    expect((app as any).updaterService.setUpdateInfo).toHaveBeenCalled();
-    expect((app as any).updaterService.isUpdateNeeded).toHaveBeenCalled();
-    expect((app as any).updaterService.updateDialog).toHaveBeenCalled();
-    expect((app as any).appProviderService.sessionManagementService.updateSessions).toHaveBeenCalled();
-
-    ipcRenderer.on("PLUGIN_URL", null);
-    expect((app as any).isOpenHopkeyDeepLink).toHaveBeenCalled();
-    expect((app as any).router.navigate).toHaveBeenCalled();
   });
 
-  it("isopendeeplink", () => {
+  it("listens for updates and plugin links", async () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
+    const listeners: { [channel: string]: (event: any, payload: any) => any } = {};
+    (app as any).appNativeService = { ipcRenderer: { on: (channel, listener) => (listeners[channel] = listener) } };
+    (app as any).behaviouralSubjectService = { sessions: [] };
+    (app as any).appProviderService = { sessionManagementService: { updateSessions: jasmine.createSpy("updateSessions") } };
+    (app as any).updaterService = {
+      getSavedAppVersion: () => "0.0.1",
+      getCurrentAppVersion: () => "0.0.0",
+      updateVersionJson: jasmine.createSpy("updateVersionJson"),
+      getReleaseNote: async () => "release-note",
+      setUpdateInfo: jasmine.createSpy("setUpdateInfo"),
+      isUpdateNeeded: () => true,
+      updateDialog: jasmine.createSpy("updateDialog"),
+    };
+    (app as any).installPluginFromLink = jasmine.createSpy("installPluginFromLink");
+    const pluginSystemDisabled = constants.disablePluginSystem;
+    constants.disablePluginSystem = false;
 
-    let result = (app as any).isOpenHopkeyDeepLink("https://01255ef8-open-hopkey?email=test@gmail.com");
-    expect(result).toBeTruthy();
-    result = (app as any).isOpenHopkeyDeepLink("https://open-plugin-name");
-    expect(result).toBeFalsy();
+    (app as any).manageAutoUpdate();
+    await listeners["UPDATE_AVAILABLE"](null, { version: "1.0.0", releaseName: "Hopkey 1.0.0", releaseDate: "2026-10-01" });
+    listeners["PLUGIN_URL"](null, "hopkey-plugin-example");
+    constants.disablePluginSystem = pluginSystemDisabled;
+
+    expect((app as any).updaterService.setUpdateInfo).toHaveBeenCalledWith("1.0.0", "Hopkey 1.0.0", "2026-10-01", "release-note");
+    expect((app as any).updaterService.updateDialog).toHaveBeenCalled();
+    expect((app as any).appProviderService.sessionManagementService.updateSessions).toHaveBeenCalled();
+    expect((app as any).installPluginFromLink).toHaveBeenCalledWith("hopkey-plugin-example");
   });
 
   it("beforeCloseInstructions", async () => {
@@ -192,7 +127,6 @@ describe("AppComponent", () => {
         stopAllSessions: jasmine.createSpy().and.callFake(() => {}),
       },
     };
-    (app as any).teamService = { signOut: jasmine.createSpy().and.callFake(() => {}) };
     (app as any).appService = { quit: jasmine.createSpy().and.callFake(() => {}) };
 
     await (app as any).beforeCloseInstructions();
@@ -200,7 +134,6 @@ describe("AppComponent", () => {
     expect((app as any).loggingService.log).toHaveBeenCalledWith(new LoggedEntry("Closing app with cleaning process...", this, LogLevel.info));
     expect((app as any).remoteProceduresServer.stopServer).toHaveBeenCalledTimes(1);
     expect((app as any).appProviderService.sessionManagementService.stopAllSessions).toHaveBeenCalledTimes(1);
-    expect((app as any).teamService.signOut).toHaveBeenCalledTimes(1);
     expect((app as any).appService.quit).toHaveBeenCalledTimes(1);
   });
 

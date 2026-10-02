@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { User } from "./team-service";
 
 /**
  * Hopkey does not collect usage analytics: these hooks are kept as no-ops so that the existing call
@@ -9,7 +8,7 @@ import { User } from "./team-service";
   providedIn: "root",
 })
 export class AnalyticsService {
-  init(_user: User): void {
+  init(): void {
     // Intentionally empty: no analytics are collected.
   }
 

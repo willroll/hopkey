@@ -74,16 +74,8 @@ const mustInjected = (): any[] => {
   const spyHopkeyCoreService = jasmine.createSpyObj("HopkeyCoreService", [], {
     fileService: spyFileService,
     loggingService: spyLoggingService,
-    workspaceService: {
-      extractGlobalSettings: () => ({ colorTheme: "" }),
-    },
-    teamService: {
-      signedInUserState: { getValue: () => ({}) },
-      workspacesState: {
-        subscribe: () => ({
-          unsubscribe: () => ({}),
-        }),
-      },
+    repository: {
+      getColorTheme: () => "",
     },
   });
 

@@ -180,28 +180,6 @@ export class OptionsService {
     this.workspaceService.persistWorkspace(workspace);
   }
 
-  get requirePassword(): number {
-    const workspace = this.workspaceService.getWorkspace();
-    return workspace.requirePassword;
-  }
-
-  set requirePassword(value: number) {
-    const workspace = this.workspaceService.getWorkspace();
-    workspace.requirePassword = value;
-    this.workspaceService.persistWorkspace(workspace);
-  }
-
-  get touchIdEnabled(): boolean {
-    const workspace = this.workspaceService.getWorkspace();
-    return workspace.touchIdEnabled;
-  }
-
-  set touchIdEnabled(value: boolean) {
-    const workspace = this.workspaceService.getWorkspace();
-    workspace.touchIdEnabled = value;
-    this.workspaceService.persistWorkspace(workspace);
-  }
-
   private async saveProxyPassword(password?: string): Promise<void> {
     if (password) {
       await this.appProviderService.keychainService.saveSecret(constants.appName, proxyPasswordKeychainItemName, password);

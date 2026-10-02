@@ -433,13 +433,6 @@ export class CreateDialogComponent implements OnInit {
           break;*/
       }
 
-      try {
-        await this.hopkeyCoreService.teamService.pushToRemote();
-      } catch (error) {
-        this.hopkeyCoreService.teamService.setSyncState("failed");
-        throw error;
-      }
-
       this.messageToasterService.toast(`Session: ${this.form.value.name}, created.`, ToastLevel.success, "");
       this.closeModal();
     } else {

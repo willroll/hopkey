@@ -27,14 +27,6 @@ export abstract class HopkeyCommand extends Command {
     const isDesktopAppRunning = await this.cliProviderService.remoteProceduresClient.isDesktopAppRunning();
     if (!isDesktopAppRunning) {
       this.error("Hopkey app must be running to use this CLI. You can download it here: https://github.com/willroll/hopkey/releases");
-      return;
-    }
-    await this.cliProviderService.teamService.setCurrentWorkspace(true);
-  }
-
-  async finally(error: any): Promise<void> {
-    if (error === undefined) {
-      await this.cliProviderService.teamService.pushToRemote();
     }
   }
 

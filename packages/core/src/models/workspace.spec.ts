@@ -15,7 +15,6 @@ describe("Workspace Model", () => {
       expect(stringifiedWorkspace).toEqual(
         '{"_sessions":[],"_awsSsoIntegrations":[],"_azureIntegrations":[],"_defaultRegion":"us-east-1",' +
           '"_defaultLocation":"eastus","_macOsTerminal":"Terminal","_idpUrls":[],"_profiles":[{"name":"default"}],' +
-          '"_remoteWorkspacesSettingsMap":{},' +
           '"_notifications":[],"_pluginsStatus":[],"_pinned":[],"_folders":[],"_segments":[],"_extensionEnabled":false,' +
           '"_proxyConfiguration":{"proxyProtocol":"https","proxyPort":"8080"},' +
           '"_credentialMethod":"credential-file-method","_samlRoleSessionDuration":3600,"_ssmRegionBehaviour":"No"}'

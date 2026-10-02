@@ -272,13 +272,6 @@ export class EditDialogComponent implements OnInit, AfterViewInit {
           await this.sessionService.start(this.selectedSession.sessionId);
         }
 
-        try {
-          await this.hopkeyCoreService.teamService.pushToRemote();
-        } catch (error) {
-          this.hopkeyCoreService.teamService.setSyncState("failed");
-          throw error;
-        }
-
         this.messageToasterService.toast(`Session: ${this.form.value.name}, edited.`, ToastLevel.success, "");
       } else {
         this.messageToasterService.toast(`One or more parameters are invalid, check your choices.`, ToastLevel.warn, "");

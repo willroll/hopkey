@@ -31,11 +31,6 @@ describe("CommandBarComponent", () => {
       repository: spyRepositoryService,
       awsCoreService: { getRegions: () => [] },
       namedProfileService: { getNamedProfiles: () => [] },
-      teamService: {
-        signedInUserState: { subscribe: () => {} },
-        workspacesState: { subscribe: () => {} },
-        getKeychainCurrentWorkspace: async () => Promise.resolve("remoteWorkspace"),
-      },
       notificationService: spyNotificationsService,
     });
 
@@ -73,12 +68,6 @@ describe("CommandBarComponent", () => {
       unsubscribe: () => {},
     };
     (component as any).subscription6 = {
-      unsubscribe: () => {},
-    };
-    (component as any).userSubscription = {
-      unsubscribe: () => {},
-    };
-    (component as any).workspaceStateSubscription = {
       unsubscribe: () => {},
     };
     (component as any).optionsService = { colorTheme: "dark-theme", workspaceService: { getWorkspace: () => new Workspace() } };

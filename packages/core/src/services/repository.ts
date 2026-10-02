@@ -18,7 +18,6 @@ import { AzureIntegration } from "../models/azure/azure-integration";
 import PluginStatus from "../models/plugin-status";
 import { WorkspaceConsistencyService } from "./workspace-consistency-service";
 import { HopkeyNotification } from "../models/notification";
-import { GlobalSettings } from "../interfaces/i-global-settings";
 import { LegacyImportService } from "./legacy-import-service";
 
 export class Repository {
@@ -464,47 +463,6 @@ export class Repository {
 
   writeFile(data: string): void {
     this.nativeService.fs.writeFileSync(__dirname + "/register-client-response", JSON.stringify(data));
-  }
-
-  get globalSettings(): GlobalSettings {
-    const workspace = this.getWorkspace();
-    return {
-      colorTheme: workspace.colorTheme,
-      credentialMethod: workspace.credentialMethod,
-      defaultLocation: workspace.defaultLocation,
-      defaultRegion: workspace.defaultRegion,
-      extensionEnabled: workspace.extensionEnabled,
-      macOsTerminal: workspace.macOsTerminal,
-      pluginsStatus: workspace.pluginsStatus,
-      samlRoleSessionDuration: workspace.samlRoleSessionDuration,
-      pinned: workspace.pinned,
-      segments: workspace.segments,
-      ssmRegionBehaviour: workspace.ssmRegionBehaviour,
-      notifications: workspace.notifications,
-      requirePassword: workspace.requirePassword,
-      touchIdEnabled: workspace.touchIdEnabled,
-      remoteWorkspacesSettingsMap: workspace.remoteWorkspacesSettingsMap,
-    };
-  }
-
-  set globalSettings(globalSettingsInput: GlobalSettings) {
-    const workspace = this.getWorkspace();
-    workspace.colorTheme = globalSettingsInput.colorTheme;
-    workspace.credentialMethod = globalSettingsInput.credentialMethod;
-    workspace.defaultLocation = globalSettingsInput.defaultLocation;
-    workspace.defaultRegion = globalSettingsInput.defaultRegion;
-    workspace.extensionEnabled = globalSettingsInput.extensionEnabled;
-    workspace.macOsTerminal = globalSettingsInput.macOsTerminal;
-    workspace.pluginsStatus = globalSettingsInput.pluginsStatus;
-    workspace.samlRoleSessionDuration = globalSettingsInput.samlRoleSessionDuration;
-    workspace.pinned = globalSettingsInput.pinned;
-    workspace.segments = globalSettingsInput.segments;
-    workspace.ssmRegionBehaviour = globalSettingsInput.ssmRegionBehaviour;
-    workspace.notifications = globalSettingsInput.notifications;
-    workspace.requirePassword = globalSettingsInput.requirePassword;
-    workspace.touchIdEnabled = globalSettingsInput.touchIdEnabled;
-    workspace.remoteWorkspacesSettingsMap = globalSettingsInput.remoteWorkspacesSettingsMap;
-    this.persistWorkspace(workspace);
   }
 
   // NOTIFICATIONS

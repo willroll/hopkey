@@ -266,14 +266,13 @@ export class RetroCompatibilityService {
     this.repository.reloadWorkspace();
   }
 
+  // Versions 6 and 7 added settings for the paid editions, a lock screen and team workspaces, which Hopkey doesn't have
   private migration6(): void {
     const workspace = this.getWorkspace();
     if (!this.checkMigration(workspace, 5, 6)) {
       return;
     }
 
-    workspace.requirePassword = constants.requirePasswordEveryTwoWeeks.value;
-    workspace.touchIdEnabled = constants.touchIdEnabled;
     this.persists(workspace);
     this.repository.reloadWorkspace();
   }
@@ -284,7 +283,6 @@ export class RetroCompatibilityService {
       return;
     }
 
-    workspace.remoteWorkspacesSettingsMap = {};
     this.persists(workspace);
     this.repository.reloadWorkspace();
   }

@@ -5,7 +5,7 @@ describe("AnalyticsService", () => {
     const service = new AnalyticsService();
     const fetchSpy = spyOn(window, "fetch");
 
-    service.init({ userId: "user-id", email: "user@example.com" } as any);
+    service.init();
     await service.captureEvent("Session Started", { sessionId: "session-id" }, true, true);
 
     expect(fetchSpy).not.toHaveBeenCalled();

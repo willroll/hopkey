@@ -29,7 +29,6 @@ import { AzureSessionService } from "@hopkey/core/services/session/azure/azure-s
 import { AzureCoreService } from "@hopkey/core/services/azure-core-service";
 import { PluginManagerService } from "@hopkey/core/plugin-sdk/plugin-manager-service";
 import { ExtensionWebsocketService } from "./services/extension-websocket.service";
-import { TeamService, Role } from "./services/team-service";
 import { AnalyticsService } from "./services/analytics.service";
 import { legacyApp } from "@hopkey/core/services/legacy-import-service";
 
@@ -39,7 +38,6 @@ import { legacyApp } from "@hopkey/core/services/legacy-import-service";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  isSyncingWorkspace: boolean;
   fetchingState: string | undefined;
 
   private fileService: FileService;
@@ -57,7 +55,6 @@ export class AppComponent implements OnInit {
   private azureSessionService: AzureSessionService;
   private azureCoreService: AzureCoreService;
   private pluginManagerService: PluginManagerService;
-  private teamService: TeamService;
 
   /* Main app file: launches the Angular framework inside Electron app */
   constructor(
@@ -94,7 +91,6 @@ export class AppComponent implements OnInit {
     this.azureSessionService = appProviderService.azureSessionService;
     this.azureCoreService = appProviderService.azureCoreService;
     this.pluginManagerService = appProviderService.pluginManagerService;
-    this.teamService = appProviderService.teamService;
 
     this.setInitialColorSchema();
     this.setColorSchemaChangeEventListener();
@@ -168,24 +164,13 @@ export class AppComponent implements OnInit {
       );
     }
 
-    let teamMemberEmail;
-    let teamMemberFirstName;
-    let teamMemberLastName;
-    let teamMemberTeamName;
     let pluginLink: string;
 
     // Deep link with app closed
     if (this.fileService.existsSync(this.appNativeService.path.join(this.appNativeService.os.homedir(), environment.deeplinkFile))) {
       try {
         const deepLink = this.fileService.readFileSync(this.appNativeService.path.join(this.appNativeService.os.homedir(), environment.deeplinkFile));
-        if (this.isOpenHopkeyDeepLink(deepLink)) {
-          const afterQuestionMark = deepLink.split("?")[1];
-          const splitByAmpersand = afterQuestionMark.split("&");
-          teamMemberEmail = splitByAmpersand[0].split("=")[1];
-          teamMemberFirstName = decodeURIComponent(splitByAmpersand[1].split("=")[1]);
-          teamMemberLastName = decodeURIComponent(splitByAmpersand[2].split("=")[1]);
-          teamMemberTeamName = decodeURIComponent(splitByAmpersand[3].split("=")[1]);
-        } else if (!constants.disablePluginSystem) {
+        if (!constants.disablePluginSystem) {
           pluginLink = deepLink;
         }
       } catch (err) {
@@ -195,35 +180,12 @@ export class AppComponent implements OnInit {
       }
     }
 
-    this.teamService.syncingWorkspaceState.subscribe((isSyncingWorkspace: boolean) => (this.isSyncingWorkspace = isSyncingWorkspace));
-
     this.behaviouralSubjectService.fetchingIntegrationState$.subscribe((fetchingState: string | undefined) => {
       this.fetchingState = fetchingState;
     });
 
-    // Check the existence of a current-workspace key in the system keychain and
-    // load the corresponding workspace
-    await this.teamService.setCurrentWorkspace();
-
-    // Go to initial page if no sessions are already created or
-    // go to the list page if is your second visit.
-    // If there is a pro user registered go to login page instead
-    const userRole = this.teamService.signedInUserState.getValue()?.role;
-    if (userRole === Role.pro || userRole === Role.user || userRole === Role.manager || teamMemberEmail !== undefined) {
-      if (userRole === Role.pro || ((userRole === Role.user || userRole === Role.manager) && teamMemberEmail === undefined)) {
-        await this.router.navigate(["/lock"]);
-      } else if (
-        teamMemberEmail !== undefined &&
-        teamMemberFirstName !== undefined &&
-        teamMemberLastName !== undefined &&
-        teamMemberTeamName !== undefined
-      ) {
-        await this.router.navigate(["/lock"], { queryParams: { teamMemberEmail, teamMemberFirstName, teamMemberLastName, teamMemberTeamName } });
-      }
-    } else {
-      this.analyticsService.init(this.teamService.signedInUserState.getValue());
-      await this.router.navigate(["/dashboard"]);
-    }
+    this.analyticsService.init();
+    await this.router.navigate(["/dashboard"]);
 
     // Start the websocket server for the Hopkey Browser Extension
     this.extensionWebsocketService.bootstrap();
@@ -256,9 +218,6 @@ export class AppComponent implements OnInit {
 
     // Stop all the sessions
     await this.appProviderService.sessionManagementService.stopAllSessions();
-
-    // Lock team-workspace before exit, to properly save global settings
-    await this.teamService.signOut(true);
 
     // Finally quit
     this.appService.quit();
@@ -366,17 +325,7 @@ export class AppComponent implements OnInit {
     });
 
     ipc.on("PLUGIN_URL", (_, url) => {
-      if (this.isOpenHopkeyDeepLink(url)) {
-        const afterQuestionMark = url.split("?")[1];
-        const splitByAmpersand = afterQuestionMark.split("&");
-        const teamMemberEmail = splitByAmpersand[0].split("=")[1];
-        const teamMemberFirstName = decodeURIComponent(splitByAmpersand[1].split("=")[1]);
-        const teamMemberLastName = decodeURIComponent(splitByAmpersand[2].split("=")[1]);
-        const teamMemberTeamName = decodeURIComponent(splitByAmpersand[3].split("=")[1]);
-        if (teamMemberEmail) {
-          this.router.navigate(["/lock"], { queryParams: { teamMemberEmail, teamMemberFirstName, teamMemberLastName, teamMemberTeamName } });
-        }
-      } else if (!constants.disablePluginSystem) {
+      if (!constants.disablePluginSystem) {
         this.installPluginFromLink(url);
       }
     });
@@ -437,9 +386,5 @@ export class AppComponent implements OnInit {
           : new LoggedEntry(`Hopkey could not install the plugin: ${error?.message ?? error}`, this, LogLevel.error, true)
       );
     }
-  }
-
-  private isOpenHopkeyDeepLink(deepLinkUrl: string): boolean {
-    return deepLinkUrl.indexOf("01255ef8-open-hopkey?email=") > -1;
   }
 }

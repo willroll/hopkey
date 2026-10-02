@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import {
   globalFilteredSessions,
   globalFilterGroup,
@@ -15,15 +15,7 @@ import { BehaviouralSubjectService } from "@hopkey/core/services/behavioural-sub
 import { AppProviderService } from "../../services/app-provider.service";
 import { constants } from "@hopkey/core/models/constants";
 import { integrationHighlight } from "../integration-bar/integration-bar.component";
-import { MatMenuTrigger } from "@angular/material/menu";
-import { AppService } from "../../services/app.service";
-import { OptionsDialogComponent } from "../dialogs/options-dialog/options-dialog.component";
 import { AgentsDialogComponent } from "../dialogs/agents-dialog/agents-dialog.component";
-import { LoginWorkspaceDialogComponent } from "../dialogs/login-team-dialog/login-workspace-dialog.component";
-import { ManageTeamWorkspacesDialogComponent } from "../dialogs/manage-team-workspaces-dialog/manage-team-workspaces-dialog.component";
-import { WorkspaceState } from "../../services/team-service";
-import { Router } from "@angular/router";
-import { AnalyticsService } from "../../services/analytics.service";
 
 export interface SelectedSegment {
   name: string;
@@ -45,48 +37,20 @@ export const sidebarHighlight = new BehaviorSubject<HighlightSettings>({ showAll
   styleUrls: ["./side-bar.component.scss"],
 })
 export class SideBarComponent implements OnInit, OnDestroy {
-  @ViewChild("workspaceSelectionTrigger")
-  workspaceSelectionTrigger: MatMenuTrigger;
-
   folders: Folder[];
   segments: Segment[];
   selectedS: SelectedSegment[];
   showAll: boolean;
   showPinned: boolean;
   modalRef: BsModalRef;
-  workspacesState: WorkspaceState[];
-  isHopkeyTeamStubbed: boolean;
-  exporting = false;
 
   private unsubscribe: () => void;
   private behaviouralSubjectService: BehaviouralSubjectService;
 
-  constructor(
-    private router: Router,
-    private bsModalService: BsModalService,
-    private appProviderService: AppProviderService,
-    private appService: AppService,
-    private readonly analyticsService: AnalyticsService
-  ) {
+  constructor(private bsModalService: BsModalService, private appProviderService: AppProviderService) {
     this.behaviouralSubjectService = appProviderService.behaviouralSubjectService;
     this.showAll = true;
     this.showPinned = false;
-  }
-
-  get isLocalWorkspaceSelected(): boolean {
-    return !!this.workspacesState.find((state) => state.type === "local" && state.selected);
-  }
-
-  get doesRemoteWorkspaceExist(): boolean {
-    return !!this.workspacesState.find((state) => state.type !== "local");
-  }
-
-  get canLockWorkspace(): boolean {
-    return !!this.workspacesState.find((state) => (state.type === "team" || state.type === "pro") && !state.locked);
-  }
-
-  get selectedWorkspace(): WorkspaceState {
-    return this.workspacesState.find((state) => state.selected);
   }
 
   ngOnInit(): void {
@@ -101,14 +65,9 @@ export class SideBarComponent implements OnInit, OnDestroy {
     });
     sidebarHighlight.next({ showAll: true, showPinned: false, selectedSegment: -1 });
 
-    const workspaceStateSubscription = this.appProviderService.teamService.workspacesState.subscribe((workspacesState: WorkspaceState[]) => {
-      this.workspacesState = workspacesState;
-    });
-    this.isHopkeyTeamStubbed = this.appProviderService.teamService.isHopkeyTeamStubbed;
     this.unsubscribe = () => {
       segmentFilterSubscription.unsubscribe();
       sidebarHighlightSubscription.unsubscribe();
-      workspaceStateSubscription.unsubscribe();
     };
   }
 
@@ -186,76 +145,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
     integrationHighlight.next(-1);
   }
 
-  setTrigger(event: any): void {
-    event.preventDefault();
-    event.stopPropagation();
-    setTimeout(() => {
-      this.workspaceSelectionTrigger.openMenu();
-      this.appService.setMenuTrigger(this.workspaceSelectionTrigger);
-    }, 100);
-  }
-
-  showOptionDialog(): void {
-    this.bsModalService.show(OptionsDialogComponent, { animated: false, class: "option-modal" });
-  }
-
   showAgentsDialog(): void {
     this.bsModalService.show(AgentsDialogComponent, { animated: false, class: "agents-modal" });
-  }
-
-  async loginToRemoteWorkspace(): Promise<void> {
-    if (this.isHopkeyTeamStubbed) return;
-    this.bsModalService.show(LoginWorkspaceDialogComponent, {
-      animated: false,
-      class: "create-modal",
-      backdrop: "static",
-      keyboard: false,
-    });
-  }
-
-  async logoutFromRemoteWorkspace(lock: boolean = false): Promise<void> {
-    if (!this.canLockWorkspace || this.isHopkeyTeamStubbed) return;
-    await this.analyticsService.captureEvent("Sign Out", undefined, false, true);
-    await this.appProviderService.teamService.signOut(lock);
-    this.appService.closeAllMenuTriggers();
-    await this.router.navigate(["/lock"]);
-  }
-
-  async switchToWorkspace(workspace: WorkspaceState): Promise<void> {
-    if (workspace.type === "local") {
-      if (this.isLocalWorkspaceSelected) return;
-      await this.appProviderService.teamService.switchToLocalWorkspace();
-      this.resetFilters();
-    } else if (workspace.locked) {
-      await this.router.navigate(["/lock"]);
-    } else {
-      if (!this.isLocalWorkspaceSelected) return;
-      await this.appProviderService.sessionManagementService.stopAllSessions();
-      await this.appProviderService.teamService.pullFromRemote();
-      this.resetFilters();
-    }
-  }
-
-  showManageWorkspacesDialog(): void {
-    if (this.isHopkeyTeamStubbed) return;
-    this.bsModalService.show(ManageTeamWorkspacesDialogComponent, {
-      animated: false,
-      class: "create-modal",
-      backdrop: "static",
-      keyboard: false,
-    });
-  }
-
-  openWorkspaceDocumentation(): void {
-    this.appProviderService.windowService.openExternalUrl("https://willroll.github.io/hopkey/latest/workspaces/");
-  }
-
-  async exportProWorkspace(): Promise<void> {
-    this.exporting = true;
-    await this.appProviderService.teamService.exportProWorkspace();
-    await new Promise((resolve, _reject) => {
-      setTimeout(resolve, 2000);
-    });
-    this.exporting = false;
   }
 }
