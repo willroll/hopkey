@@ -23,8 +23,6 @@ contextMenu({
 
 const proxySet = setUpProxy(autoUpdater);
 
-// Fix for warning at startup
-app.allowRendererProcessReuse = true;
 app.disableHardwareAcceleration();
 
 if (process.platform === "linux") {
@@ -49,7 +47,6 @@ const windowDefaultConfig = {
     webPreferences: {
       devTools: !environment.production,
       contextIsolation: false,
-      enableRemoteModule: true,
       nodeIntegration: true
     },
   },
