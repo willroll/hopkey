@@ -53,7 +53,5 @@ These need the repository owner and can't be done from the code:
   should be regenerated with the first CLI release.
 - **Aging stack**: Node 18 and Electron 22 are out of support, and `keytar` is archived; plan the upgrades (Electron's
   `safeStorage` is a candidate replacement for `keytar`).
-- The CLI imports `puppeteer` (for SAML and IAM Identity Center logins) but lists it as a dev dependency: check the
-  published package before the first npm release.
 - The proxy settings in the options are saved (the password in the keychain) but no connection uses them: apply them
   or remove them.
