@@ -31,6 +31,8 @@ Leapp's.
 
 ### Security
 
+* Electron 44 (Chromium 152) and Node.js 24 replace Electron 22 (Chromium 108) and Node.js 18, which no longer get
+  security fixes. The sign-in windows for SAML and AWS SSO run on the current Chromium.
 * any program of the user could get credentials for any session with `hopkey session generate`, started or not
 * the CLI talked to the app through `/tmp/app.hopkey_da`, a path any user of the computer could take first: the socket
   is now in `~/.hopkey` on macOS and Linux. Over it, the app only shares its own keychain items, not those of other

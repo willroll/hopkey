@@ -25,7 +25,8 @@ In order to better understanding the Hopkey App, firstly check out the [Concept 
 
 Follow [this](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) official guide to install both Node.js and NPM.
 
-Hopkey builds with Node.js 18 (18.20.8, as specified in the .nvmrc) and npm 10.
+Hopkey builds with Node.js 24, as specified in the .nvmrc, and the npm that comes with it. The desktop app's
+Electron download needs Node.js 22.12 or later.
 
 ## NVM
 
