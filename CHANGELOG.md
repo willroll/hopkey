@@ -25,6 +25,8 @@ Leapp's.
 * import an existing Leapp workspace, its plugins and its system vault secrets on first launch
 * load plugins published for Leapp
 * bundle the icons instead of loading them from a remote Font Awesome kit
+* the proxy in the options works: the app's AWS calls, sign-in windows and update check, the CLI and the Azure CLI go
+  through it, with the password from the system vault. The options show the proxy section again.
 * the CLI no longer installs puppeteer, which downloaded a copy of Chrome for login code that nothing used
 
 ### Security

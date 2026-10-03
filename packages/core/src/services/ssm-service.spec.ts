@@ -50,6 +50,18 @@ describe("SsmService", () => {
     ssmService = new SsmService(null, executeService, nativeService, null);
   });
 
+  test("getSsmInstances - creates its clients with the request handler it was given", async () => {
+    const httpHandler = { handle: jest.fn() } as any;
+    ssmService = new SsmService(null, executeService, nativeService, null, httpHandler);
+    (ssmService as any).applyEc2MetadataInformation = jest.fn(async () => []);
+    (ssmService as any).requestSsmInstances = jest.fn(async () => []);
+
+    await ssmService.getSsmInstances(credentialInfo, "eu-west-1");
+
+    expect(ssmService.ssmClient.config.requestHandler).toBe(httpHandler);
+    expect(ssmService.ec2Client.config.requestHandler).toBe(httpHandler);
+  });
+
   test("getSsmInstances - should retrieve a list of ssm sessions given a valid region", (done) => {
     (ssmService as any).applyEc2MetadataInformation = jest.fn((_: any): any => []);
     (ssmService as any).requestSsmInstances = jest.fn((_: any): any => []);

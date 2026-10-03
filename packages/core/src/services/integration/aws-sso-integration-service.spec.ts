@@ -895,4 +895,13 @@ describe("AwsSsoIntegrationService", () => {
       new Error("fake error")
     );
   });
+
+  test("setupSsoPortalClient - creates the SSO client with the request handler it was given", () => {
+    const httpHandler = { handle: jest.fn() } as any;
+    const awsIntegrationService = new AwsSsoIntegrationService(null, null, null, null, null, null, null, httpHandler);
+
+    (awsIntegrationService as any).setupSsoPortalClient("eu-west-1");
+
+    expect((awsIntegrationService as any).ssoPortal.config.requestHandler).toBe(httpHandler);
+  });
 });

@@ -10,6 +10,7 @@ import { IAwsSsoOidcVerificationWindowService } from "../interfaces/i-aws-sso-oi
 import { BrowserWindowClosing } from "../interfaces/i-browser-window-closing";
 import { LoggedException, LogLevel } from "./log-service";
 import { CreateTokenRequest, RegisterClientRequest, SSOOIDC, StartDeviceAuthorizationRequest } from "@aws-sdk/client-sso-oidc";
+import { HttpHandler } from "@smithy/protocol-http";
 
 export class AwsSsoOidcService {
   public readonly listeners: BrowserWindowClosing[];
@@ -24,7 +25,8 @@ export class AwsSsoOidcService {
   constructor(
     private verificationWindowService: IAwsSsoOidcVerificationWindowService,
     private repository: Repository,
-    private disableInAppBrowser: boolean = false
+    private disableInAppBrowser: boolean = false,
+    private httpHandler?: HttpHandler
   ) {
     this.listeners = [];
     this.ssoOidc = null;
@@ -47,7 +49,7 @@ export class AwsSsoOidcService {
     if (!this.loginMutex && this.setIntervalQueue.length === 0) {
       this.loginMutex = true;
 
-      this.ssoOidc = new SSOOIDC({ region });
+      this.ssoOidc = new SSOOIDC({ region, requestHandler: this.httpHandler });
       this.generateSSOTokenResponse = null;
       this.setIntervalQueue = [];
       this.timeoutOccurred = false;

@@ -13,6 +13,7 @@ import { AuthorizationDialogComponent } from "../components/dialogs/authorizatio
 })
 export class WindowService implements IOpenExternalUrlService {
   private currentWindow: any;
+  private currentWindowProxy: Promise<void> = Promise.resolve();
   private windowOs = "win32";
 
   constructor(private modalService: BsModalService, private electronService: AppNativeService, private appProviderService: AppProviderService) {}
@@ -28,6 +29,7 @@ export class WindowService implements IOpenExternalUrlService {
    * @returns return a new browser window
    */
   newWindow(url: string, show: boolean, title?: string, x?: number, y?: number): any {
+    const partition = `persist:hopkey-${btoa(url)}`;
     const opts = {
       width: 514,
       height: 550,
@@ -37,7 +39,7 @@ export class WindowService implements IOpenExternalUrlService {
       webPreferences: {
         devTools: !environment.production,
         worldSafeExecuteJavaScript: true,
-        partition: `persist:hopkey-${btoa(url)}`,
+        partition,
       },
     };
 
@@ -55,6 +57,8 @@ export class WindowService implements IOpenExternalUrlService {
       this.currentWindow = null;
     }
     this.currentWindow = new this.electronService.browserWindow(opts);
+    // The window has a session of its own, which must go through the proxy in the options before it loads a page
+    this.currentWindowProxy = this.electronService.ipcRenderer.invoke("SET_PARTITION_PROXY", partition);
     if (this.electronService.os.platform() === this.windowOs) {
       this.electronService.menu.setApplicationMenu(null);
     }
@@ -62,6 +66,23 @@ export class WindowService implements IOpenExternalUrlService {
     this.currentWindow.removeMenu(); // Remove Window Menu inside App, to make it compliant with Linux
     this.currentWindow.setMenu(null);
     return this.currentWindow;
+  }
+
+  /**
+   * Loads a page in the window from newWindow, once the window's session goes through the proxy in the options
+   *
+   * @param window - the window from newWindow
+   * @param url - the page to load
+   */
+  async loadUrl(window: any, url: string): Promise<void> {
+    try {
+      await this.currentWindowProxy;
+    } catch (error) {
+      this.appProviderService.logService.log(
+        new LoggedEntry(`Could not apply the proxy to the window: ${error?.message ?? error}`, this, LogLevel.warn)
+      );
+    }
+    window.loadURL(url);
   }
 
   getCurrentWindow(): any {

@@ -1,4 +1,5 @@
 import { contextMenu } from "./context-menu";
+import { setUpProxy } from "./proxy";
 import * as path from "path";
 import { environment } from "../src/environments/environment";
 
@@ -19,6 +20,8 @@ contextMenu({
   showLookUpSelection: false,
   showSearchWithGoogle: false
 });
+
+const proxySet = setUpProxy(autoUpdater);
 
 // Fix for warning at startup
 app.allowRendererProcessReuse = true;
@@ -85,7 +88,8 @@ const buildAutoUpdater = (win: any): void => {
   };
   autoUpdater.setFeedURL(data);
 
-  autoUpdater.checkForUpdates().then((_) => {
+  // The first check waits for the window to apply the proxy from the options, for a minute at most
+  Promise.race([proxySet, new Promise((resolve) => setTimeout(resolve, 60 * 1000))]).then(() => autoUpdater.checkForUpdates()).then((_) => {
     console.log("[AUTO-UPDATER] Initial update check completed");
   }).catch((error) => {
     console.log("[AUTO-UPDATER] Initial update check failed:", error);

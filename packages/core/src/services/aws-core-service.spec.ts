@@ -151,6 +151,7 @@ describe("AwsCoreService", () => {
     expect(result).toStrictEqual({
       maxRetries: 0,
       httpOptions: { timeout },
+      requestHandler: httpHandler,
       endpoint,
       region: session.region,
     });
@@ -158,6 +159,7 @@ describe("AwsCoreService", () => {
     expect(result2).toStrictEqual({
       maxRetries: 0,
       httpOptions: { timeout },
+      requestHandler: httpHandler,
     });
   });
 });

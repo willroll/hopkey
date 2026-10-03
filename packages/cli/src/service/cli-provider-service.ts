@@ -48,6 +48,7 @@ import { IKeychainService } from "@hopkey/core/interfaces/i-keychain-service";
 import { WorkspaceConsistencyService } from "@hopkey/core/services/workspace-consistency-service";
 import { LocalstackSessionService } from "@hopkey/core/services/session/localstack/localstack-session-service";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
+import { ProxyService } from "@hopkey/core/services/proxy-service";
 import { AgentActivityService } from "@hopkey/core/services/agent-activity-service";
 import { AgentService } from "@hopkey/core/services/agent-service";
 
@@ -80,6 +81,7 @@ export class CliProviderService {
   private logServiceInstance: LogService;
   private timerServiceInstance: TimerService;
   private executeServiceInstance: ExecuteService;
+  private proxyServiceInstance: ProxyService;
   private rotationServiceInstance: RotationService;
   private retroCompatibilityServiceInstance: RetroCompatibilityService;
   private cloudProviderServiceInstance: CloudProviderService;
@@ -266,7 +268,12 @@ export class CliProviderService {
 
   get awsSsoOidcService(): AwsSsoOidcService {
     if (!this.awsSsoOidcServiceInstance) {
-      this.awsSsoOidcServiceInstance = new AwsSsoOidcService(this.cliAwsSsoOidcVerificationWindowService, this.repository, true);
+      this.awsSsoOidcServiceInstance = new AwsSsoOidcService(
+        this.cliAwsSsoOidcVerificationWindowService,
+        this.repository,
+        true,
+        this.awsCoreService.httpHandler
+      );
     }
     return this.awsSsoOidcServiceInstance;
   }
@@ -364,7 +371,7 @@ export class CliProviderService {
     if (!this.awsSsoIntegrationServiceInstance) {
       this.awsSsoIntegrationServiceInstance = new AwsSsoIntegrationService(this.repository, this.keyChainService,
         this.behaviouralSubjectService, this.cliNativeService,
-        this.sessionFactory, this.awsSsoOidcService, this.awsSsoRoleService);
+        this.sessionFactory, this.awsSsoOidcService, this.awsSsoRoleService, this.awsCoreService.httpHandler);
     }
     return this.awsSsoIntegrationServiceInstance;
   }
@@ -390,9 +397,16 @@ export class CliProviderService {
     return this.timerServiceInstance;
   }
 
+  get proxyService(): ProxyService {
+    if (!this.proxyServiceInstance) {
+      this.proxyServiceInstance = new ProxyService(this.repository, this.keyChainService);
+    }
+    return this.proxyServiceInstance;
+  }
+
   get executeService(): ExecuteService {
     if (!this.executeServiceInstance) {
-      this.executeServiceInstance = new ExecuteService(this.cliNativeService, this.repository, this.logService);
+      this.executeServiceInstance = new ExecuteService(this.cliNativeService, this.repository, this.logService, this.proxyService);
     }
     return this.executeServiceInstance;
   }
@@ -422,7 +436,9 @@ export class CliProviderService {
 
   get awsCoreService(): AwsCoreService {
     if (!this.awsCoreServiceInstance) {
-      this.awsCoreServiceInstance = new AwsCoreService(new NodeHttpHandler({ connectionTimeout: constants.timeout }), this.cliNativeService, this.logService);
+      // The AWS clients go through the proxy loaded by HopkeyCommand.init, before any of them is created
+      const httpHandler = new NodeHttpHandler({ connectionTimeout: constants.timeout, ...this.cliNativeService.proxyAgents });
+      this.awsCoreServiceInstance = new AwsCoreService(httpHandler, this.cliNativeService, this.logService);
     }
     return this.awsCoreServiceInstance;
   }
@@ -450,7 +466,7 @@ export class CliProviderService {
 
   get ssmService(): SsmService {
     if (!this.ssmServiceInstance) {
-      this.ssmServiceInstance = new SsmService(this.logService, this.executeService, this.cliNativeService, this.fileService);
+      this.ssmServiceInstance = new SsmService(this.logService, this.executeService, this.cliNativeService, this.fileService, this.awsCoreService.httpHandler);
     }
     return this.ssmServiceInstance;
   }

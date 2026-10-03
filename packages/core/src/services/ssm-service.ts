@@ -6,6 +6,7 @@ import { INativeService } from "../interfaces/i-native-service";
 import { FileService } from "./file-service";
 import { DescribeInstanceInformationCommand, SSMClient } from "@aws-sdk/client-ssm";
 import { DescribeInstancesCommand, EC2Client } from "@aws-sdk/client-ec2";
+import { HttpHandler } from "@smithy/protocol-http";
 
 export class SsmService {
   ssmClient: SSMClient;
@@ -15,7 +16,8 @@ export class SsmService {
     private logService: LogService,
     private executeService: ExecuteService,
     private nativeService: INativeService,
-    private fileService: FileService
+    private fileService: FileService,
+    private httpHandler?: HttpHandler
   ) {}
 
   /**
@@ -45,6 +47,7 @@ export class SsmService {
     // Set your SSM client and EC2 client
     this.ssmClient = new SSMClient({
       region,
+      requestHandler: this.httpHandler,
       credentials: {
         accessKeyId: credentials.sessionToken.aws_access_key_id,
         secretAccessKey: credentials.sessionToken.aws_secret_access_key,
@@ -53,6 +56,7 @@ export class SsmService {
     });
     this.ec2Client = new EC2Client({
       region,
+      requestHandler: this.httpHandler,
       credentials: {
         accessKeyId: credentials.sessionToken.aws_access_key_id,
         secretAccessKey: credentials.sessionToken.aws_secret_access_key,

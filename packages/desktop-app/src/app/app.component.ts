@@ -138,6 +138,7 @@ export class AppComponent implements OnInit {
     await this.retroCompatibilityService.applyWorkspaceMigrations();
 
     await this.moveProxyPasswordToKeychain();
+    await this.applyProxy();
 
     // Check the existence of a pre-Hopkey credential file and make a backup
     this.showCredentialBackupMessageIfNeeded();
@@ -234,6 +235,14 @@ export class AppComponent implements OnInit {
           LogLevel.warn
         )
       );
+    }
+  }
+
+  private async applyProxy(): Promise<void> {
+    try {
+      await this.optionsService.applyProxy();
+    } catch (error) {
+      this.loggingService.log(new LoggedEntry(error?.message ?? `${error}`, this, LogLevel.warn, true));
     }
   }
 

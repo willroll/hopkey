@@ -26,6 +26,7 @@ import { AwsSsoIntegrationCreationParams } from "../../models/aws/aws-sso-integr
 import { ThrottleService } from "../throttle-service";
 import { IKeychainService } from "../../interfaces/i-keychain-service";
 import { ConfiguredRetryStrategy } from "@aws-sdk/util-retry";
+import { HttpHandler } from "@smithy/protocol-http";
 
 const portalUrlValidationRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/;
 
@@ -45,7 +46,8 @@ export class AwsSsoIntegrationService implements IIntegrationService {
     public nativeService: INativeService,
     public sessionFactory: SessionFactory,
     private awsSsoOidcService: AwsSsoOidcService,
-    private awsSsoRoleService: AwsSsoRoleService
+    private awsSsoRoleService: AwsSsoRoleService,
+    private httpHandler?: HttpHandler
   ) {}
 
   static validateAlias(alias: string): boolean | string {
@@ -322,6 +324,7 @@ export class AwsSsoIntegrationService implements IIntegrationService {
         region,
         maxAttempts: 30,
         retryStrategy: new ConfiguredRetryStrategy(30, nextBackoffDelayComputationLambda),
+        requestHandler: this.httpHandler,
       });
       this.listAccountRolesCall = new ThrottleService(
         (...params) =>
