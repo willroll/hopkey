@@ -31,7 +31,7 @@ Lastly, from the Hopkey Plugins tab in the Option menu, click on the refresh ico
 ```
 ~/.hopkey
 └── plugins
-    └── leapp-web-console-plugin
+    └── my-plugin
         ├── package.json
         └── plugin.js
 ```
