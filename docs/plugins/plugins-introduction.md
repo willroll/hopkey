@@ -28,7 +28,13 @@ Alternatively, you can simply move your entire plugin folder cloned from the [ex
 
 Lastly, from the Hopkey Plugins tab in the Option menu, click on the refresh icon to reload all plugins.
 
-![](../../images/plugin-system/screen3.png?style=even-smaller-img)
+```
+~/.hopkey
+└── plugins
+    └── my-plugin
+        ├── package.json
+        └── plugin.js
+```
 
 !!! Warning
 

@@ -13,7 +13,7 @@ In this modal, a user can do the following:
     
     Hopkey will close the modal and notify the user that a new update
     is available by adding a notification dot
-    <img width="55" alt="Screenshot_2021-05-04_at_10 28 21 (1)" src="https://user-images.githubusercontent.com/9497292/152328456-9fa51c95-d675-4b71-bd95-85c56b290843.png"> 
+    <img width="55" alt="Hopkey's Dock icon with a notification dot" src="../../images/screens/newuxui/dock-update-badge.png"> 
     to the Dock Bar icon. Users will not be bothered anymore until the next release is available. 
     This option is **convenient for users that want to stick to a specific version**. 
     Note that you can do this for every version and maintain the one you prefer.
