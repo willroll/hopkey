@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## Hopkey (unreleased)
+## 1.0.0 (unreleased)
 
 Hopkey continues [Leapp](https://github.com/Noovolari/leapp) under a new name: the releases below this section are
 Leapp's.

@@ -46,12 +46,27 @@ These need the repository owner and can't be done from the code:
    Linux packages (`build.linux.maintainer` in `packages/desktop-app/package.json`).
 6. **Name checks**: a trademark search for "Hopkey" where you distribute it, and a final logo to replace the placeholder.
 
+## First release
+
+Hopkey starts its own numbering at 1.0.0, for the desktop app, `@hopkey/core` and `@hopkey/cli` alike; the releases
+below 1.0.0 in the changelog are Leapp's. `npm run hopkey-release` sets a package's version, then commits, tags and
+pushes, so the `package.json` files keep Leapp's numbers until then. Release in this order:
+
+1. **Core** (`core-v1.0.0`), which [npm-release.yml](.github/workflows/npm-release.yml) publishes once the npm
+   organization and token exist.
+2. **CLI** (`cli-v1.0.0`). The script regenerates the CLI reference in `docs/cli`, and the workflow checks that the
+   core version is on npm before publishing.
+3. **Desktop app** (`v1.0.0`), after a dry run with a pre-release tag such as `v1.0.0-rc.1`. When the script waits for
+   the changelog, date the 1.0.0 heading.
+
+The script pushes the release commits to `master`, so branch protection has to allow it. Once the 1.0.0 docs are
+published, remove the docs that went out under Leapp's number with `mike delete --push 0.26.1`.
+
 ## Known gaps
 
 - **Upstream assets still in use**: the multi-console browser extension (Firefox add-on and Chromium zip published by
   Noovolari), the [plugin template](https://github.com/Noovolari/leapp-plugin-template) and `@noovolari/dpapi-addon`.
   Fork them before they disappear. Plugin signature checks (disabled) still point at Noovolari's plugin service.
-- **The CLI reference** in `docs/cli` should be regenerated with the first CLI release.
 - **Aging stack**: `keytar` is archived (Electron's `safeStorage` is a candidate replacement), and the desktop app
   builds with Angular's Webpack-based builder, deprecated in favor of `@angular/build`. Electron, Node.js and Angular
   are on supported releases (44, 24 and 22).

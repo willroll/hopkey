@@ -27,6 +27,12 @@ jobs:
         with:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
+      - name: Check that the tag matches the version
+        run: |
+          if [ "$(npm pkg get version | tr -d '"')" != "${GITHUB_REF_NAME#core-v}" ]; then
+            echo "::error::packages/core/package.json has version $(npm pkg get version), but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
       - run: npm ci
       - run: npm run build
       - run: npm publish --access public
@@ -42,6 +48,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
+      - name: Check that the tag matches the version
+        working-directory: packages/cli
+        run: |
+          if [ "$(npm pkg get version | tr -d '"')" != "${GITHUB_REF_NAME#cli-v}" ]; then
+            echo "::error::packages/cli/package.json has version $(npm pkg get version), but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
       - name: Build core
         working-directory: packages/core
         run: npm ci && npm run build

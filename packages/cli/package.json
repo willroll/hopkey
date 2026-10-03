@@ -130,7 +130,8 @@
     },
     "macos": {
       "identifier": "io.github.willroll.hopkey.cli"
-    }
+    },
+    "repositoryPrefix": "<%- repo %>/blob/cli-v<%- version %>/packages/cli/<%- commandPath %>"
   },
   "repository": "willroll/hopkey",
   "publishConfig": {

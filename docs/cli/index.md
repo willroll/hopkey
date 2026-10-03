@@ -3,7 +3,7 @@ Hopkey's Command Line Interface.
 !!! warning
 
     Hopkey CLI works only if the Desktop App is installed and running.
-    Note that version >= v0.11.0 of the Desktop App is required.
+    It needs version 1.0.0 or later of the Desktop App.
     Check the [installation guide](../installation/install-hopkey/){: target='_blank'} to install the Desktop App.
 
 

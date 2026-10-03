@@ -16,7 +16,7 @@ module.exports = {
       "!!! warning\n" +
       "\n" +
       "    Hopkey CLI works only if the Desktop App is installed and running.\n" +
-      "    Note that version >= v0.11.0 of the Desktop App is required.\n" +
+      "    It needs version 1.0.0 or later of the Desktop App.\n" +
       "    Check the [installation guide](../installation/install-hopkey/){: target='_blank'} to install the Desktop App.\n" +
       "\n" +
       "\n"
