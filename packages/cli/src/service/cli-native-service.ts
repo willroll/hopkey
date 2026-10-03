@@ -22,8 +22,6 @@ export class CliNativeService implements INativeService {
   nodeIpc: any;
   msalEncryptionService: IMsalEncryptionService;
   requireModule: any;
-  hashElement: any;
-  crypto: any;
   tar: any;
   fetch: any;
   // The agents that send the CLI's requests through the proxy set in the app's options, once useProxy has it
@@ -49,8 +47,6 @@ export class CliNativeService implements INativeService {
     this.httpProxyAgent = require("http-proxy-agent");
     this.httpsProxyAgent = require("https-proxy-agent");
     this.requireModule = require("require-module");
-    this.hashElement = require("folder-hash");
-    this.crypto = require("crypto");
     this.tar = require("tar");
     const nodeFetch = require("node-fetch");
     this.fetch = (url: any, options: any = {}) =>

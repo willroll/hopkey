@@ -66,7 +66,7 @@ published, remove the docs that went out under Leapp's number with `mike delete 
 
 - **Upstream assets still in use**: the multi-console browser extension (Firefox add-on and Chromium zip published by
   Noovolari), the [plugin template](https://github.com/Noovolari/leapp-plugin-template) and `@noovolari/dpapi-addon`.
-  Fork them before they disappear. Plugin signature checks (disabled) still point at Noovolari's plugin service.
+  Fork them before they disappear.
 - **Aging stack**: `keytar` is archived (Electron's `safeStorage` is a candidate replacement), and the desktop app
   builds with Angular's Webpack-based builder, deprecated in favor of `@angular/build`. Electron, Node.js and Angular
   are on supported releases (44, 24 and 22).
