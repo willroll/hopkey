@@ -24,6 +24,8 @@ tracks where the port stands: what changed, what the maintainers still have to d
 - **CI.** [ci.yml](.github/workflows/ci.yml) lints and tests the three packages; [release.yml](.github/workflows/release.yml)
   publishes the desktop app to GitHub releases on `vX.Y.Z` tags, [npm-release.yml](.github/workflows/npm-release.yml)
   the packages on `core-vX.Y.Z` / `cli-vX.Y.Z` tags, and [docs.yml](.github/workflows/docs.yml) the docs to GitHub Pages.
+  A pre-release tag such as `vX.Y.Z-rc.1` builds the desktop app with that version and publishes it as a GitHub
+  pre-release, which the in-app update check skips: use one for a release dry run.
 
 Verified locally with Node 18.20.8: core 726 tests, CLI 336 tests, desktop app 51 tests, lint, a production build,
 the Linux `.deb` and AppImage, the app launching, the import of a seeded Leapp workspace with its keychain secrets, and

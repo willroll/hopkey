@@ -3,16 +3,20 @@ name: Release desktop app
 # Pushing a vX.Y.Z tag (see `npm run hopkey-release`) builds the desktop app for every platform and publishes it,
 # with the latest*.yml files the in-app update check reads, to a GitHub release. Packages are code-signed when the
 # signing secrets are configured, and built unsigned otherwise.
+# A pre-release tag such as vX.Y.Z-rc.1 runs the same build as a dry run: the app gets the tag's version, and the
+# release is published as a pre-release, which the in-app update check skips.
 on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
 
 permissions:
   contents: write
 
 env:
   HUSKY: "0"
+  PRERELEASE: ${{ contains(github.ref_name, '-') }}
 
 jobs:
   create-release:
@@ -22,7 +26,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: >
-          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft --title "Hopkey ${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft --prerelease="$PRERELEASE"
+          --title "Hopkey ${GITHUB_REF_NAME#v}"
           --notes "See the [changelog](https://github.com/$GITHUB_REPOSITORY/blob/$GITHUB_REF_NAME/CHANGELOG.md)."
 
   build:
@@ -51,6 +56,17 @@ jobs:
         run: npm ci && npm run build
       - run: npm ci
         working-directory: packages/desktop-app
+      # electron-builder uploads to the release named after the package version
+      - name: Match the version to the tag
+        working-directory: packages/desktop-app
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if [ "$PRERELEASE" = true ]; then
+            npm pkg set version="$version"
+          elif [ "$(npm pkg get version | tr -d '"')" != "$version" ]; then
+            echo "::error::packages/desktop-app/package.json has version $(npm pkg get version), but the tag is $GITHUB_REF_NAME"
+            exit 1
+          fi
       - run: npx gushio gushio/target-build.js "configuration production"
         working-directory: packages/desktop-app
       - name: Package and upload to the draft release
@@ -78,4 +94,9 @@ jobs:
       - name: Publish the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+        run: |
+          if [ "$PRERELEASE" = true ]; then
+            gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --prerelease --latest=false
+          else
+            gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+          fi
