@@ -38,8 +38,7 @@ Lastly, from the Hopkey Plugins tab in the Option menu, click on the refresh ico
 
 !!! Warning
 
-    Adding plugins is at your own risk! We cannot currently guarantee that a plugin is safe, so BE CAREFUL when you install something from an unknown source. 
-    A plugin verification system is under development and will be available later this year.
+    Adding plugins is at your own risk! Hopkey doesn't check plugins: a plugin's code runs inside Hopkey and can reach everything Hopkey can, your credentials included. Only install plugins from sources you trust.
 
 ##Disable a Plugin
 

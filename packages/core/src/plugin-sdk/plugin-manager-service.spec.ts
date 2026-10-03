@@ -9,15 +9,9 @@ import { LoggedEntry, LoggedException, LogLevel } from "../services/log-service"
 import { AwsCredentialsPlugin } from "./aws-credentials-plugin";
 
 describe("PluginManagerService", () => {
-  test("base64Decoding", () => {
-    const result = (PluginManagerService as any).base64Decoding("fake-input");
-    expect(result).toBeInstanceOf(Buffer);
-  });
-
   test("pluginContainers", () => {
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const expectedValue = ["fake-plugin"];
     const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
@@ -29,7 +23,6 @@ describe("PluginManagerService", () => {
   test("getPluginByName", () => {
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const plugins = [{ metadata: { uniqueName: "plugin-1" } }, { metadata: { uniqueName: "plugin-2" } }];
     const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
@@ -41,7 +34,6 @@ describe("PluginManagerService", () => {
   test("verifyAndGeneratePluginFolderIfMissing", () => {
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
       fs: {
         existsSync: jest.fn(() => false),
         mkdirSync: jest.fn(),
@@ -62,10 +54,6 @@ describe("PluginManagerService", () => {
     const pluginDir = "plugin-dir";
     const homedir = "homedir";
     const pluginDirContent = ["plugin-1", "plugin-2"];
-    const options = {
-      folders: { include: ["*.*"] },
-      files: { exclude: ["signature", ".DS_Store", "package-lock.json"] },
-    };
     const packageJson1 = {
       name: "plugin-1",
     };
@@ -93,7 +81,6 @@ describe("PluginManagerService", () => {
 
     const nativeService = {
       requireModule: jest.fn(() => ({ action1: PluginAction1, action2: PluginAction2 })),
-      hashElement: { hashElement: null },
       fs: {
         readdirSync: jest.fn(() => pluginDirContent),
         existsSync: jest.fn(
@@ -123,10 +110,9 @@ describe("PluginManagerService", () => {
 
     const pluginManager = new PluginManagerService(pluginEnvironment, nativeService, logService, repository, null, null);
     (pluginManager as any)._pluginDir = "plugin-dir";
-    (pluginManager as any).validatePlugin = jest.fn((_p1, _p2, pluginName) => ({
-      packageJson: packagesJsons.find((packageJson) => packageJson.name === pluginName),
-      isPluginValid: true,
-    }));
+    (pluginManager as any).readPackageJson = jest.fn((pluginFilePath: string) =>
+      packagesJsons.find((packageJson) => pluginFilePath.endsWith("/" + packageJson.name))
+    );
     (pluginManager as any).extractMetadata = jest.fn((pkgjson: any) => plugins.find((data) => data.metadata.uniqueName === pkgjson.name).metadata);
 
     await pluginManager.loadFromPluginDir();
@@ -138,7 +124,7 @@ describe("PluginManagerService", () => {
       const pluginFilePath = homedir + "/.hopkey/" + pluginDir + "/" + pluginDirContent[i];
       expect(nativeService.fs.existsSync).toHaveBeenCalledWith(pluginFilePath);
       expect(nativeService.fs.lstatSync).toHaveBeenCalledWith(pluginFilePath);
-      expect((pluginManager as any).validatePlugin).toHaveBeenCalledWith(pluginFilePath, options, pluginDirContent[i]);
+      expect((pluginManager as any).readPackageJson).toHaveBeenCalledWith(pluginFilePath);
       expect((pluginManager as any).extractMetadata).toHaveBeenCalledWith(packagesJsons[i]);
       expect(nativeService.fs.existsSync).toHaveBeenCalledWith(pluginFilePath + "/plugin.js");
       expect(repository.getPluginStatus).toHaveBeenCalledWith(plugins[i].metadata.uniqueName);
@@ -163,7 +149,6 @@ describe("PluginManagerService", () => {
     const packageJson1 = {};
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
       fs: {
         readdirSync: () => pluginDirContent,
         existsSync: (pluginFilePath) => pluginFilePath === homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1",
@@ -181,7 +166,7 @@ describe("PluginManagerService", () => {
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
     (pluginManager as any)._pluginDir = "plugin-dir";
-    (pluginManager as any).validatePlugin = () => ({ packageJson: packageJson1, isPluginValid: true });
+    (pluginManager as any).readPackageJson = () => packageJson1;
     (pluginManager as any).extractMetadata = () => {
       throw new Error("error");
     };
@@ -191,19 +176,16 @@ describe("PluginManagerService", () => {
     );
   });
 
-  test("loadFromPluginDir, invalid signature", async () => {
+  test("loadFromPluginDir, a folder that isn't a plugin is skipped and left in place", async () => {
     const pluginDir = "plugin-dir";
     const homedir = "homedir";
-    const pluginDirContent = ["plugin-1"];
-    const packageJson1 = {};
-    const path = homedir + "/.hopkey/" + pluginDir + "/" + "plugin-1";
+    const pluginDirContent = ["not-a-plugin"];
+    const path = homedir + "/.hopkey/" + pluginDir + "/" + "not-a-plugin";
     const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: null },
+      requireModule: jest.fn(),
       fs: {
         readdirSync: () => pluginDirContent,
         existsSync: (pluginFilePath) => pluginFilePath === path,
-        mkdirSync: () => {},
         lstatSync: () => ({
           isDirectory: () => true,
         }),
@@ -218,13 +200,12 @@ describe("PluginManagerService", () => {
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
     (pluginManager as any)._pluginDir = "plugin-dir";
-    (pluginManager as any).validatePlugin = () => ({ packageJson: packageJson1, isPluginValid: false });
-    (pluginManager as any).extractMetadata = () => {};
-    (pluginManager as any).skipPluginValidation = () => false;
 
     await pluginManager.loadFromPluginDir();
-    expect(logService.log).toHaveBeenCalledWith(new LoggedEntry(`Signature not verified for plugin: plugin-1`, this, LogLevel.warn, true));
-    expect(nativeService.fs.remove).toHaveBeenCalledWith(path);
+    expect(logService.log).toHaveBeenCalledWith(new LoggedEntry(`folder ${path} is not a plugin folder, ignoring...`, this, LogLevel.info, false));
+    expect(nativeService.requireModule).not.toHaveBeenCalled();
+    expect(nativeService.fs.remove).not.toHaveBeenCalled();
+    expect(pluginManager.pluginContainers).toStrictEqual([]);
   });
 
   test("loadFromPluginDir, invalid plugin code", async () => {
@@ -237,7 +218,6 @@ describe("PluginManagerService", () => {
       requireModule: () => {
         throw new Error("error");
       },
-      hashElement: { hashElement: null },
       fs: {
         readdirSync: () => pluginDirContent,
         existsSync: (pluginFilePath) =>
@@ -257,9 +237,8 @@ describe("PluginManagerService", () => {
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
     (pluginManager as any)._pluginDir = "plugin-dir";
-    (pluginManager as any).validatePlugin = () => ({ packageJson: packageJson1, isPluginValid: true });
+    (pluginManager as any).readPackageJson = () => packageJson1;
     (pluginManager as any).extractMetadata = () => {};
-    (pluginManager as any).skipPluginValidation = () => true;
 
     await pluginManager.loadFromPluginDir();
     expect(logService.log).toHaveBeenCalledWith(new LoggedEntry(`error loading plugin plugin-1: error`, this, LogLevel.error, false));
@@ -284,7 +263,6 @@ describe("PluginManagerService", () => {
     };
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
     (pluginManager as any)._pluginContainers = [plugin1, plugin2];
@@ -295,7 +273,6 @@ describe("PluginManagerService", () => {
   test("unloadSinglePlugin", () => {
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const plugin1 = {
       metadata: {
@@ -321,30 +298,11 @@ describe("PluginManagerService", () => {
     expect((pluginManager as any)._pluginContainers).toStrictEqual([plugin2]);
   });
 
-  test("testRsaSignToBase64", () => {
-    const nativeService = {
-      crypto: {
-        createSign: jest.fn(() => ({
-          update: () => {},
-          end: () => {},
-          sign: () => "fake-signature",
-        })),
-      },
-      requireModule: null,
-      hashElement: { hashElement: null },
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    const result = pluginManager.testRsaSignToBase64("fake-message");
-    expect(nativeService.crypto.createSign).toHaveBeenCalledWith("sha256");
-    expect(result).toStrictEqual("fake-signature");
-  });
-
   test("availableAwsCredentialsPlugins", () => {
     const sessionFactory = new SessionFactory(null, null, null, null, null);
     jest.spyOn(sessionFactory, "getCompatibleTypes");
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const repository = {
       getPluginStatus: () => ({ active: true }),
@@ -457,7 +415,6 @@ describe("PluginManagerService", () => {
 
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
       os: {
         homedir: jest.fn(() => homedir),
       },
@@ -514,7 +471,7 @@ describe("PluginManagerService", () => {
   });
 
   test("pluginPackageName - the npm package of a link or a name", () => {
-    const pluginManager = new PluginManagerService(null, { requireModule: null, hashElement: { hashElement: null } } as any, null, null, null, null);
+    const pluginManager = new PluginManagerService(null, { requireModule: null } as any, null, null, null, null);
     expect(pluginManager.pluginPackageName("hopkey://hopkey-plugin-example")).toBe("hopkey-plugin-example");
     expect(pluginManager.pluginPackageName("hopkey://@acme/hopkey-plugin.v2\n")).toBe("@acme/hopkey-plugin.v2");
     expect(pluginManager.pluginPackageName("hopkey-plugin-example")).toBe("hopkey-plugin-example");
@@ -531,7 +488,7 @@ describe("PluginManagerService", () => {
   });
 
   test("installPlugin, refuses a link that isn't an npm package before asking npm", async () => {
-    const pluginManager = new PluginManagerService(null, { requireModule: null, hashElement: { hashElement: null } } as any, null, null, null, null);
+    const pluginManager = new PluginManagerService(null, { requireModule: null } as any, null, null, null, null);
     (pluginManager as any).http = { get: jest.fn() };
     await expect(pluginManager.installPlugin("hopkey://../../-/whoami")).rejects.toThrow('"../../-/whoami" is not the name of an npm package');
     expect((pluginManager as any).http.get).not.toHaveBeenCalled();
@@ -545,7 +502,6 @@ describe("PluginManagerService", () => {
     const packageName = "not-a-hopkey-plugin";
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
       os: {
         homedir: () => homedir,
       },
@@ -579,7 +535,6 @@ describe("PluginManagerService", () => {
     const packageName = "legacy-fake-plugin";
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
       os: { homedir: () => "homedir" },
       path: { join: jest.fn(() => "path") },
       fs: { writeFileSync: jest.fn(), remove: jest.fn(), ensureDir: jest.fn() },
@@ -602,7 +557,7 @@ describe("PluginManagerService", () => {
 
   test("extractMetadata, legacy app keyword and package.json key", () => {
     const sessionFactory = { getCompatibleTypes: jest.fn(() => ["any"]) } as any;
-    const nativeService = { requireModule: null, hashElement: { hashElement: null } } as any;
+    const nativeService = { requireModule: null } as any;
     const repository = { getPluginStatus: jest.fn(() => undefined) } as any;
     const packageJson = {
       version: "0.1.0",
@@ -625,7 +580,6 @@ describe("PluginManagerService", () => {
     } as any;
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const repository = {
       getPluginStatus: jest.fn(() => ({ active: true })),
@@ -658,212 +612,67 @@ describe("PluginManagerService", () => {
     });
   });
 
-  test("validatePlugin, not hash children", async () => {
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({}) },
-      fs: {
-        existsSync: jest.fn(),
-      },
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    const result = await (pluginManager as any).validatePlugin(null, null, null);
-    expect(result).toStrictEqual({ packageJson: undefined, isPluginValid: false });
-  });
-
-  /*
-  test("validatePlugin, success and active plugin found", async () => {
+  test("readPackageJson", () => {
     const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
     const packageJsonContent = '{ "test": true }';
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: jest.fn(() => ({ children: true, hash: "fake-hash" })) },
       fs: {
         existsSync: jest.fn(() => true),
         readFileSync: jest.fn(() => packageJsonContent),
       },
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    (pluginManager as any).rsaVerifySignatureFromBase64 = jest.fn(() => true);
-    (pluginManager as any).http = {
-      get: jest.fn(() => ({
-        toPromise: async () => ({ status: "active", signature: "fake-signature" }),
-      })),
-    };
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect(nativeService.hashElement.hashElement).toHaveBeenCalledWith(pluginFilePath, options);
+    const result = (pluginManager as any).readPackageJson(pluginFilePath);
     expect(nativeService.fs.existsSync).toHaveBeenNthCalledWith(1, pluginFilePath + "/package.json");
     expect(nativeService.fs.existsSync).toHaveBeenNthCalledWith(2, pluginFilePath + "/plugin.js");
     expect(nativeService.fs.readFileSync).toHaveBeenCalledWith(pluginFilePath + "/package.json");
-    // expect((pluginManager as any).http.get).toHaveBeenCalledWith(constants.pluginPortalUrl + "/plugin-1", { responseType: "json" });
-    expect((pluginManager as any).rsaVerifySignatureFromBase64).toHaveBeenCalledWith(
-      constants.publicKey,
-      packageJsonContent + "fake-hash",
-      "fake-signature"
-    );
-    expect(result).toStrictEqual({ packageJson: JSON.parse(packageJsonContent), isPluginValid: true });
-  });
-  */
-
-  test("validatePlugin, verify signature correctly", async () => {
-    const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const packageJsonContent = '{ "test": true }';
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({ children: true, hash: "fake-hash" }) },
-      fs: {
-        existsSync: () => true,
-        readFileSync: () => packageJsonContent,
-      },
-      rimraf: jest.fn(),
-    } as any;
-    const logService = {
-      log: jest.fn(),
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
-    (pluginManager as any).http = {
-      get: jest.fn(() => ({
-        toPromise: async () => ({ status: "active", signature: "fake-signature" }),
-      })),
-    };
-    (pluginManager as any).skipPluginValidation = () => false;
-    (pluginManager as any).rsaVerifySignatureFromBase64 = jest.fn(() => true);
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect((pluginManager as any).rsaVerifySignatureFromBase64).toHaveBeenCalledWith(
-      constants.publicKey,
-      packageJsonContent + "fake-hash",
-      "fake-signature"
-    );
-    expect(result).toStrictEqual({ packageJson: JSON.parse(packageJsonContent), isPluginValid: true });
+    expect(result).toStrictEqual({ test: true });
   });
 
-  test("validatePlugin, verify signature fails", async () => {
+  test("readPackageJson, not a plugin folder", () => {
     const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const packageJsonContent = '{ "test": true }';
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({ children: true, hash: "fake-hash" }) },
-      fs: {
-        existsSync: () => true,
-        readFileSync: () => packageJsonContent,
-      },
-      rimraf: jest.fn(),
-    } as any;
-    const logService = {
-      log: jest.fn(),
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
-    (pluginManager as any).http = {
-      get: jest.fn(() => ({
-        toPromise: async () => ({ status: "active", signature: "fake-signature" }),
-      })),
-    };
-    (pluginManager as any).skipPluginValidation = () => false;
-    (pluginManager as any).rsaVerifySignatureFromBase64 = jest.fn(() => false);
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect((pluginManager as any).rsaVerifySignatureFromBase64).toHaveBeenCalledWith(
-      constants.publicKey,
-      packageJsonContent + "fake-hash",
-      "fake-signature"
-    );
-    expect(result).toStrictEqual({ packageJson: JSON.parse(packageJsonContent), isPluginValid: false });
-  });
-
-  test("validatePlugin, no active plugin found", async () => {
-    const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const packageJsonContent = '{ "test": true }';
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({ children: true }) },
-      fs: {
-        existsSync: () => true,
-        readFileSync: () => packageJsonContent,
-      },
-      rimraf: jest.fn(),
-    } as any;
-    const logService = {
-      log: jest.fn(),
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
-    (pluginManager as any).http = {
-      get: jest.fn(() => ({
-        toPromise: async () => ({ status: "inactive", signature: "fake-signature" }),
-      })),
-    };
-    (pluginManager as any).skipPluginValidation = jest.fn(() => false);
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect((pluginManager as any).skipPluginValidation).toHaveBeenCalled();
-    expect(logService.log).toHaveBeenCalledWith(new LoggedEntry("Plugin not in active state: " + "plugin-1", this, LogLevel.warn, true));
-    expect(result).toStrictEqual({ packageJson: JSON.parse(packageJsonContent), isPluginValid: false });
-  });
-
-  test("validatePlugin, not a plugin folder", async () => {
-    const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({ children: true }) },
-      fs: {
-        existsSync: () => false,
-      },
-    } as any;
-    const logService = {
-      log: jest.fn(),
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect(logService.log).toHaveBeenCalledWith(
-      new LoggedEntry(`folder ${pluginFilePath} is not a plugin folder, ignoring...`, this, LogLevel.info, false)
-    );
-    expect(result).toStrictEqual({ packageJson: undefined, isPluginValid: false });
-  });
-
-  test("validatePlugin, signature not verified", async () => {
-    const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const packageJsonContent = '{ "test": true }';
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: () => ({ children: true, hash: "fake-hash" }) },
-      fs: {
-        existsSync: () => true,
-        readFileSync: () => packageJsonContent,
-      },
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    (pluginManager as any).rsaVerifySignatureFromBase64 = jest.fn(() => false);
-    (pluginManager as any).http = {
-      get: jest.fn(() => ({
-        toPromise: async () => ({ status: "active", signature: "fake-signature" }),
-      })),
-    };
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect(result).toStrictEqual({ packageJson: JSON.parse(packageJsonContent), isPluginValid: true });
-  });
-
-  test("validatePlugin, hashing or verification failed", async () => {
-    const pluginFilePath = "fake-filepath";
-    const options = "fake-options";
-    const error = "error";
-    const nativeService = {
-      hashElement: {
-        hashElement: () => {
-          throw new Error(error);
+    for (const existingFile of [undefined, "/package.json", "/plugin.js"]) {
+      const nativeService = {
+        requireModule: null,
+        fs: {
+          existsSync: (path: string) => existingFile !== undefined && path === pluginFilePath + existingFile,
+          readFileSync: jest.fn(),
         },
-      },
+      } as any;
+      const logService = {
+        log: jest.fn(),
+      } as any;
+      const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
+      const result = (pluginManager as any).readPackageJson(pluginFilePath);
+      expect(logService.log).toHaveBeenCalledWith(
+        new LoggedEntry(`folder ${pluginFilePath} is not a plugin folder, ignoring...`, this, LogLevel.info, false)
+      );
+      expect(nativeService.fs.readFileSync).not.toHaveBeenCalled();
+      expect(result).toBeUndefined();
+    }
+  });
+
+  test("readPackageJson, package.json can't be read", () => {
+    const pluginFilePath = "fake-filepath";
+    const nativeService = {
       requireModule: null,
+      fs: {
+        existsSync: () => true,
+        readFileSync: () => "{ not json",
+      },
     } as any;
     const logService = {
       log: jest.fn(),
     } as any;
     const pluginManager = new PluginManagerService(null, nativeService, logService, null, null, null);
-    const result = await (pluginManager as any).validatePlugin(pluginFilePath, options, "plugin-1");
-    expect(logService.log).toHaveBeenCalledWith(new LoggedEntry(`hashing failed or verification failed: ${error}`, this, LogLevel.warn, false));
-    expect(result).toStrictEqual({ packageJson: undefined, isPluginValid: false });
+    const result = (pluginManager as any).readPackageJson(pluginFilePath);
+    expect(logService.log).toHaveBeenCalledTimes(1);
+    const loggedEntry = logService.log.mock.calls[0][0];
+    expect(loggedEntry).toBeInstanceOf(LoggedException);
+    expect(loggedEntry.message).toMatch(new RegExp(`^reading ${pluginFilePath}/package.json failed: `));
+    expect(loggedEntry.level).toBe(LogLevel.warn);
+    expect(result).toBeUndefined();
   });
 
   test("extractMetadata, throws an error about missing package.json entries", () => {
@@ -872,7 +681,6 @@ describe("PluginManagerService", () => {
     } as any;
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const service = new PluginManagerService(null, nativeService, null, null, sessionFactory, null) as any;
 
@@ -900,7 +708,6 @@ describe("PluginManagerService", () => {
     } as any;
     const nativeService = {
       requireModule: null,
-      hashElement: { hashElement: null },
     } as any;
     const packageJson = {
       version: "0.1.0",
@@ -917,34 +724,5 @@ describe("PluginManagerService", () => {
     const expectedErrors = ["hopkeyPlugin.supportedSessions: wrong-session is unsupported", "hopkeyPlugin.supportedOS: wrong-os is unsupported"];
     const service = new PluginManagerService(null, nativeService, null, null, sessionFactory, null) as any;
     expect(() => service.extractMetadata(packageJson)).toThrowError(expectedErrors.join(", "));
-  });
-
-  test("rsaVerifySignatureFromBase64", () => {
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: null },
-      crypto: {
-        createVerify: jest.fn(() => ({
-          update: () => {},
-          end: () => {},
-          verify: () => true,
-        })),
-      },
-    } as any;
-    (PluginManagerService as any).base64Decoding = jest.fn(() => "fake-signature");
-    const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    const result = (pluginManager as any).rsaVerifySignatureFromBase64();
-    expect(result).toBeTruthy();
-    expect(nativeService.crypto.createVerify).toHaveBeenCalledWith("sha256");
-  });
-
-  test("skipPluginValidation", () => {
-    const nativeService = {
-      requireModule: null,
-      hashElement: { hashElement: null },
-    } as any;
-    const pluginManager = new PluginManagerService(null, nativeService, null, null, null, null);
-    const result = (pluginManager as any).skipPluginValidation();
-    expect(result).toBeTruthy();
   });
 });

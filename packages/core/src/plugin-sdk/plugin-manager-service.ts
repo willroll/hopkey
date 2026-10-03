@@ -26,7 +26,6 @@ export class PluginContainer {
 export class PluginManagerService {
   private _pluginContainers: PluginContainer[];
   private _requireModule;
-  private _hashElement;
   private _pluginDir = "plugins";
 
   constructor(
@@ -39,11 +38,6 @@ export class PluginManagerService {
   ) {
     this._pluginContainers = [];
     this._requireModule = nativeService.requireModule;
-    this._hashElement = nativeService.hashElement.hashElement;
-  }
-
-  private static base64Decoding(input): Buffer {
-    return Buffer.from(input, "base64");
   }
 
   // Plugins published for the app Hopkey was forked from declare themselves with its keyword and package.json key
@@ -67,18 +61,12 @@ export class PluginManagerService {
 
   async loadFromPluginDir(): Promise<void> {
     this._pluginContainers = [];
-    const options = {
-      folders: { include: ["*.*"] },
-      files: { exclude: ["signature", ".DS_Store", "package-lock.json"] },
-    };
-
     const pluginDirContent = this.nativeService.fs.readdirSync(this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir);
     for (const pluginName of pluginDirContent) {
       const pluginFilePath = this.nativeService.os.homedir() + "/.hopkey/" + this._pluginDir + "/" + pluginName;
       const isDir = this.nativeService.fs.existsSync(pluginFilePath) && this.nativeService.fs.lstatSync(pluginFilePath).isDirectory();
       if (isDir) {
-        // VALIDATION PROCESS
-        const { packageJson, isPluginValid } = await this.validatePlugin(pluginFilePath, options, pluginName);
+        const packageJson = this.readPackageJson(pluginFilePath);
 
         // HANDLE PACKAGE.JSON ERROR
         let metadata: IPluginMetadata;
@@ -88,13 +76,6 @@ export class PluginManagerService {
           this.logService.log(
             new LoggedEntry(`missing or invalid values in plugin ${pluginName} package.json: ${errors.message}`, this, LogLevel.warn, true)
           );
-          continue;
-        }
-
-        // CHECK VALIDATION
-        if (!isPluginValid) {
-          this.logService.log(new LoggedEntry(`Signature not verified for plugin: ${pluginName}`, this, LogLevel.warn, true));
-          await this.nativeService.fs.remove(pluginFilePath);
           continue;
         }
 
@@ -132,20 +113,6 @@ export class PluginManagerService {
     if (pluginIndex > -1) {
       this._pluginContainers.splice(pluginIndex, 1);
     }
-  }
-
-  testRsaSignToBase64(message: string): string {
-    const privateKey = "fake-rsa-key";
-    const signer = this.nativeService.crypto.createSign("sha256");
-    signer.update(message);
-    signer.end();
-    const signature = signer.sign({
-      key: privateKey,
-      format: "pem",
-      type: "pkcs1",
-      passphrase: "fake-passphrase",
-    });
-    return signature.toString("Base64");
   }
 
   availableAwsCredentialsPlugins(os: OperatingSystem, session: Session): AwsCredentialsPlugin[] {
@@ -275,63 +242,20 @@ export class PluginManagerService {
     };
   }
 
-  private async validatePlugin(
-    pluginFilePath: string,
-    options: { folders: { include: string[] }; files: { exclude: string[] } },
-    pluginName: string
-  ): Promise<{ packageJson: string; isPluginValid: boolean }> {
-    let packageJson: string;
-    try {
-      // Hashing file and directory
-      const hash = await this._hashElement(pluginFilePath, options);
-      if (!hash.children) {
-        return { packageJson, isPluginValid: false };
-      }
-      // If it has children then it is a directory
-      if (
-        // Required files
-        this.nativeService.fs.existsSync(pluginFilePath + "/package.json") &&
-        this.nativeService.fs.existsSync(pluginFilePath + "/plugin.js")
-      ) {
-        const packageJsonContent = this.nativeService.fs.readFileSync(pluginFilePath + "/package.json");
-        packageJson = JSON.parse(packageJsonContent);
-        if (this.skipPluginValidation()) {
-          return { packageJson, isPluginValid: true };
-        }
-
-        // Verify signature to enable plugin
-        const data = await this.http.get(constants.pluginPortalUrl + `/${pluginName}`, { responseType: "json" }).toPromise();
-        if (data.status !== "active") {
-          this.logService.log(new LoggedEntry("Plugin not in active state: " + pluginName, this, LogLevel.warn, true));
-          return { packageJson, isPluginValid: false };
-        }
-
-        const verifyMessage = packageJsonContent + hash.hash;
-        const signatureVerified = this.rsaVerifySignatureFromBase64(constants.publicKey, verifyMessage, data.signature);
-
-        if (!signatureVerified) {
-          return { packageJson, isPluginValid: false };
-        }
-      } else {
-        this.logService.log(new LoggedEntry(`folder ${pluginFilePath} is not a plugin folder, ignoring...`, this, LogLevel.info, false));
-        return { packageJson, isPluginValid: false };
-      }
-    } catch (error) {
-      this.logService.log(new LoggedException(`hashing failed or verification failed: ${error.message}`, this, LogLevel.warn, false));
-      return { packageJson, isPluginValid: false };
+  /**
+   * The parsed package.json of a plugin folder, or undefined if the folder doesn't have a package.json and a plugin.js
+   * or the package.json can't be read. Hopkey doesn't verify plugins: it loads whatever is in the plugins folder.
+   */
+  private readPackageJson(pluginFilePath: string): any {
+    if (!this.nativeService.fs.existsSync(pluginFilePath + "/package.json") || !this.nativeService.fs.existsSync(pluginFilePath + "/plugin.js")) {
+      this.logService.log(new LoggedEntry(`folder ${pluginFilePath} is not a plugin folder, ignoring...`, this, LogLevel.info, false));
+      return undefined;
     }
-    return { packageJson, isPluginValid: true };
-  }
-
-  private rsaVerifySignatureFromBase64(publicKey, message, signatureBase64): boolean {
-    const signature = PluginManagerService.base64Decoding(signatureBase64);
-    const verifier = this.nativeService.crypto.createVerify("sha256");
-    verifier.update(message);
-    verifier.end();
-    return verifier.verify(publicKey, signature);
-  }
-
-  private skipPluginValidation() {
-    return constants.skipPluginValidation;
+    try {
+      return JSON.parse(this.nativeService.fs.readFileSync(pluginFilePath + "/package.json"));
+    } catch (error) {
+      this.logService.log(new LoggedException(`reading ${pluginFilePath}/package.json failed: ${error.message}`, this, LogLevel.warn, false));
+      return undefined;
+    }
   }
 }
