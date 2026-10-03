@@ -11,10 +11,10 @@ Display help for hopkey.
 
 ```console
 USAGE
-  $ hopkey help [COMMANDS] [-n]
+  $ hopkey help [COMMANDS...] [-n]
 
 ARGUMENTS
-  COMMANDS  Command to show help for.
+  COMMANDS...  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
