@@ -1,13 +1,20 @@
-<div class="holder {{this.data.link ? 'add-error-link-cursor' : ''}}">
+<div class="holder {{ this.data.link ? 'add-error-link-cursor' : '' }}">
   <div class="icon float">
-    <i *ngIf="data.className === 'toast-success'" class="fas fa-check-circle"></i>
-    <i *ngIf="data.className === 'toast-info'" class="fas fa-info-circle"></i>
-    <i *ngIf="data.className === 'toast-warning'" class="fas fa-exclamation-triangle"></i>
-    <i *ngIf="data.className === 'toast-error'" class="fas fa-exclamation-circle"></i>
+    @if (data.className === 'toast-success') {
+    <i class="fas fa-check-circle"></i>
+    } @if (data.className === 'toast-info') {
+    <i class="fas fa-info-circle"></i>
+    } @if (data.className === 'toast-warning') {
+    <i class="fas fa-exclamation-triangle"></i>
+    } @if (data.className === 'toast-error') {
+    <i class="fas fa-exclamation-circle"></i>
+    }
   </div>
 
-  <div [innerHTML]="data.html" class="large float" (click)="processOptionalLink();"></div>
+  <div [innerHTML]="data.html" class="large float" (click)="processOptionalLink()"></div>
 
-  <a (click)="close($event);" class="small float" *ngIf="data.className === 'toast-error'"><i class="moon-Close"></i></a>
+  @if (data.className === 'toast-error') {
+  <a (click)="close($event)" class="small float"><i class="moon-Close"></i></a>
+  }
   <div class="clear"></div>
 </div>

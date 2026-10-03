@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { HopkeySelectComponent } from "./hopkey-select.component";
 import { mustInjected } from "../../../base-injectables";
-import { NgSelectComponent, NgSelectModule } from "@ng-select/ng-select";
+import { NgSelectModule } from "@ng-select/ng-select";
 
 describe("HopkeySelectComponent", () => {
   let component: HopkeySelectComponent;
@@ -10,7 +10,7 @@ describe("HopkeySelectComponent", () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HopkeySelectComponent, NgSelectComponent],
+      declarations: [HopkeySelectComponent],
       providers: [].concat(mustInjected()),
       imports: [NgSelectModule],
     }).compileComponents();

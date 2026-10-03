@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, SecurityContext, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Input, Output, SecurityContext, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { NgSelectComponent } from "@ng-select/ng-select";
 import { FormGroup } from "@angular/forms";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -9,6 +9,8 @@ import { LoggedEntry, LogLevel } from "@hopkey/core/services/log-service";
   selector: "app-hopkey-select",
   templateUrl: "./hopkey-select.component.html",
   styleUrls: ["./hopkey-select.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class HopkeySelectComponent implements AfterViewInit {
   @ViewChild("ngSelectComponent")

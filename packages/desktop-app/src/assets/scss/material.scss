@@ -1,0 +1,110 @@
+@import "mixins/palette";
+
+/**
+Angular Material's components take their typography and colors from these tokens: they keep the app's font and the
+sizes its lists, menus and tabs had before Material moved to its MDC-based components. Each group is set on the
+element the theme sets it on, and Material's own component styles load after this file, so the rules below that
+override them use a more specific selector.
+ */
+$font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+html {
+  --mat-list-list-item-label-text-font: #{$font-family};
+  --mat-list-list-item-label-text-size: 14px;
+  --mat-list-list-item-label-text-line-height: 21px;
+  --mat-list-list-item-label-text-tracking: -0.5px;
+  --mat-list-list-item-label-text-weight: 400;
+  --mat-list-list-item-label-text-color: #212529;
+
+  --mat-menu-item-label-text-font: #{$font-family};
+  --mat-menu-item-label-text-size: 15px;
+  --mat-menu-item-label-text-tracking: normal;
+  --mat-menu-item-label-text-weight: 400;
+  --mat-menu-item-label-text-color: #000000;
+}
+
+.mat-mdc-tab-header {
+  --mat-tab-label-text-font: #{$font-family};
+  --mat-tab-label-text-size: 16px;
+  --mat-tab-label-text-line-height: 24px;
+  --mat-tab-label-text-tracking: -0.5px;
+  --mat-tab-label-text-weight: 400;
+}
+
+.mat-mdc-tab-group {
+  --mat-tab-active-label-text-color: #{$black};
+  --mat-tab-active-hover-label-text-color: #{$black};
+  --mat-tab-active-focus-label-text-color: #{$black};
+  --mat-tab-inactive-label-text-color: #{$text-color};
+  --mat-tab-inactive-hover-label-text-color: #{$text-color};
+  --mat-tab-inactive-focus-label-text-color: #{$text-color};
+}
+
+body.dark-theme {
+  --mat-list-list-item-label-text-color: #{$dark-main-text-color};
+  --mat-menu-item-label-text-color: #{$dark-main-text-color};
+
+  .mat-mdc-tab-group {
+    --mat-tab-active-label-text-color: #{$dark-main-text-color};
+    --mat-tab-active-hover-label-text-color: #{$dark-main-text-color};
+    --mat-tab-active-focus-label-text-color: #{$dark-main-text-color};
+    --mat-tab-inactive-label-text-color: #{$dark-main-text-color};
+    --mat-tab-inactive-hover-label-text-color: #{$dark-main-text-color};
+    --mat-tab-inactive-focus-label-text-color: #{$dark-main-text-color};
+  }
+}
+
+// As with the legacy tabs, the ones not selected are dimmed (global.scss shows the selected one in full)
+.mat-mdc-tab {
+  opacity: 0.6;
+}
+
+.mat-mdc-menu-panel .mat-mdc-menu-item {
+  min-height: 36px;
+
+  .mat-mdc-menu-item-text {
+    line-height: 36px;
+  }
+
+  &[disabled] {
+    color: rgba(16, 16, 16, 0.3);
+  }
+}
+
+// Like the ripples (see global.scss), no focus or hover layer over the tab's pill
+.mat-mdc-tab .mdc-tab__ripple {
+  display: none;
+}
+
+// The tab's icon sits above its label
+.mat-mdc-tab .mdc-tab__text-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .mat-tab-label-text {
+    line-height: 1.5;
+  }
+}
+
+// Checkboxes and slide toggles now wrap their label in a <label>, which Bootstrap gives a bottom margin
+label.mat-internal-form-field {
+  margin-bottom: 0;
+}
+
+// Legacy lists had no padding at the bottom, and legacy subheaders no margins of their own
+.mat-mdc-list-base.mdc-list {
+  padding-bottom: 0;
+}
+
+.mat-mdc-list-base .mat-mdc-subheader.mdc-list-group__subheader {
+  height: 48px;
+  letter-spacing: inherit;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: 0;
+
+  &:first-child {
+    margin-top: -8px;
+  }
+}

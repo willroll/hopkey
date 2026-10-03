@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, Input, OnInit, ViewChild, ViewEncapsulation, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { AppService } from "../../../services/app.service";
 import { Router } from "@angular/router";
@@ -26,6 +26,8 @@ import { proxyUrl } from "@hopkey/core/services/proxy-service";
   templateUrl: "./options-dialog.component.html",
   styleUrls: ["./options-dialog.component.scss"],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class OptionsDialogComponent implements OnInit, AfterViewInit {
   @Input()

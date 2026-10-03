@@ -20,7 +20,7 @@ class FakeWebSocketServer {
   }
 }
 
-const fakeClient = (readyState = WebSocket.OPEN): any => {
+const fakeClient = (readyState: number = WebSocket.OPEN): any => {
   const client = {
     readyState,
     handlers: {} as { [event: string]: (arg: any) => void },

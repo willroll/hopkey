@@ -5,4 +5,5 @@
 # You can see what browsers were selected by your queries by running:
 #   npx browserslist
 
-chrome >= 80
+# The app only runs in the Chromium of the Electron version in package.json
+electron 44.0

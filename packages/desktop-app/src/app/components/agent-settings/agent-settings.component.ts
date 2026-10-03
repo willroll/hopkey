@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { AgentPermissions } from "@hopkey/core/models/aws/aws-agent";
 import { agentDurationOptions, agentPermissionsOptions } from "./agent-form";
@@ -10,6 +10,8 @@ import { agentDurationOptions, agentPermissionsOptions } from "./agent-form";
   selector: "app-agent-settings",
   templateUrl: "./agent-settings.component.html",
   styleUrls: ["./agent-settings.component.scss"],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false,
 })
 export class AgentSettingsComponent {
   @Input() form: FormGroup;

@@ -1,7 +1,5 @@
-<form spellcheck="false" [formGroup]="form" class="form center-vertical text-left" (submit)="saveOptions();">
-
+<form spellcheck="false" [formGroup]="form" class="form center-vertical text-left" (submit)="saveOptions()">
   <mat-tab-group [animationDuration]="'0ms'" #tabs>
-
     <mat-tab>
       <ng-template mat-tab-label>
         <i class="mat-tab-icon moon-Settings"></i>
@@ -9,54 +7,76 @@
       </ng-template>
 
       <div class="panel">
-
         <h2>Default Regions</h2>
 
         <div class="form-container">
           <div class="form-group">
             <div class="form-field">
               <label>AWS Region</label>
-              <ng-select formControlName="regionsSelect" bindLabel="region" bindValue="region" [clearable]="false" [items]="regions"
-                         [(ngModel)]="selectedRegion" [appendTo]="'body'"></ng-select>
+              <ng-select
+                formControlName="regionsSelect"
+                bindLabel="region"
+                bindValue="region"
+                [clearable]="false"
+                [items]="regions"
+                [(ngModel)]="selectedRegion"
+                [appendTo]="'body'"
+              ></ng-select>
             </div>
           </div>
 
           <div class="form-group">
             <div class="form-field">
               <label>Azure Location</label>
-              <ng-select formControlName="locationsSelect" bindLabel="location" bindValue="location" [clearable]="false" [items]="locations"
-                         [(ngModel)]="selectedLocation" [appendTo]="'body'"></ng-select>
+              <ng-select
+                formControlName="locationsSelect"
+                bindLabel="location"
+                bindValue="location"
+                [clearable]="false"
+                [items]="locations"
+                [(ngModel)]="selectedLocation"
+                [appendTo]="'body'"
+              ></ng-select>
             </div>
           </div>
         </div>
 
         <h2>Generics</h2>
-        <ng-container *ngIf="appService.detectOs() === eOperatingSystem.mac">
-          <div class="form-container">
-            <div class="form-group">
-              <div class="form-field">
-                <label>MacOS Terminal</label>
-                <ng-select formControlName="terminalSelect" bindLabel="terminal" bindValue="terminal" [clearable]="false" [searchable]="false"
-                           [items]="[{terminal: eConstants.macOsTerminal}, {terminal: eConstants.macOsIterm2}, {terminal: eConstants.macOsWarp}]" [(ngModel)]="selectedTerminal"
-                           [appendTo]="'body'"></ng-select>
-              </div>
+        @if (appService.detectOs() === eOperatingSystem.mac) {
+        <div class="form-container">
+          <div class="form-group">
+            <div class="form-field">
+              <label>MacOS Terminal</label>
+              <ng-select
+                formControlName="terminalSelect"
+                bindLabel="terminal"
+                bindValue="terminal"
+                [clearable]="false"
+                [searchable]="false"
+                [items]="[{ terminal: eConstants.macOsTerminal }, { terminal: eConstants.macOsIterm2 }, { terminal: eConstants.macOsWarp }]"
+                [(ngModel)]="selectedTerminal"
+                [appendTo]="'body'"
+              ></ng-select>
             </div>
           </div>
-        </ng-container>
+        </div>
+        }
 
         <div class="form-container">
           <div class="form-group">
             <div class="form-field">
               <label>Color Theme</label>
-              <ng-select formControlName="colorThemeSelect"
-                         bindLabel="colorTheme"
-                         bindValue="colorTheme"
-                         [clearable]="false"
-                         [searchable]="false"
-                         [items]="[{colorTheme: eConstants.darkTheme}, {colorTheme: eConstants.lightTheme},{colorTheme: eConstants.systemDefaultTheme}]"
-                         [(ngModel)]="selectedColorTheme"
-                         (change)="setColorTheme(selectedColorTheme)"
-                         [appendTo]="'body'">
+              <ng-select
+                formControlName="colorThemeSelect"
+                bindLabel="colorTheme"
+                bindValue="colorTheme"
+                [clearable]="false"
+                [searchable]="false"
+                [items]="[{ colorTheme: eConstants.darkTheme }, { colorTheme: eConstants.lightTheme }, { colorTheme: eConstants.systemDefaultTheme }]"
+                [(ngModel)]="selectedColorTheme"
+                (change)="setColorTheme(selectedColorTheme)"
+                [appendTo]="'body'"
+              >
               </ng-select>
             </div>
           </div>
@@ -66,20 +86,25 @@
           <div class="form-container">
             <div class="form-group">
               <div class="form-field">
-                <label><i class="moon-Help fix-top"
-                          matTooltip="Note: when switching method a backup of your credentials and config files will be created and the original files cleaned."></i>&nbsp;AWS
-                  Credential Method</label>
-                <ng-select formControlName="credentialMethodSelect"
-                           bindLabel="credentialMethod"
-                           bindValue="credentialMethod"
-                           [clearable]="false"
-                           [searchable]="false"
-                           [items]="[{credentialMethod: eConstants.credentialFile}, {credentialMethod: eConstants.credentialProcess}]"
-                           [(ngModel)]="selectedCredentialMethod"
-                           (change)="showWarningModalForCredentialProcess()"
-                           [appendTo]="'body'">
+                <label
+                  ><i
+                    class="moon-Help fix-top"
+                    matTooltip="Note: when switching method a backup of your credentials and config files will be created and the original files cleaned."
+                  ></i
+                  >&nbsp;AWS Credential Method</label
+                >
+                <ng-select
+                  formControlName="credentialMethodSelect"
+                  bindLabel="credentialMethod"
+                  bindValue="credentialMethod"
+                  [clearable]="false"
+                  [searchable]="false"
+                  [items]="[{ credentialMethod: eConstants.credentialFile }, { credentialMethod: eConstants.credentialProcess }]"
+                  [(ngModel)]="selectedCredentialMethod"
+                  (change)="showWarningModalForCredentialProcess()"
+                  [appendTo]="'body'"
+                >
                 </ng-select>
-
               </div>
             </div>
           </div>
@@ -89,35 +114,59 @@
         <div class="form-container">
           <div class="form-group">
             <div class="form-field">
-              <label><i class="moon-Help fix-top"
-                        matTooltip="Note: The minimum session duration is 1 hour, and can be set to a maximum of 12 hours."></i>&nbsp;Session
-                Time</label>
-              <input formControlName="sessionDuration" type="number" class="form-control" min="1" max="12" step="1"
-                     [value]="webConsoleSessionDuration">
+              <label
+                ><i class="moon-Help fix-top" matTooltip="Note: The minimum session duration is 1 hour, and can be set to a maximum of 12 hours."></i
+                >&nbsp;Session Time</label
+              >
+              <input
+                formControlName="sessionDuration"
+                type="number"
+                class="form-control"
+                min="1"
+                max="12"
+                step="1"
+                [value]="webConsoleSessionDuration"
+              />
             </div>
           </div>
         </div>
 
-        <hr class="proxy-settings-section">
+        <hr class="proxy-settings-section" />
 
         <h2 class="proxy-settings-section">Proxy settings</h2>
 
         <div class="form-container proxy-settings-section">
-
           <div class="form-group">
             <div class="form-field">
-              <ng-select formControlName="proxyProtocol" [items]="['HTTP', 'HTTPS']" [(ngModel)]="proxyProtocol" [appendTo]="'body'"
-                         class="proxy-length-1"></ng-select>
+              <ng-select
+                formControlName="proxyProtocol"
+                [items]="['HTTP', 'HTTPS']"
+                [(ngModel)]="proxyProtocol"
+                [appendTo]="'body'"
+                class="proxy-length-1"
+              ></ng-select>
 
               <span class="proxy-length-2">://</span>
 
-              <input spellcheck="false" formControlName="proxyUrl" type="text" class="form-control proxy-length-3" placeholder="Enter Proxy Url"
-                     [value]="proxyUrl">
+              <input
+                spellcheck="false"
+                formControlName="proxyUrl"
+                type="text"
+                class="form-control proxy-length-3"
+                placeholder="Enter Proxy Url"
+                [value]="proxyUrl"
+              />
 
               <span class="proxy-length-4">:</span>
 
-              <input spellcheck="false" formControlName="proxyPort" type="text" class="form-control proxy-length-5" placeholder="Enter Proxy Port"
-                     [value]="proxyPort">
+              <input
+                spellcheck="false"
+                formControlName="proxyPort"
+                type="text"
+                class="form-control proxy-length-5"
+                placeholder="Enter Proxy Port"
+                [value]="proxyPort"
+              />
             </div>
           </div>
 
@@ -128,20 +177,26 @@
             </div>
           </div>
 
-          <div class="form-group" *ngIf="showProxyAuthentication">
+          @if (showProxyAuthentication) {
+          <div class="form-group">
             <div class="form-field">
               <label>Username</label>
-              <input spellcheck="false" formControlName="proxyUsername" type="text" class="form-control" placeholder="Proxy Username"
-                     [value]="proxyUsername">
+              <input
+                spellcheck="false"
+                formControlName="proxyUsername"
+                type="text"
+                class="form-control"
+                placeholder="Proxy Username"
+                [value]="proxyUsername"
+              />
             </div>
-
             <div class="form-field">
               <label>Password</label>
-              <input formControlName="proxyPassword" type="password" class="form-control" placeholder="Proxy Password" [value]="proxyPassword">
+              <input formControlName="proxyPassword" type="password" class="form-control" placeholder="Proxy Password" [value]="proxyPassword" />
             </div>
           </div>
+          }
         </div>
-
       </div>
     </mat-tab>
 
@@ -155,33 +210,38 @@
         <h2>IdP URL</h2>
 
         <div class="form-container">
-
           <div class="form-group">
             <div class="form-field form-control-input-button max-width">
-              <input spellcheck="false" formControlName="idpUrl" type="text" class="form-control max-width" placeholder="Add SAML 2.0 IdP URL"
-                     (keydown.enter)="$event.preventDefault(); manageIdpUrl(idpUrlValue ? idpUrlValue.id: -1);"
-                     [value]="idpUrlValue ? idpUrlValue.url : ''">
-              <button type="button" (click)="manageIdpUrl(idpUrlValue ? idpUrlValue.id: -1);"><i
-                class="{{editingIdpUrl ? 'moon-Edit' : 'moon-Add'}}"></i></button>
+              <input
+                spellcheck="false"
+                formControlName="idpUrl"
+                type="text"
+                class="form-control max-width"
+                placeholder="Add SAML 2.0 IdP URL"
+                (keydown.enter)="$event.preventDefault(); manageIdpUrl(idpUrlValue ? idpUrlValue.id : -1)"
+                [value]="idpUrlValue ? idpUrlValue.url : ''"
+              />
+              <button type="button" (click)="manageIdpUrl(idpUrlValue ? idpUrlValue.id : -1)">
+                <i class="{{ editingIdpUrl ? 'moon-Edit' : 'moon-Add' }}"></i>
+              </button>
             </div>
           </div>
 
           <div class="form-group scrollable max-height-230">
             <table class="table option-table">
               <tbody>
-              <ng-container *ngFor="let idpUrl of appProviderService.idpUrlService.getIdpUrls()">
-                <tr *ngIf="idpUrl">
-                  <td>{{idpUrl.url}}</td>
+                @for (idpUrl of appProviderService.idpUrlService.getIdpUrls(); track idpUrl) { @if (idpUrl) {
+                <tr>
+                  <td>{{ idpUrl.url }}</td>
                   <td>
-                    <button class="icon-button inline" type="button" (click)="editIdpUrl(idpUrl.id);"><i class="moon-Edit"></i></button>
-                    <button class="icon-button inline" type="button" (click)="deleteIdpUrl(idpUrl.id);"><i class="moon-Delete"></i></button>
+                    <button class="icon-button inline" type="button" (click)="editIdpUrl(idpUrl.id)"><i class="moon-Edit"></i></button>
+                    <button class="icon-button inline" type="button" (click)="deleteIdpUrl(idpUrl.id)"><i class="moon-Delete"></i></button>
                   </td>
                 </tr>
-              </ng-container>
+                } }
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
     </mat-tab>
@@ -196,29 +256,35 @@
 
         <div class="form-group">
           <div class="form-field form-control-input-button max-width">
-            <input spellcheck="false" formControlName="awsProfile" type="text" class="form-control max-width" placeholder="Add a new Named Profile"
-                   (keydown.enter)="$event.preventDefault(); manageAwsProfile(awsProfileValue ? awsProfileValue.id: -1);"
-                   [value]="awsProfileValue ? awsProfileValue.name : ''">
-            <button class="button" type="button" (click)="manageAwsProfile(awsProfileValue ? awsProfileValue.id: -1);"><i
-              class="{{editingAwsProfile ? 'moon-Edit' : 'moon-Add'}}"></i></button>
+            <input
+              spellcheck="false"
+              formControlName="awsProfile"
+              type="text"
+              class="form-control max-width"
+              placeholder="Add a new Named Profile"
+              (keydown.enter)="$event.preventDefault(); manageAwsProfile(awsProfileValue ? awsProfileValue.id : -1)"
+              [value]="awsProfileValue ? awsProfileValue.name : ''"
+            />
+            <button class="button" type="button" (click)="manageAwsProfile(awsProfileValue ? awsProfileValue.id : -1)">
+              <i class="{{ editingAwsProfile ? 'moon-Edit' : 'moon-Add' }}"></i>
+            </button>
           </div>
         </div>
 
         <div class="form-group scrollable max-height-230">
           <table class="table option-table">
             <tbody>
-            <ng-container *ngFor="let profile of appProviderService.namedProfileService.getNamedProfiles()">
-              <tr *ngIf="profile">
-                <td>{{profile.name}}</td>
+              @for (profile of appProviderService.namedProfileService.getNamedProfiles(); track profile) { @if (profile) {
+              <tr>
+                <td>{{ profile.name }}</td>
                 <td>
-                  <ng-container *ngIf="profile.name !== 'default'">
-                    <button class="icon-button inline" type="button" (click)="editAwsProfile(profile.id);"><i class="moon-Edit"></i></button>
-                    <button class="icon-button inline" type="button" (click)="deleteAwsProfile(profile.id);"><i class="moon-Delete size-up"></i>
-                    </button>
-                  </ng-container>
+                  @if (profile.name !== 'default') {
+                  <button class="icon-button inline" type="button" (click)="editAwsProfile(profile.id)"><i class="moon-Edit"></i></button>
+                  <button class="icon-button inline" type="button" (click)="deleteAwsProfile(profile.id)"><i class="moon-Delete size-up"></i></button>
+                  }
                 </td>
               </tr>
-            </ng-container>
+              } }
             </tbody>
           </table>
         </div>
@@ -237,74 +303,86 @@
           <div class="form-group">
             <div class="form-field">
               <label>Populate Region</label>
-              <ng-select formControlName="ssmRegionBehaviourSelect"
-                         bindLabel="ssmRegionBehaviour"
-                         bindValue="ssmRegionBehaviour"
-                         [clearable]="false"
-                         [searchable]="false"
-                         [items]="[{ssmRegionBehaviour: eConstants.ssmRegionNo}, {ssmRegionBehaviour: eConstants.ssmRegionDefault}]"
-                         [(ngModel)]="selectedSsmRegionBehaviour"
-                         [appendTo]="'body'">
+              <ng-select
+                formControlName="ssmRegionBehaviourSelect"
+                bindLabel="ssmRegionBehaviour"
+                bindValue="ssmRegionBehaviour"
+                [clearable]="false"
+                [searchable]="false"
+                [items]="[{ ssmRegionBehaviour: eConstants.ssmRegionNo }, { ssmRegionBehaviour: eConstants.ssmRegionDefault }]"
+                [(ngModel)]="selectedSsmRegionBehaviour"
+                [appendTo]="'body'"
+              >
               </ng-select>
             </div>
           </div>
         </div>
       </ng-container>
-
     </mat-tab>
 
-    <mat-tab *ngIf=!eConstants.disablePluginSystem>
+    @if (!eConstants.disablePluginSystem) {
+    <mat-tab>
       <ng-template mat-tab-label>
         <i class="mat-tab-icon moon-Puzzle"></i>
         <span class="mat-tab-label-text">Plugins</span>
       </ng-template>
       <div class="no-padding no-margin panel">
         <h2>Download Plugin manually</h2>
-
         <div class="form-group">
           <div class="form-field form-control-input-button max-width">
-            <input spellcheck="false" formControlName="pluginDeepLink" type="text" class="form-control max-width"
-                   placeholder="Insert an npm package name"
-                   (keydown.enter)="$event.preventDefault(); installPlugin();">
-            <button [disabled]="fetchingPlugins" class="button" type="button" (click)="installPlugin();"><i class="moon-Add"></i></button>
+            <input
+              spellcheck="false"
+              formControlName="pluginDeepLink"
+              type="text"
+              class="form-control max-width"
+              placeholder="Insert an npm package name"
+              (keydown.enter)="$event.preventDefault(); installPlugin()"
+            />
+            <button [disabled]="fetchingPlugins" class="button" type="button" (click)="installPlugin()"><i class="moon-Add"></i></button>
           </div>
-
-          <h4> Installed plugins
-            <button class="borderless-button pull-right" (click)="$event.preventDefault(); openPluginFolder()"><i class="fas fa-folder-open blackery"
-                                                                                                                  matTooltip="Open plugin folder"></i>
+          <h4>
+            Installed plugins
+            <button class="borderless-button pull-right" (click)="$event.preventDefault(); openPluginFolder()">
+              <i class="fas fa-folder-open blackery" matTooltip="Open plugin folder"></i>
             </button>
-            <button [disabled]="fetchingPlugins" class="borderless-button pull-right" (click)="$event.preventDefault(); refreshPluginList(true)"><i
-              class="fa fa-refresh blackery" matTooltip="Refresh plugin list"></i></button>
+            <button [disabled]="fetchingPlugins" class="borderless-button pull-right" (click)="$event.preventDefault(); refreshPluginList(true)">
+              <i class="fa fa-refresh blackery" matTooltip="Refresh plugin list"></i>
+            </button>
           </h4>
-
           <div class="form-group scrollable max-height-320 tableFixHead">
             <table class="table plugin-table">
               <thead>
-              <th><span class="centered-column">Name</span></th>
-              <th><span class="centered-column">Version</span></th>
-              <th><span class="centered-column">Supported OS</span></th>
-              <th><span class="centered-column">Enabled</span></th>
+                <th><span class="centered-column">Name</span></th>
+                <th><span class="centered-column">Version</span></th>
+                <th><span class="centered-column">Supported OS</span></th>
+                <th><span class="centered-column">Enabled</span></th>
               </thead>
               <tbody>
-              <ng-container *ngFor="let plugin of pluginList">
+                @for (plugin of pluginList; track plugin) {
                 <tr>
-                  <td><i class="fa fa-info-circle blackery" matTooltipClass="allow-cr"
-                         [matTooltip]="getPluginExtraInfo(plugin)"></i>&nbsp;{{plugin.metadata.uniqueName}}</td>
-                  <td>{{plugin.metadata.version}}</td>
+                  <td>
+                    <i class="fa fa-info-circle blackery" matTooltipClass="allow-cr" [matTooltip]="getPluginExtraInfo(plugin)"></i>&nbsp;{{
+                      plugin.metadata.uniqueName
+                    }}
+                  </td>
+                  <td>{{ plugin.metadata.version }}</td>
                   <td [innerHTML]="getSupportedOsIcons(plugin)"></td>
                   <td>
-                    <mat-slide-toggle class="inline toggleColoredCorrectly" (toggleChange)="togglePluginActivation(plugin)"
-                                      [checked]="plugin.metadata.active"></mat-slide-toggle>
+                    <mat-slide-toggle
+                      class="inline toggleColoredCorrectly"
+                      (toggleChange)="togglePluginActivation(plugin)"
+                      [checked]="plugin.metadata.active"
+                    ></mat-slide-toggle>
                   </td>
                 </tr>
-              </ng-container>
+                }
               </tbody>
             </table>
           </div>
         </div>
-
       </div>
     </mat-tab>
+    }
 
     <mat-tab>
       <ng-template mat-tab-label>
@@ -313,17 +391,31 @@
       </ng-template>
       <div class="no-padding no-margin panel">
         <div class="hero-unit hero-unit-extension">
-          <img src="assets/images/in-browser.png" alt="">
+          <img src="assets/images/in-browser.png" alt="" />
           <p class="extension-info">
             <strong>Multi-Console Browser Extension</strong>
-            <span class="description-container">Navigate multiple AWS consoles on different tabs at once. <a
-              (click)="openBrowser('https://willroll.github.io/hopkey/latest/built-in-features/multi-console/#install-the-extension')">Read the docs for more info.</a></span>
-            <br>
+            <span class="description-container"
+              >Navigate multiple AWS consoles on different tabs at once.
+              <a (click)="openBrowser('https://willroll.github.io/hopkey/latest/built-in-features/multi-console/#install-the-extension')"
+                >Read the docs for more info.</a
+              ></span
+            >
+            <br />
             <span class="button-container">
-              <button type="button" class="install-firefox-button"
-                      (click)="openBrowser('https://addons.mozilla.org/en-US/firefox/addon/leapp-multi-console-extension/')">Get for Firefox</button>
-              <button type="button" class="install-chrome-button"
-                      (click)="openBrowser('https://d3o59asa8udcq9.cloudfront.net/extension/leapp-extension-chromium-latest.zip')">Get for Chrome/Others</button>
+              <button
+                type="button"
+                class="install-firefox-button"
+                (click)="openBrowser('https://addons.mozilla.org/en-US/firefox/addon/leapp-multi-console-extension/')"
+              >
+                Get for Firefox
+              </button>
+              <button
+                type="button"
+                class="install-chrome-button"
+                (click)="openBrowser('https://d3o59asa8udcq9.cloudfront.net/extension/leapp-extension-chromium-latest.zip')"
+              >
+                Get for Chrome/Others
+              </button>
             </span>
           </p>
         </div>
@@ -342,15 +434,16 @@
         <!--          </div>-->
         <!--        </div>-->
         <div class="enable-option">
-          <mat-slide-toggle class="enable-extension-toggle" (toggleChange)="toggleExtension()" [checked]="extensionEnabled">Enable Multi-Console
-            Extension
+          <mat-slide-toggle class="enable-extension-toggle" (toggleChange)="toggleExtension()" [checked]="extensionEnabled"
+            >Enable Multi-Console Extension
           </mat-slide-toggle>
-          <span class="extension-description">Use the Extension as default. Fallback to the Single-Console method if the browser is closed or any error occurs.</span>
+          <span class="extension-description"
+            >Use the Extension as default. Fallback to the Single-Console method if the browser is closed or any error occurs.</span
+          >
         </div>
       </div>
     </mat-tab>
-
   </mat-tab-group>
 
-  <button type="button" (click)="saveOptions();" [disabled]="!form.valid" class="margin-fix">Done</button>
+  <button type="button" (click)="saveOptions()" [disabled]="!form.valid" class="margin-fix">Done</button>
 </form>

@@ -20,13 +20,11 @@
 }
 
 ::ng-deep {
-  .mat-list.mat-list-base {
+  .mat-mdc-list.mat-mdc-list-base {
     user-select: none;
   }
 
-  .mat-line {
-    font-size: 15px;
-
+  [mat-line] {
     &:hover {
       &:not(.workspace-menu-line) {
         all: unset !important;
@@ -36,11 +34,9 @@
       opacity: 0.7;
     }
   }
-
-  .mat-list-item-content {
+  .mat-mdc-list-item {
     cursor: pointer;
     margin-top: 2px;
-    margin-bottom: 2px;
 
     i {
       font-size: 20px;
@@ -64,8 +60,7 @@
   .moon-Row {
     top: -2px !important;
   }
-
-  .mat-list-item-content:hover i.moon-Close {
+  .mat-mdc-list-item:hover i.moon-Close {
     display: inline-block !important;
     color: $text-color;
     font-size: 18px;
@@ -81,7 +76,7 @@
 }
 
 ::ng-deep {
-  .mat-list-text div span:not(.workspace-name-initial) {
+  .mdc-list-item__content div span:not(.workspace-name-initial) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -105,8 +100,7 @@
     font-size: 14px !important;
     font-weight: 500 !important;
   }
-
-  .selected-segment .mat-list-item-content .mat-list-text {
+  .selected-segment .mdc-list-item__content {
     margin-left: -10px;
   }
 }
@@ -132,11 +126,10 @@ div.space-between-mat-lists {
     margin-top: -4px;
   }
 
-  .mat-list-item.selected-segment:hover {
+  .mat-mdc-list-item.selected-segment:hover {
     background-color: $silver-25 !important;
   }
-
-  .mat-list-item.selected-segment:hover .mat-list-item-content .mat-list-text .mat-line {
+  .mat-mdc-list-item.selected-segment:hover [mat-line] {
     transition: unset;
     opacity: 1;
   }
@@ -156,7 +149,7 @@ i.moon-Caret-down {
     width: 250px;
   }
 
-  .mat-expanded .mat-content mat-panel-title .mat-subheader i.moon-Caret-down {
+  .mat-expanded .mat-content mat-panel-title .mat-mdc-subheader i.moon-Caret-down {
     display: inline-block;
     transform: rotate(180deg);
     transition: all 0.3s ease;
@@ -172,8 +165,8 @@ i.moon-Caret-down {
 }
 
 ::ng-deep {
-  .mat-menu-panel .mat-menu-content {
-    .mat-menu-item {
+  .mat-mdc-menu-panel .mat-mdc-menu-content {
+    .mat-mdc-menu-item {
       img {
         width: 20px;
         margin-right: 7px;

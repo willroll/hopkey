@@ -186,26 +186,6 @@
   align-items: center;
   justify-content: center;
 
-  &.mat-menu-item-style {
-    height: 36px;
-    padding: 0 20px;
-    font-size: 15px;
-    justify-content: initial;
-    position: relative;
-
-    &:hover::before {
-      content: "";
-      position: absolute;
-      top: 3px;
-      bottom: 3px;
-      left: 10px;
-      right: 10px;
-      border-radius: 5px;
-      background: rgba(0, 0, 0, 0.04);
-      cursor: pointer;
-    }
-  }
-
   .notification-button-clickable {
     display: flex;
     align-items: center;
@@ -240,16 +220,22 @@
 }
 
 ::ng-deep {
-  .mat-menu-panel {
+  .mat-mdc-menu-panel {
     max-width: 320px!important;
   }
-  .mat-menu-panel .mat-menu-content {
-    .mat-menu-item {
+  .mat-mdc-menu-panel .mat-mdc-menu-content {
+    .mat-mdc-menu-item {
       img.icon-not-menu {
         width: 20px;
         margin-right: 0;
         margin-left: 0;
       }
     }
+  }
+
+  // The icon, the space and the label line up as they did when they were the item's own flex items
+  .notification-menu-item .mat-mdc-menu-item-text {
+    display: flex;
+    align-items: center;
   }
 }
