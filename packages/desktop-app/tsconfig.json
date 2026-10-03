@@ -13,7 +13,8 @@
     "moduleResolution": "bundler",
     "sourceMap": true,
     "strict": false,
-    "target": "ES2019",
+    "target": "ES2022",
+    "useDefineForClassFields": false,
     "typeRoots": ["node_modules/@types"],
     "paths": {
       "stream": ["../node_modules/stream-browserify"],
